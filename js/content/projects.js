@@ -19,7 +19,7 @@ const projects = [
   },
   {
     name: "Web Browser",
-    desc: "Lightweight web browser built on the Servo engine designed for retro and low-resource systems",
+    desc: "Lightweight web browser built using Servo engine and designed for retro and low-resource systems",
     url: "https://github.com/mxmgorin/retsurf",
     tags: ["Rust", "Web"],
   },
