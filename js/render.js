@@ -1,10 +1,10 @@
 import { state, Languages, setLang } from "./app.js";
 import { menu, Views } from "./content/views.js";
-import { renderProjects } from "./content/projects.js";
+import { projects } from "./content/projects.js";
 import { renderAbout } from "./content/about.js";
 
 export function render() {
-  // renderLangSelector()
+  renderLangSelector();
   renderMenu();
   renderContent();
 }
@@ -27,7 +27,7 @@ function renderContent() {
 
   switch (state.view) {
     case Views.PROJECTS:
-      renderProjects(content);
+      renderProjects(content, projects);
       break;
 
     case Views.ABOUT:
@@ -64,4 +64,49 @@ function renderLangSelector() {
   });
 
   el.lastChild.remove(); // remove trailing separator
+}
+
+const separator = " ".repeat(1);
+function renderProjects(root, items) {
+  const pre = document.createElement("pre");
+
+  items.forEach((p, i) => {
+    const name = document.createElement("strong");
+    name.textContent = p.name;
+    pre.append(name);
+
+    if (p.url) {
+      pre.append(document.createTextNode(" "));
+
+      const link = document.createElement("a");
+      link.href = p.url;
+      link.textContent = "[link]";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.setAttribute("aria-label", `Open ${p.name} project`);
+
+      pre.append(link);
+    }
+
+    const desc = p.desc?.[state.lang] ?? p.desc?.[DEFAULT_LANG];
+    if (desc) {
+      pre.append(
+        document.createTextNode("\n"),
+        document.createTextNode(`  ${desc}\n`),
+      );
+    }
+
+    if (p.tags?.length) {
+      const tags = document.createElement("span");
+      tags.className = "tags";
+      tags.textContent = `  [${p.tags.join(" | ")}]`;
+      pre.append(tags, document.createTextNode("\n"));
+    }
+
+    if (i < items.length - 1) {
+      pre.append(document.createTextNode(`${separator}\n`));
+    }
+  });
+
+  root.appendChild(pre);
 }
