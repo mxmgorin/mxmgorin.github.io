@@ -3,7 +3,7 @@ export const projects = [
     name: "GMBoy",
     desc: {
       en: "Cross-platform Game Boy emulator with a focus on accuracy, performance, and modern enhancements",
-      ru: "Кросс-платформенный эмулятор для Game Boy с упором на точность, производительность и современные фичи",
+      ru: "Кросс-платформенный эмулятор для Game Boy с упором на точность, производительность и современные функции (перемотка, сохранение и тд)",
     },
     url: "https://github.com/mxmgorin/gmboy",
     tags: ["Rust", "Emulation", "SDL2", "OpenGL", "Android", "Desktop"],
@@ -12,7 +12,7 @@ export const projects = [
     name: "ch8go",
     desc: {
       en: "Multi-frontend CHIP-8, SCHIP, and XO-CHIP VM (emulator) with broad compatibility across variants and quirks support",
-      ru: "Мульти-фронтенд виртуальная машина для CHIP-8, SCHIP, and XO-CHIP  с упором на широкую совместимость между разными версиями платформы",
+      ru: "Мульти-фронтенд виртуальная машина для CHIP-8, SCHIP, and XO-CHIP с упором на широкую совместимость между разными версиями платформы",
     },
     url: "https://mxmgorin.github.io/ch8go/web/",
     tags: ["Go", "Emulation", "WASM", "CLI", "SDL2"],
@@ -48,7 +48,7 @@ export const projects = [
     name: "PortMaster",
     desc: {
       en: "Contributor to PortMaster Games, porting several titles for ARM-based Linux handheld systems",
-      ru: "Участник проекта PortMaster Games, занимался портированием нескольких игр на ARM-основанные портативные Linux-системы",
+      ru: "Участник проекта PortMaster Games, где я портировал несколько игр на платформы ARM-Linux системы",
     },
     url: "https://portmaster.games/profile.html?porter=Troidem",
     tags: ["Lua", "Bash", "GameDev"],

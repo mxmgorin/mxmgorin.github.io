@@ -1,12 +1,17 @@
-import { state, Languages, setLang } from "./app.js";
+import { state, Languages, setLang, DEFAULT_LANG } from "./app.js";
 import { menu, Views } from "./content/views.js";
 import { projects } from "./content/projects.js";
-import { renderAbout } from "./content/about.js";
+import { about } from "./content/about.js";
+import { contacts } from "./content/contacts.js";
 
 export function render() {
   renderLangSelector();
   renderMenu();
   renderContent();
+  document.querySelectorAll('.tui-content a[href^="http"]').forEach((a) => {
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+  });
 }
 
 function renderMenu() {
@@ -27,11 +32,15 @@ function renderContent() {
 
   switch (state.view) {
     case Views.PROJECTS:
-      renderProjects(content, projects);
+      renderBlocks(content, projects);
       break;
 
     case Views.ABOUT:
-      renderAbout(content);
+      renderText(content, about);
+      break;
+
+    case Views.CONTACT:
+      renderText(content, contacts);
       break;
 
     default:
@@ -67,7 +76,7 @@ function renderLangSelector() {
 }
 
 const separator = " ".repeat(1);
-function renderProjects(root, items) {
+function renderBlocks(root, items) {
   const pre = document.createElement("pre");
 
   items.forEach((p, i) => {
@@ -109,4 +118,9 @@ function renderProjects(root, items) {
   });
 
   root.appendChild(pre);
+}
+
+function renderText(root, text) {
+  const val = text[state.lang] ?? text[DEFAULT_LANG];
+  root.innerHTML = `<pre>${val}</pre>`;
 }

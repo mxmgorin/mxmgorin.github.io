@@ -1,6 +1,4 @@
-import { state, DEFAULT_LANG } from "../app.js";
-
-const text = {
+export const about = {
   en: `
 Hi there, I'm Maxim!
 
@@ -25,8 +23,3 @@ Outside of work, I spend time on Linux systems and retro gaming projects, especi
 В свободное время итересуюсь Linux-экосистемой и open-source проектами, связанными с ретро-системами и эмуляцией.
 `,
 };
-
-export function renderAbout(root) {
-  const v = text[state.lang] ?? text[DEFAULT_LANG];
-  root.innerHTML = `<pre>${v}</pre>`;
-}
