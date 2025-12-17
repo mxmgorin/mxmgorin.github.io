@@ -1,9 +1,10 @@
-import { state } from "./app.js";
+import { state, Languages, setLang } from "./app.js";
 import { menu, Views } from "./content/views.js";
 import { renderProjects } from "./content/projects.js";
 import { renderAbout } from "./content/about.js";
 
 export function render() {
+  // renderLangSelector()
   renderMenu();
   renderContent();
 }
@@ -36,4 +37,31 @@ function renderContent() {
     default:
       content.innerHTML = `<pre>Under development</pre>`;
   }
+}
+
+function renderLangSelector() {
+  const el = document.querySelector(".tui-header .lang");
+  if (!el) return;
+
+  el.innerHTML = "";
+
+  Object.values(Languages).forEach((lang) => {
+    const a = document.createElement("a");
+    a.href = "#";
+    a.textContent = lang.toUpperCase();
+
+    if (state.lang === lang) {
+      a.classList.add("active");
+    }
+
+    a.onclick = (e) => {
+      e.preventDefault();
+      setLang(lang);
+      render();
+    };
+
+    el.append(a, document.createTextNode(" | "));
+  });
+
+  el.lastChild.remove(); // remove trailing separator
 }

@@ -25,6 +25,21 @@
     font-weight: bold;
 }
 
+.tui-header .lang {
+    margin-left: 1em;
+    font-size: 0.9em;
+    opacity: 0.7;
+}
+
+.tui-header .lang a {
+    text-decoration: none;
+}
+
+.tui-header .lang .active {
+    opacity: 1;
+    text-decoration: underline;
+}
+
 .tui-body {
     min-height: 0;
     flex: 1;

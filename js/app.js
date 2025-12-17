@@ -51,8 +51,9 @@ function getLang() {
   return params.get("l") || DEFAULT_LANG;
 }
 
-function setLang(lang, replace = false) {
-  setParam("l", value);
+export function setLang(lang, replace = false) {
+  setParam("l", lang);
+  state.lang = lang;
 }
 
 export const state = {
