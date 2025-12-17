@@ -53,7 +53,7 @@
     color: var(--fg);
     text-transform: uppercase;
     position: relative;
-    padding-left: 2ch;
+    padding-left: 1.5em; /* space for arrow */
 }
 
 .tui-menu li.active {
@@ -95,12 +95,25 @@
 }
 
 @media (max-width: 700px) {
+    body {
+        font-size: 16px;
+    }
     .tui-body {
-        grid-template-columns: 1fr;
+        flex-direction: column;
     }
 
     .tui-menu {
+        width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--border);
+    }
+
+    .tui-menu ul {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .tui-menu li.active::before {
+        content: "";
     }
 }
