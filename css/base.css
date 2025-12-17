@@ -1,0 +1,33 @@
+:root {
+    --bg: #0b0f0c; /* near-black with green tint */
+    --panel: #0f1612;
+    --border: #1f2a23;
+
+    --fg: #cfe8d8; /* main text */
+    --muted: #8fb3a0; /* secondary text */
+    --accent: #6fd19c; /* selection / highlights */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1.125rem; /* ≈ 18px */
+    overflow: hidden;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

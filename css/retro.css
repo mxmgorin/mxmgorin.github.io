@@ -1,0 +1,117 @@
+:root {
+    /* CRT color (derived from accent) */
+    --crt-r: 111;
+    --crt-g: 209;
+    --crt-b: 156;
+
+    /* Text glow strength */
+    --crt-glow-inner: 0.25;
+    --crt-glow-outer: 0.15;
+
+    /* Active item glow */
+    --crt-active-inner: 0.6;
+    --crt-active-outer: 0.35;
+
+    /* Scanline strength */
+    --crt-scanline-opacity: 0.12;
+
+    /* Flicker */
+    --crt-flicker-speed: 6s;
+    --crt-flicker-min-opacity: 0.985;
+
+    /* Border glow */
+    --crt-border-alpha: 0.25;
+    --crt-border-blur-inner: 6px;
+    --crt-border-blur-outer: 16px;
+}
+
+html.no-crt {
+    --crt-glow-inner: 0;
+    --crt-glow-outer: 0;
+    --crt-active-inner: 0;
+    --crt-active-outer: 0;
+    --crt-scanline-opacity: 0;
+}
+
+body {
+    color: var(--fg);
+    text-shadow:
+        0 0 2px
+            rgba(
+                var(--crt-r),
+                var(--crt-g),
+                var(--crt-b),
+                var(--crt-glow-inner)
+            ),
+        0 0 6px
+            rgba(
+                var(--crt-r),
+                var(--crt-g),
+                var(--crt-b),
+                var(--crt-glow-outer)
+            );
+    animation: crt-flicker var(--crt-flicker-speed) infinite;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, var(--crt-scanline-opacity)),
+        rgba(0, 0, 0, var(--crt-scanline-opacity)) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    mix-blend-mode: multiply;
+}
+
+@keyframes crt-flicker {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: var(--crt-flicker-min-opacity);
+    }
+}
+
+.tui-menu li.active {
+    color: var(--accent);
+    text-shadow:
+        0 0 3px
+            rgba(
+                var(--crt-r),
+                var(--crt-g),
+                var(--crt-b),
+                var(--crt-active-inner)
+            ),
+        0 0 8px
+            rgba(
+                var(--crt-r),
+                var(--crt-g),
+                var(--crt-b),
+                var(--crt-active-outer)
+            );
+}
+
+.tui-container,
+.tui-footer,
+.tui-header,
+.tui-menu,
+.tui-content {
+  border: 1px solid rgba(
+    var(--crt-r),
+    var(--crt-g),
+    var(--crt-b),
+    0.25
+  );
+
+  box-shadow:
+    inset 0 0 var(--crt-border-blur-inner)
+      rgba(var(--crt-r), var(--crt-g), var(--crt-b), var(--crt-border-alpha)),
+    0 0 var(--crt-border-blur-outer)
+      rgba(var(--crt-r), var(--crt-g), var(--crt-b), calc(var(--crt-border-alpha) * 0.6));
+}

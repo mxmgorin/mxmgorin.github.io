@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>mxmgorin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <link rel="stylesheet" href="css/base.css" />
+        <link rel="stylesheet" href="css/term.css" />
+        <link rel="stylesheet" href="css/retro.css" />
+
+        <meta name="description" content="Personal website of Maxim Horin." />
+    </head>
+
+    <body>
+        <main id="terminal">
+            <header class="terminal-header">
+                <span class="status">ONLINE</span>
+                <span class="title">mxmgorin@website</span>
+                <span class="hint">type <code>help</code></span>
+            </header>
+
+            <section id="output" aria-live="polite">
+                <pre>
+Welcome.
+
+This is a terminal mode.
+Type 'help' to see available commands.
+      </pre
+                >
+            </section>
+
+            <form id="input-line" autocomplete="off">
+                <label for="command" class="prompt">></label>
+                <input
+                    id="command"
+                    type="text"
+                    autofocus
+                    spellcheck="false"
+                    aria-label="Command input"
+                />
+            </form>
+        </main>
+
+        <noscript>
+            <section>
+                <h1>Maxim Gorin</h1>
+                <p>Software developer.</p>
+                <p><a href="cv.pdf">Download CV</a></p>
+            </section>
+        </noscript>
+
+        <script src="js/term.js"></script>
+    </body>
+</html>

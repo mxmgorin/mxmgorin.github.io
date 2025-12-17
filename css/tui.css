@@ -1,0 +1,106 @@
+.tui {
+    max-width: 960px;
+    margin: 2rem auto;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+    min-height: 80vh;
+    height: 90vh;
+}
+
+.tui-header {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.tui-header .title {
+    font-weight: bold;
+}
+
+.tui-header .status {
+    color: var(--muted);
+}
+
+.tui-body {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    min-height: 0; /* REQUIRED for scroll to work */
+}
+
+.tui-menu {
+    border-right: 1px solid var(--border);
+    padding: 0.5rem 0;
+    width: 200px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.tui-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tui-menu li {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: var(--fg);
+    text-transform: uppercase;
+    position: relative;
+    padding-left: 2ch;
+}
+
+.tui-menu li.active {
+    background: rgba(122, 162, 247, 0.15);
+    color: var(--accent);
+}
+
+.tui-menu li::before {
+    content: " ";
+    position: absolute;
+    left: 0;
+}
+
+.tui-menu li.active::before {
+    content: "▶";
+}
+
+.tui-menu li:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tui-content {
+    padding: 1rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.tui-content pre {
+    margin: 0;
+    white-space: pre-wrap;
+    line-height: 1.4;
+}
+
+.tui-footer {
+    padding: 0.4rem 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+@media (max-width: 700px) {
+    .tui-body {
+        grid-template-columns: 1fr;
+    }
+
+    .tui-menu {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+}
