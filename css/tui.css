@@ -5,7 +5,6 @@
     background: var(--panel);
     display: flex;
     flex-direction: column;
-    min-height: 80vh;
     height: 90vh;
 }
 
@@ -98,6 +97,12 @@
     body {
         font-size: 16px;
     }
+
+    .tui {
+        margin: auto;
+        height: 100vh;
+    }
+
     .tui-body {
         flex-direction: column;
     }
