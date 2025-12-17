@@ -102,6 +102,8 @@
     .tui {
         margin: auto;
         height: 100dvh;
+        transform: none;
+        border-radius: 0;
     }
 
     .tui-body {
@@ -110,8 +112,7 @@
 
     .tui-menu {
         width: 100%;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
     }
 
     .tui-menu ul {

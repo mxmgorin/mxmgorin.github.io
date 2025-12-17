@@ -102,38 +102,43 @@ body::after {
 .tui-header,
 .tui-menu,
 .tui-content {
-  border: 1px solid rgba(
-    var(--crt-r),
-    var(--crt-g),
-    var(--crt-b),
-    0.25
-  );
+    border: 1px solid rgba(var(--crt-r), var(--crt-g), var(--crt-b), 0.25);
 
-  box-shadow:
-    inset 0 0 var(--crt-border-blur-inner)
-      rgba(var(--crt-r), var(--crt-g), var(--crt-b), var(--crt-border-alpha)),
-    0 0 var(--crt-border-blur-outer)
-      rgba(var(--crt-r), var(--crt-g), var(--crt-b), calc(var(--crt-border-alpha) * 0.6));
+    box-shadow:
+        inset 0 0 var(--crt-border-blur-inner)
+            rgba(
+                var(--crt-r),
+                var(--crt-g),
+                var(--crt-b),
+                var(--crt-border-alpha)
+            ),
+        0 0 var(--crt-border-blur-outer)
+            rgba(
+                var(--crt-r),
+                var(--crt-g),
+                var(--crt-b),
+                calc(var(--crt-border-alpha) * 0.6)
+            );
 }
 
 .tui {
-  position: relative;
-  transform: perspective(1200px)
-             scale(1.02)
-             rotateX(0.6deg)
-             rotateY(-0.6deg);
-  border-radius: 6px;
-  overflow: hidden;
+    position: relative;
+    transform: perspective(1200px) scale(1.02) rotateX(0.6deg) rotateY(-0.6deg);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow:
+        inset 0 0 30px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(var(--crt-r), var(--crt-g), var(--crt-b), 0.15);
 }
 
 .tui::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 55%,
-    rgba(0, 0, 0, 0.35) 100%
-  );
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 55%,
+        rgba(0, 0, 0, 0.35) 100%
+    );
 }
