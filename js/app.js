@@ -8,26 +8,63 @@ const routes = [
   { view: Views.CONTACT, key: "contact" },
 ];
 
-function viewFromQuery() {
-  const p = new URLSearchParams(window.location.search).get("p");
+function setParam(name, value, replace = false) {
+  const params = new URLSearchParams(window.location.search);
+
+  if (value == null) {
+    params.delete(name);
+  } else {
+    params.set(name, value);
+  }
+
+  const qs = params.toString();
+  const url = qs ? `/?${qs}` : "/";
+
+  replace ? history.replaceState({}, "", url) : history.pushState({}, "", url);
+}
+
+/* view navigation */
+function getView() {
+  const p = new URLSearchParams(window.location.search).get("v");
   return routes.find((r) => r.key === p)?.view ?? Views.ABOUT;
 }
 
-function indexFromQuery() {
-  const p = new URLSearchParams(window.location.search).get("p");
+function getViewIndex() {
+  const p = new URLSearchParams(window.location.search).get("v");
   const i = routes.findIndex((r) => r.key === p);
   return i === -1 ? 0 : i;
 }
 
-function setQuery(key, replace = false) {
-  const url = key ? `/?p=${key}` : "/";
-  replace ? history.replaceState({}, "", url) : history.pushState({}, "", url);
+function setView(value, replace = false) {
+  setParam("v", value);
+}
+
+/* lang handling */
+export const Languages = {
+  EN: "en",
+  RU: "ru",
+};
+export const DEFAULT_LANG = Languages.EN;
+
+function getLang() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("l") || DEFAULT_LANG;
+}
+
+function setLang(lang, replace = false) {
+  setParam("l", value);
 }
 
 export const state = {
-  menuIndex: indexFromQuery(),
-  view: viewFromQuery(),
+  menuIndex: getViewIndex(),
+  view: getView(),
+  lang: getLang(),
 };
+
+// debug helper
+if (location.hostname === "localhost") {
+  window.appState = state;
+}
 
 export function moveUp() {
   state.menuIndex = Math.max(0, state.menuIndex - 1);
@@ -39,13 +76,13 @@ export function moveDown() {
 
 export function select() {
   const key = routes[state.menuIndex]?.key;
-  setQuery(key);
+  setView(key);
   state.view = routes[state.menuIndex].view;
   render();
 }
 
 window.addEventListener("popstate", () => {
-  state.menuIndex = indexFromQuery();
-  state.view = viewFromQuery();
+  state.menuIndex = getViewIndex();
+  state.view = getView();
   render();
 });
