@@ -1,5 +1,4 @@
 import { moveUp, moveDown, select, state } from "./app.js";
-import { render } from "./render.js";
 
 export function setupInput(render) {
   // Keyboard navigation
@@ -34,7 +33,6 @@ export function setupInput(render) {
     }
 
     e.preventDefault();
-    render();
   });
 
   // Mouse navigation
@@ -50,6 +48,5 @@ export function setupInput(render) {
 
     state.menuIndex = index;
     select();
-    render();
   });
 }

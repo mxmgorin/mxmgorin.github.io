@@ -1,8 +1,32 @@
 import { menu, Views } from "./content/views.js";
+import { render } from "./render.js";
+
+const routes = [
+  { view: Views.ABOUT, key: null },
+  { view: Views.PROJECTS, key: "projects" },
+  { view: Views.CV, key: "cv" },
+  { view: Views.CONTACT, key: "contact" },
+];
+
+function viewFromQuery() {
+  const p = new URLSearchParams(window.location.search).get("p");
+  return routes.find((r) => r.key === p)?.view ?? Views.ABOUT;
+}
+
+function indexFromQuery() {
+  const p = new URLSearchParams(window.location.search).get("p");
+  const i = routes.findIndex((r) => r.key === p);
+  return i === -1 ? 0 : i;
+}
+
+function setQuery(key, replace = false) {
+  const url = key ? `/?p=${key}` : "/";
+  replace ? history.replaceState({}, "", url) : history.pushState({}, "", url);
+}
 
 export const state = {
-  menuIndex: 0,
-  view: Views.ABOUT,
+  menuIndex: indexFromQuery(),
+  view: viewFromQuery(),
 };
 
 export function moveUp() {
@@ -14,5 +38,14 @@ export function moveDown() {
 }
 
 export function select() {
-  state.view = menu[state.menuIndex];
+  const key = routes[state.menuIndex]?.key;
+  setQuery(key);
+  state.view = routes[state.menuIndex].view;
+  render();
 }
+
+window.addEventListener("popstate", () => {
+  state.menuIndex = indexFromQuery();
+  state.view = viewFromQuery();
+  render();
+});
