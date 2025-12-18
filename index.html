@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="css/base.css" />
         <link rel="stylesheet" href="css/tui.css" />
         <link rel="stylesheet" href="css/retro.css" />
+        <link rel="stylesheet" href="css/term.css" />
         <title>mxmgorin.dev | Web TUI</title>
     </head>
 
@@ -28,10 +29,25 @@
             </div>
 
             <footer class="tui-footer">
-                ↑↓ · Nav | PgUp/PgDn · Scroll | Enter · Select | Mouse
+                <div class="footer-help">
+                    nav: ↑↓ | scroll: PgUp/PgDn | select: Enter | Mouse | type:
+                    help
+                </div>
+                <div class="footer-prompt">
+                    <form id="input-line" autocomplete="off">
+                        <span for="command" class="prompt">guest:~$</span>
+                        <input
+                            id="command"
+                            type="text"
+                            spellcheck="false"
+                            aria-label="Command input"
+                        />
+                    </form>
+                </div>
             </footer>
         </main>
 
         <script type="module" src="js/main.js"></script>
+        <script type="module" src="js/term.js"></script>
     </body>
 </html>

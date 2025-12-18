@@ -1,13 +1,11 @@
-const output = document.getElementById("output");
+const output = document.getElementById("content");
 const input = document.getElementById("command");
 
 const commands = {
   help() {
-    print(`
-Available commands:
+    print(
+      `Available commands:
 - about
-- projects
-- skills
 - cv
 - contact
 - clear
@@ -15,30 +13,11 @@ Available commands:
   },
 
   about() {
-    print(`
-Maksym Horin
-------------
-Systems-focused developer with an emphasis on emulation,
-low-level software, and correctness-oriented design.
-
-Primary interests:
-- Emulator development (CHIP-8, Game Boy)
-- Rust, Go
-- Testing, documentation, architecture
-    `);
-  },
-
-  projects() {
-    print(`
-Projects:
-- CHIP-8 Emulator
-- Game Boy Emulator
-Type: project <name>
-    `);
+    print(`about`);
   },
 
   cv() {
-    print(`Download CV: <a href="cv.pdf">cv.pdf</a>`);
+    print(`Available on request`);
   },
 
   clear() {
@@ -48,9 +27,23 @@ Type: project <name>
 
 function print(text) {
   const pre = document.createElement("pre");
-  pre.innerHTML = text.trim();
+  pre.textContent = text;
   output.appendChild(pre);
   output.scrollTop = output.scrollHeight;
+}
+
+export function focusTerm() {
+  console.log("focus");
+  input.focus();
+}
+
+export function blurTerm(clear = false) {
+  if (clear) input.value = "";
+  input.blur();
+}
+
+export function isTermFocused() {
+  return document.activeElement === input;
 }
 
 document.getElementById("input-line").addEventListener("submit", (e) => {
@@ -59,7 +52,7 @@ document.getElementById("input-line").addEventListener("submit", (e) => {
   const value = input.value.trim();
   input.value = "";
 
-  print(`> ${value}`);
+  print(`\n> ${value}`);
 
   const [cmd, ...args] = value.split(" ");
   if (commands[cmd]) {

@@ -11,3 +11,7 @@ GitHub:
 </pre>
 `,
 };
+
+export function getContacts() {
+  return contacts[en]
+}

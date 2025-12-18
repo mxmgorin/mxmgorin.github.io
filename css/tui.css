@@ -140,3 +140,23 @@
         content: "";
     }
 }
+
+.footer-help {
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+.footer-prompt {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.footer-prompt input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    outline: none;
+}

@@ -1,9 +1,25 @@
 import { moveUp, moveDown, select, state } from "./app.js";
 import { render } from "./render.js";
+import { isTermFocused, blurTerm, focusTerm } from "./term.js";
 
 export function setupInput() {
-  // Keyboard navigation
   document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isTermFocused()) {
+      e.preventDefault();
+      blurTerm(true);
+      return;
+    }
+
+    if ((e.key === "/" || e.key === ":") && !isTermFocused()) {
+      e.preventDefault();
+      focusTerm();
+      return;
+    }
+
+    if (document.activeElement?.id === "command") {
+      return;
+    }
+
     const content = document.querySelector(".tui-content");
     switch (e.key) {
       case "ArrowUp":
@@ -34,7 +50,7 @@ export function setupInput() {
     }
 
     e.preventDefault();
-    render()
+    render();
   });
 
   // Mouse navigation

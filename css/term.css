@@ -1,25 +1,8 @@
-#terminal {
-    max-width: 900px;
-    margin: auto;
-    padding: 1rem;
-}
-
-.terminal-header {
-    display: flex;
-    justify-content: space-between;
-    opacity: 0.8;
-    margin-bottom: 1rem;
-}
-
-#output {
-    height: 70vh;
-    overflow-y: auto;
-}
-
 #input-line {
     display: flex;
     align-items: center;
     padding-top: 0.5rem;
+    width: 100%;
 }
 
 .prompt {
@@ -28,7 +11,7 @@
 
 #input-line input {
     padding: 0.2rem 0.4rem;
-    border: 1px solid rgba(199, 208, 217, 0.25);
+    border: 1px solid rgba(199, 208, 217, 0.15);
     background: transparent;
     border-radius: 2px;
 }
