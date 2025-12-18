@@ -139,6 +139,10 @@
     .tui-menu li.active::before {
         content: "";
     }
+
+    .kbd-hints {
+      display: none;
+    }
 }
 
 .footer-help {
