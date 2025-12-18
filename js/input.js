@@ -1,7 +1,7 @@
 import { moveUp, moveDown, select, state } from "./app.js";
 import { render } from "./render.js";
 
-export function setupInput(render) {
+export function setupInput() {
   // Keyboard navigation
   document.addEventListener("keydown", (e) => {
     const content = document.querySelector(".tui-content");

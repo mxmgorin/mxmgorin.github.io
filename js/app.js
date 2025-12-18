@@ -1,8 +1,9 @@
 import { menu, Views } from "./content/views.js";
 import { render } from "./render.js";
 
+const BASE_TITLE = "mxmgorin.dev | Web TUI";
 const routes = [
-  { view: Views.ABOUT, key: null },
+  { view: Views.ABOUT, key: "about" },
   { view: Views.PROJECTS, key: "projects" },
   { view: Views.WORK, key: "work" },
   { view: Views.CONTACT, key: "contact" },
@@ -61,6 +62,7 @@ export const state = {
   view: getView(),
   lang: getLang(),
 };
+setTitle(state.view);
 
 // debug helper
 if (location.hostname === "localhost") {
@@ -76,8 +78,9 @@ export function moveDown() {
 }
 
 export function select() {
-  const key = routes[state.menuIndex]?.key;
-  setView(key);
+  const route = routes[state.menuIndex]?.key;
+  setView(route);
+  setTitle(route);
   state.view = routes[state.menuIndex].view;
   render();
 }
@@ -87,3 +90,12 @@ window.addEventListener("popstate", () => {
   state.view = getView();
   render();
 });
+
+function setTitle(route) {
+  if (!route) {
+    document.title = BASE_TITLE;
+    return;
+  }
+
+  document.title = `${BASE_TITLE}: ${route.toUpperCase()}`;
+}
