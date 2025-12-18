@@ -82,6 +82,7 @@ function renderBlocks(root, items, title) {
   if (titleTr) {
     const el = document.createElement("span");
     el.textContent = `${titleTr}\n\n`;
+    el.classList.add("view-title");
     pre.append(el);
   }
 
@@ -127,7 +128,7 @@ function renderBlocks(root, items, title) {
 }
 
 function renderText(root, text) {
-  const val = text[state.lang] ?? text[DEFAULT_LANG];
+  const val = getTranslated(text);
   root.innerHTML = `<pre>${val}</pre>`;
 }
 

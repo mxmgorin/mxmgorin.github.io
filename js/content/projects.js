@@ -16,7 +16,7 @@ export const projects = [
   {
     name: "ch8go",
     desc: {
-      en: "Multi-frontend CHIP-8, SCHIP, and XO-CHIP VM (emulator) with broad compatibility across variants and quirks support.",
+      en: "Multi-frontend CHIP-8, SCHIP, and XO-CHIP VM (emulator) with broad compatibility across platform variants and its quirks.",
       ru: "Мультифронтендная виртуальная машина, реализующая CHIP-8, SCHIP и XO-CHIP, ориентированная на максимальную совместимость между различными историческими версиями платформы.",
     },
     url: "https://mxmgorin.github.io/ch8go/web/",
@@ -25,7 +25,7 @@ export const projects = [
   {
     name: "Luar",
     desc: {
-      en: "A Lua interpreter focused on understanding language internals through a custom lexer, parser, and runtime.",
+      en: "A interpreter for Lua programming language developed to study the internals by implementing a custom lexer, parser, and runtime.",
       ru: "Интерпретатор для языка программирования Lua, созданный для изучения внутреннего устройства через реализацию лексера, парсера и рантайма.",
     },
     url: "https://github.com/mxmgorin/luar",
@@ -43,7 +43,7 @@ export const projects = [
   {
     name: "egui-sdl2",
     desc: {
-      en: "Library that integrates egui with SDL2, providing input handling and rendering backends.",
+      en: "Library that integrates egui with SDL2, providing input handling and several rendering backends.",
       ru: "Библиотека для использования egui с SDL2, обеспечивающая обработку событий ввода полязователя и видео рендеринг с использованием мескольких бекендов.",
     },
     url: "https://github.com/mxmgorin/egui-sdl2",

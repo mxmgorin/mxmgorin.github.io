@@ -36,3 +36,7 @@ a:hover {
   font-style: italic;
   opacity: 0.8;
 }
+
+.view-title {
+    text-decoration: underline;
+}
