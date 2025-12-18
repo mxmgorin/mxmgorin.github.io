@@ -8,7 +8,7 @@ export const work = [
     name: "Team Lead — Prop Trading Platform",
     desc: {
       en: "Managed a development team of a high-load financial system. Responsible for system architecture, core backend components, and production operations. Worked on the trading engine, payment flows, and third-party integrations.",
-      ru: "Руководил командой разработки высоконагруженной финансовой системы. Отвечал за архитектуру системы, ключевые компоненты бэкенда и мониторинг в проде. Работал над торговым движком, платёжными сервисами и интеграций со сторонними провайдеров.",
+      ru: "Руководил командой разработки высоконагруженной финансовой системы. Отвечал за архитектуру системы, ключевые компоненты бэкенда и мониторинг в проде. Работал над торговым движком, платёжными сервисами и интеграциeй с внешними системами.",
     },
     url: "",
     tags: ["Rust", "PSQL", "Docker", "Prometheus", "Grafana"],
