@@ -1,8 +1,8 @@
 export const Views = {
   ABOUT: "about",
   PROJECTS: "projects",
-  CV: "cv",
+  WORK: "work",
   CONTACT: "contact",
 };
 
-export const menu = [Views.ABOUT, Views.PROJECTS, Views.CV, Views.CONTACT];
+export const menu = [Views.ABOUT, Views.PROJECTS, Views.WORK, Views.CONTACT];

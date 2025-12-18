@@ -4,7 +4,7 @@ import { render } from "./render.js";
 const routes = [
   { view: Views.ABOUT, key: null },
   { view: Views.PROJECTS, key: "projects" },
-  { view: Views.CV, key: "cv" },
+  { view: Views.WORK, key: "work" },
   { view: Views.CONTACT, key: "contact" },
 ];
 

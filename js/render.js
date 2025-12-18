@@ -1,17 +1,14 @@
 import { state, Languages, setLang, DEFAULT_LANG } from "./app.js";
 import { menu, Views } from "./content/views.js";
-import { projects } from "./content/projects.js";
+import { projects, projectsTitle } from "./content/projects.js";
 import { about } from "./content/about.js";
 import { contacts } from "./content/contacts.js";
+import { work, workTitle } from "./content/work.js";
 
 export function render() {
   renderLangSelector();
   renderMenu();
   renderContent();
-  document.querySelectorAll('.tui-content a[href^="http"]').forEach((a) => {
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-  });
 }
 
 function renderMenu() {
@@ -31,14 +28,15 @@ function renderContent() {
   content.innerHTML = "";
 
   switch (state.view) {
-    case Views.PROJECTS:
-      renderBlocks(content, projects);
-      break;
-
     case Views.ABOUT:
       renderText(content, about);
       break;
-
+    case Views.PROJECTS:
+      renderBlocks(content, projects, projectsTitle);
+      break;
+    case Views.WORK:
+      renderBlocks(content, work, workTitle);
+      break;
     case Views.CONTACT:
       renderText(content, contacts);
       break;
@@ -75,9 +73,17 @@ function renderLangSelector() {
   el.lastChild.remove(); // remove trailing separator
 }
 
-const separator = " ".repeat(1);
-function renderBlocks(root, items) {
+const blockSeparator = " ".repeat(1);
+
+function renderBlocks(root, items, title) {
   const pre = document.createElement("pre");
+
+  const titleTr = getTranslated(title);
+  if (titleTr) {
+    const el = document.createElement("span");
+    el.textContent = `${titleTr}\n\n`;
+    pre.append(el);
+  }
 
   items.forEach((p, i) => {
     const name = document.createElement("strong");
@@ -97,7 +103,7 @@ function renderBlocks(root, items) {
       pre.append(link);
     }
 
-    const desc = p.desc?.[state.lang] ?? p.desc?.[DEFAULT_LANG];
+    const desc = getTranslated(p.desc);
     if (desc) {
       pre.append(
         document.createTextNode("\n"),
@@ -113,7 +119,7 @@ function renderBlocks(root, items) {
     }
 
     if (i < items.length - 1) {
-      pre.append(document.createTextNode(`${separator}\n`));
+      pre.append(document.createTextNode(`${blockSeparator}\n`));
     }
   });
 
@@ -123,4 +129,8 @@ function renderBlocks(root, items) {
 function renderText(root, text) {
   const val = text[state.lang] ?? text[DEFAULT_LANG];
   root.innerHTML = `<pre>${val}</pre>`;
+}
+
+function getTranslated(value) {
+  return value?.[state.lang] ?? value?.[DEFAULT_LANG];
 }
