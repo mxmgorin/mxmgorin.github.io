@@ -17,7 +17,7 @@ export const work = [
     name: "Tech Lead — Trading Platform",
     desc: {
       en: "Designed system architecture and API layers for a high-load, real-time trading system. Migrated performance-critical services from .NET to Rust, significantly reducing memory usage and latency. Worked on core backend services, payment integrations, and contributed to team technical growth.",
-      ru: "Cпроектировал архитектуру системы и API для высоконагруженной торговой системы. Выполнил миграцию критичных к производительности сервисов с .NET на Rust, существенно снизив потребление памяти и задержки. Работал над ключевыми бэкенд-сервисами, платёжными интеграциями, вносил вклад в техническое развитие команды.",
+      ru: "Cпроектировал архитектуру системы и API для высоконагруженной торговой системы. Выполнил миграцию критичных по производительности сервисов с C#.NET на Rust, существенно снизив потребление памяти и задержки. Работал над ключевыми бэкенд-сервисами, платёжными интеграциями, вносил вклад в техническое развитие команды.",
     },
     url: "",
     tags: ["Rust", "C#", "PSQL", "K8s"],
