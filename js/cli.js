@@ -26,7 +26,7 @@ const commands = {
       "Available commands:",
       "help            Show available commands",
       "clear (clr)     Clear the current output",
-      "game <name>     Start a game: 'snake'",
+      "play <name>     Start a game: 'snake'",
       "cv              Show CV availability (PDF)",
       "login <user>    Log in as the specified user",
       "about           Background and profile",
@@ -82,7 +82,7 @@ const commands = {
     renderElement("Password:");
   },
 
-  game(args) {
+  play(args) {
     const name = args[0];
     blurCli();
     renderElement(renderGame(name));

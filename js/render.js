@@ -50,11 +50,15 @@ function renderView() {
 
 export function renderGame(name, exitCallback) {
   const preEl = document.createElement("pre");
-  startGame(preEl, name, () => {
+  const ok = startGame(preEl, name, () => {
     if (exitCallback) exitCallback();
     renderElement("\nGame exited.");
     contentEl.scrollTop = contentEl.scrollHeight;
   });
+
+  if (!ok) {
+    preEl.innerHTML = `Not found game '${name}'`;
+  }
 
   return preEl;
 }
