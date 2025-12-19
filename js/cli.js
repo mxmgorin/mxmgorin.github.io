@@ -1,56 +1,118 @@
-const output = document.getElementById("content");
-const input = document.getElementById("command");
+import {
+  renderAbout,
+  renderProjects,
+  renderWork,
+  renderContact,
+} from "./render.js";
 
+const state = {
+  user: "guest",
+  mode: "command", // "command" | "password",
+  loginUser: null,
+};
+const USERS = {
+  admin: {
+    password: "admin",
+  },
+};
+const outputEl = document.getElementById("content");
+const inputEl = document.getElementById("command");
+const promptEl = document.getElementById("prompt");
 const commands = {
   help() {
-    printCli(
-      `Available commands:
-- about
-- cv
-- contact
-- clear
-    `,
-    );
+    printCli([
+      "Available commands:",
+      "help            Show available commands",
+      "clear (clr)     Clear the current output",
+      "cv              Show CV availability (PDF)",
+      "login <user>    Log in as the specified user",
+      "about           Background and profile",
+      "projects        List personal and open-source projects",
+      "work            Professional experience",
+      "contact         Ways to get in touch",
+    ]);
   },
 
   about() {
-    printCli(`about`);
+    printCli(renderAbout());
+  },
+
+  contact() {
+    printCli(renderContact());
+  },
+
+  projects() {
+    printCli(renderProjects());
+  },
+
+  work() {
+    printCli(renderWork());
   },
 
   cv() {
-    printCli(`Available on request`);
+    printCli([
+      "Curriculum Vitae",
+      "────────────────",
+      "Available upon request (PDF).",
+      "Feel free to use `contact` to ask for a copy.",
+    ]);
   },
 
   clear() {
-    output.innerHTML = "";
+    outputEl.innerHTML = "";
+  },
+
+  clr() {
+    outputEl.innerHTML = "";
+  },
+
+  login(args) {
+    const user = args[0];
+
+    if (!user) {
+      printCli("Usage: login <user>");
+      return;
+    }
+
+    enterPasswordMode(user);
+
+    printCli("Password:");
   },
 };
 
-function printCli(text) {
-  const pre = document.createElement("pre");
-  pre.textContent = text;
-  output.appendChild(pre);
-  output.scrollTop = output.scrollHeight;
+function printCli(value) {
+  let node;
+
+  if (value instanceof Node) {
+    node = value;
+  } else {
+    const pre = document.createElement("pre");
+    pre.textContent = Array.isArray(value) ? value.join("\n") : value;
+    node = pre;
+  }
+
+  outputEl.appendChild(node);
+  outputEl.scrollTop = outputEl.scrollHeight;
 }
 
 export function focusCli() {
-  input.focus();
+  inputEl.focus();
 }
 
 export function blurCli(clear = false) {
-  if (clear) input.value = "";
-  input.blur();
+  if (clear) inputEl.value = "";
+  inputEl.blur();
 }
 
 export function isCliFocused() {
-  return document.activeElement === input;
+  return document.activeElement === inputEl;
 }
 
-function execCommand() {
-  const [commandRaw, ...args] = input.value.trim().split(/\s+/);
+function handleCommand() {
+  const [commandRaw, ...args] = inputEl.value.trim().split(/\s+/);
   const command = commandRaw.toLowerCase();
   const handler = commands[command];
-  input.value = "";
+  inputEl.value = "";
 
   printCli(`\n> ${command}`);
 
@@ -62,7 +124,48 @@ function execCommand() {
   handler(args);
 }
 
-document.getElementById("input-line").addEventListener("submit", (e) => {
-  e.preventDefault();
-  execCommand();
-});
+export function setupCli() {
+  updatePrompt();
+  document.getElementById("input-line").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    if (state.mode === "password") {
+      handlePassword();
+    } else {
+      handleCommand();
+    }
+  });
+}
+
+function updatePrompt() {
+  promptEl.textContent = `${state.user}:~$`;
+}
+
+function handlePassword() {
+  const password = inputEl.value;
+  const user = state.loginUser;
+
+  exitPasswordMode();
+
+  if (password === USERS[user]?.password) {
+    state.user = user;
+    updatePrompt();
+    printCli("Login successful.");
+  } else {
+    printCli("Authentication failed.");
+  }
+}
+
+function enterPasswordMode(user) {
+  state.loginUser = user;
+  state.mode = "password";
+  inputEl.type = "password";
+  inputEl.autocomplete = "new-password";
+}
+
+function exitPasswordMode() {
+  state.mode = "command";
+  inputEl.type = "text";
+  inputEl.autocomplete = "off";
+  inputEl.value = "";
+}

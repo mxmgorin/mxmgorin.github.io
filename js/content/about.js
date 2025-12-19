@@ -1,4 +1,4 @@
-export const about = {
+export const aboutView = {
   en: `
 Hi there, I'm Maxim!
 

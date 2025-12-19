@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="css/base.css" />
         <link rel="stylesheet" href="css/tui.css" />
         <link rel="stylesheet" href="css/retro.css" />
-        <link rel="stylesheet" href="css/term.css" />
+        <link rel="stylesheet" href="css/cli.css" />
         <title>mxmgorin.dev | Web TUI</title>
     </head>
 
@@ -37,19 +37,33 @@
                 </div>
                 <div class="footer-prompt">
                     <form id="input-line" autocomplete="off">
-                        <span for="command" class="prompt">guest:~$</span>
+                        <span id="prompt" for="command" class="prompt"
+                            >guest:~$</span
+                        >
+                        <!-- Honeypot to disable password manager -->
+                        <input
+                            type="text"
+                            name="login_dummy"
+                            style="display: none"
+                            tabindex="-1"
+                        />
+
                         <input
                             id="command"
                             type="text"
-                            spellcheck="false"
                             aria-label="Command input"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
                         />
+                        <!-- Required for submit event -->
+                        <button type="submit" hidden></button>
                     </form>
                 </div>
             </footer>
         </main>
 
         <script type="module" src="js/main.js"></script>
-        <script type="module" src="js/term.js"></script>
     </body>
 </html>

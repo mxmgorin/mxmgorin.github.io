@@ -9,6 +9,14 @@ const routes = [
   { view: Views.CONTACT, key: "contact" },
 ];
 
+export function setupApp() {
+  window.addEventListener("popstate", () => {
+    state.menuIndex = getViewIndex();
+    state.view = getView();
+    render();
+  });
+}
+
 function setParam(name, value, replace = false) {
   const params = new URLSearchParams(window.location.search);
 
@@ -84,12 +92,6 @@ export function select() {
   state.view = routes[state.menuIndex].view;
   render();
 }
-
-window.addEventListener("popstate", () => {
-  state.menuIndex = getViewIndex();
-  state.view = getView();
-  render();
-});
 
 function setTitle(route) {
   if (!route) {

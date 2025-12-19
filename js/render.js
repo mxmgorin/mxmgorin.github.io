@@ -1,14 +1,17 @@
 import { state, Languages, setLang, DEFAULT_LANG } from "./app.js";
 import { menu, Views } from "./content/views.js";
 import { projects, projectsTitle } from "./content/projects.js";
-import { about } from "./content/about.js";
-import { contacts } from "./content/contacts.js";
+import { aboutView } from "./content/about.js";
+import { contactView } from "./content/contact.js";
 import { work, workTitle } from "./content/work.js";
+
+const content = document.getElementById("content");
+const blockSeparator = " ".repeat(1);
 
 export function render() {
   renderLangSelector();
   renderMenu();
-  renderContent();
+  renderView();
 }
 
 function renderMenu() {
@@ -23,27 +26,56 @@ function renderMenu() {
   });
 }
 
-function renderContent() {
-  const content = document.getElementById("content");
+function renderView() {
   content.innerHTML = "";
 
   switch (state.view) {
     case Views.ABOUT:
-      renderText(content, about);
+      content.appendChild(renderAbout());
       break;
     case Views.PROJECTS:
-      renderBlocks(content, projects, projectsTitle);
+      content.appendChild(renderProjects());
       break;
     case Views.WORK:
-      renderBlocks(content, work, workTitle);
+      content.appendChild(renderWork());
       break;
     case Views.CONTACT:
-      renderText(content, contacts);
+      content.appendChild(renderContact());
       break;
 
     default:
       content.innerHTML = `<pre>Under development</pre>`;
   }
+}
+
+export function renderProjects() {
+  return renderBlocks(projects, projectsTitle);
+}
+
+export function renderWork() {
+  return renderBlocks(work, workTitle);
+}
+
+export function renderAbout() {
+  return renderText(aboutView);
+}
+
+export function renderContact() {
+  const pre = document.createElement("pre");
+
+  contactView.forEach(({ label, url, text }) => {
+    pre.append(document.createTextNode(`${label}:\n  `));
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.textContent = text;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+
+    pre.append(a, document.createTextNode("\n\n"));
+  });
+
+  return pre;
 }
 
 function renderLangSelector() {
@@ -73,9 +105,7 @@ function renderLangSelector() {
   el.lastChild.remove(); // remove trailing separator
 }
 
-const blockSeparator = " ".repeat(1);
-
-function renderBlocks(root, items, title) {
+function renderBlocks(items, title) {
   const pre = document.createElement("pre");
 
   const titleTr = getTranslated(title);
@@ -124,12 +154,15 @@ function renderBlocks(root, items, title) {
     }
   });
 
-  root.appendChild(pre);
+  return pre;
 }
 
-function renderText(root, text) {
+function renderText(text) {
   const val = getTranslated(text);
-  root.innerHTML = `<pre>${val}</pre>`;
+  const pre = document.createElement("pre");
+  pre.innerHTML = val;
+
+  return pre;
 }
 
 function getTranslated(value) {
