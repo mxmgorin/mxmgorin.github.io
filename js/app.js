@@ -94,7 +94,10 @@ export function startGame(name, exitCallback) {
   const history = screen.textContent;
   state.mode = "game";
   gameApp = createSnakeApp(screen, { history });
-  gameApp.start(() => exitCallback);
+  gameApp.start(() => {
+    state.mode = "tui";
+    if (exitCallback) exitCallback();
+  });
 }
 
 export function setupApp() {

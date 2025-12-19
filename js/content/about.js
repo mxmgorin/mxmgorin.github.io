@@ -1,6 +1,5 @@
 export const aboutView = {
-  en: `
-Hi there, I'm Maxim!
+  en: `Hi there, I'm Maxim!
 
 I am a Software Engineer with <b>7+ years</b> of experience building high-performance, reliable, and maintainable systems.
 
@@ -11,8 +10,7 @@ I’ve <b>worked</b> on server-side services, web platforms, and desktop applica
 Outside of work, I spend time on Linux systems and retro gaming projects, especially emulation, open-source software, and classic hardware.
 `,
 
-  ru: `
-Привет! Меня зовут Максим.
+  ru: `Привет! Меня зовут Максим.
 
 Я разработчик с <b>7-летним</b> опытом коммерческой разработки приложений.
 
