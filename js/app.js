@@ -2,7 +2,7 @@ import { menu, Views } from "./content/views.js";
 import { render } from "./render.js";
 import { createSnakeApp } from "./snake.js";
 
-let gameApp = null;
+export let gameApp = null;
 export const Languages = {
   EN: "en",
   RU: "ru",
@@ -97,12 +97,6 @@ export function startGame(screen, name, exitCallback) {
     state.mode = "tui";
     if (exitCallback) exitCallback();
   });
-}
-
-export function handleKey(key) {
-  if (state.mode === "game" && gameApp) {
-    gameApp.handleKey(key);
-  }
 }
 
 export function setupApp() {

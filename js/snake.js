@@ -141,6 +141,12 @@ export function createSnakeApp(screen, options = {}) {
     }
 
     draw(food.x, food.y, FOOD);
+
+    if (!alive) {
+      drawTextCentered("GAME OVER", Math.floor(HEIGHT / 2) - 1);
+      drawTextCentered("Press Esc to exit", Math.floor(HEIGHT / 2) + 1);
+    }
+
     flush();
   }
 
@@ -150,7 +156,6 @@ export function createSnakeApp(screen, options = {}) {
 
     if (!alive) {
       stop();
-      screen.textContent += "\nGame over. Press Esc to exit.";
     }
   }
 
@@ -178,8 +183,10 @@ export function createSnakeApp(screen, options = {}) {
         exit();
         break;
       default:
-        return;
+        return false;
     }
+
+    return true;
   }
 
   /* ------------------ lifecycle ------------------ */
@@ -201,6 +208,13 @@ export function createSnakeApp(screen, options = {}) {
   function exit() {
     stop();
     if (onExit) onExit();
+  }
+
+  function drawTextCentered(text, y) {
+    const x = Math.floor((WIDTH - text.length) / 2);
+    for (let i = 0; i < text.length; i++) {
+      draw(x + i, y, text[i]);
+    }
   }
 
   return {

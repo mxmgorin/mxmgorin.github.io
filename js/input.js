@@ -1,29 +1,15 @@
-import { moveUp, moveDown, select, state, handleKey } from "./app.js";
-import { render } from "./render.js";
+import { moveUp, moveDown, select, state, gameApp } from "./app.js";
+import { render, scroll } from "./render.js";
 import { blurCli, focusCli, isCliFocused } from "./cli.js";
 
 export function setupInput() {
   document.addEventListener("keydown", (e) => {
-    const cliFocused = isCliFocused();
-    if (e.key === "Escape" && cliFocused) {
-      e.preventDefault();
-      blurCli(true);
+    const handled = handleKey(e);
+
+    if (handled) {
       return;
     }
 
-    if ((e.key === "/" || e.key === ":") && !cliFocused) {
-      e.preventDefault();
-      focusCli();
-      return;
-    }
-
-    if (cliFocused || state.mode == "game") {
-      // allow to handle input
-      handleKey(e.key);
-      return;
-    }
-
-    const content = document.querySelector(".tui-content");
     switch (e.key) {
       case "ArrowUp":
         moveUp();
@@ -35,17 +21,11 @@ export function setupInput() {
         select();
         break;
       case "PageUp":
-        content.scrollBy({
-          top: -content.clientHeight * 0.9,
-          behavior: "instant",
-        });
+        scroll(-0.9);
         e.preventDefault();
         break;
       case "PageDown":
-        content.scrollBy({
-          top: content.clientHeight * 0.9,
-          behavior: "instant",
-        });
+        scroll(0.9);
         e.preventDefault();
         break;
       default:
@@ -70,4 +50,33 @@ export function setupInput() {
     state.menuIndex = index;
     select();
   });
+}
+
+// returns true when key event is consumed
+function handleKey(e) {
+  var gameHandled = false;
+  if (state.mode === "game" && gameApp) {
+    gameHandled = gameApp.handleKey(e.key);
+  }
+
+  const cliFocused = isCliFocused();
+
+  if (e.key === "Escape" && cliFocused) {
+    e.preventDefault();
+    blurCli(true);
+    return true;
+  }
+
+  if ((e.key === "/" || e.key === ":") && !cliFocused) {
+    e.preventDefault();
+    focusCli();
+    return true;
+  }
+
+  if (cliFocused) {
+    // block navigation
+    return true;
+  }
+
+  return gameHandled;
 }

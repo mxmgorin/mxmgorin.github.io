@@ -44,7 +44,7 @@ function renderView() {
       break;
 
     default:
-      contentEl.innerHTML = `<pre>Under development</pre>`;
+      renderElement("Under development");
   }
 }
 
@@ -52,7 +52,7 @@ export function renderGame(name, exitCallback) {
   const preEl = document.createElement("pre");
   startGame(preEl, name, () => {
     if (exitCallback) exitCallback();
-    renderElement("Game exited.")
+    renderElement("\nGame exited.");
     contentEl.scrollTop = contentEl.scrollHeight;
   });
 
@@ -193,4 +193,11 @@ export function renderElement(element) {
 
   contentEl.appendChild(node);
   contentEl.scrollTop = contentEl.scrollHeight;
+}
+
+export function scroll(delta) {
+  contentEl.scrollBy({
+    top: contentEl.clientHeight * delta,
+    behavior: "instant",
+  });
 }
