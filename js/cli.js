@@ -4,7 +4,9 @@ import {
   renderWork,
   renderContact,
 } from "./render.js";
+import { createSnakeApp } from "./snake.js";
 
+let snakeApp = null;
 const state = {
   user: "guest",
   mode: "command", // "command" | "password",
@@ -24,6 +26,7 @@ const commands = {
       "Available commands:",
       "help            Show available commands",
       "clear (clr)     Clear the current output",
+      "game <name>     Start a game: 'snake'",
       "cv              Show CV availability (PDF)",
       "login <user>    Log in as the specified user",
       "about           Background and profile",
@@ -77,6 +80,20 @@ const commands = {
     enterPasswordMode(user);
 
     printCli("Password:");
+  },
+
+  game() {
+    const screen = document.querySelector(".tui-content pre");
+    const history = screen.textContent;
+    state.mode = "game";
+    snakeApp = createSnakeApp(screen, { history });
+    snakeApp.start(() => {
+      mode = "command";
+      printCli("Exited snake.\nType `help` to continue.");
+      outputEl.scrollTop = outputEl.scrollHeight;
+    });
+
+    outputEl.scrollTop = outputEl.scrollHeight;
   },
 };
 
