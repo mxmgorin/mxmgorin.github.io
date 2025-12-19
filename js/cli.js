@@ -1,10 +1,11 @@
 import {
-  renderAbout,
-  renderProjects,
-  renderWork,
-  renderContact,
-  renderGame,
+  newAbout,
+  newProjects,
+  newWork,
+  newContact,
+  newGame,
   renderElement,
+  clearContent,
 } from "./render.js";
 
 var state = {
@@ -26,7 +27,7 @@ const commands = {
       "Available commands:",
       "help            Show available commands",
       "clear (clr)     Clear the current output",
-      "play <name>     Start a game: 'snake'",
+      "play <name>     Start a game: snake, tetris, invaders, breakout",
       "cv              Show CV availability (PDF)",
       "login <user>    Log in as the specified user",
       "about           Background and profile",
@@ -37,19 +38,19 @@ const commands = {
   },
 
   about() {
-    renderElement(renderAbout());
+    renderElement(newAbout());
   },
 
   contact() {
-    renderElement(renderContact());
+    renderElement(newContact());
   },
 
   projects() {
-    renderElement(renderProjects());
+    renderElement(newProjects());
   },
 
   work() {
-    renderElement(renderWork());
+    renderElement(newWork());
   },
 
   cv() {
@@ -62,11 +63,11 @@ const commands = {
   },
 
   clear() {
-    contentEl.innerHTML = "";
+    clearContent();
   },
 
   clr() {
-    contentEl.innerHTML = "";
+    clearContent();
   },
 
   login(args) {
@@ -85,7 +86,7 @@ const commands = {
   play(args) {
     const name = args[0];
     blurCli();
-    renderElement(renderGame(name));
+    renderElement(newGame(name));
   },
 };
 

@@ -31,16 +31,16 @@ function renderView() {
 
   switch (state.view) {
     case Views.ABOUT:
-      contentEl.appendChild(renderAbout());
+      contentEl.appendChild(newAbout());
       break;
     case Views.PROJECTS:
-      contentEl.appendChild(renderProjects());
+      contentEl.appendChild(newProjects());
       break;
     case Views.WORK:
-      contentEl.appendChild(renderWork());
+      contentEl.appendChild(newWork());
       break;
     case Views.CONTACT:
-      contentEl.appendChild(renderContact());
+      contentEl.appendChild(newContact());
       break;
 
     default:
@@ -48,7 +48,7 @@ function renderView() {
   }
 }
 
-export function renderGame(name, exitCallback) {
+export function newGame(name, exitCallback) {
   const preEl = document.createElement("pre");
   const ok = startGame(preEl, name, () => {
     if (exitCallback) exitCallback();
@@ -63,19 +63,19 @@ export function renderGame(name, exitCallback) {
   return preEl;
 }
 
-export function renderProjects() {
-  return renderBlocks(projects, projectsTitle);
+export function newProjects() {
+  return newBlocks(projects, projectsTitle);
 }
 
-export function renderWork() {
-  return renderBlocks(work, workTitle);
+export function newWork() {
+  return newBlocks(work, workTitle);
 }
 
-export function renderAbout() {
-  return renderText(aboutView);
+export function newAbout() {
+  return newText(aboutView);
 }
 
-export function renderContact() {
+export function newContact() {
   const pre = document.createElement("pre");
 
   contactView.forEach(({ label, url, text }) => {
@@ -120,7 +120,7 @@ function renderLangSelector() {
   el.lastChild.remove(); // remove trailing separator
 }
 
-function renderBlocks(items, title) {
+function newBlocks(items, title) {
   const pre = document.createElement("pre");
 
   const titleTr = getTranslated(title);
@@ -172,7 +172,7 @@ function renderBlocks(items, title) {
   return pre;
 }
 
-function renderText(text) {
+function newText(text) {
   const val = getTranslated(text);
   const pre = document.createElement("pre");
   pre.innerHTML = val;
@@ -204,4 +204,8 @@ export function scroll(delta) {
     top: contentEl.clientHeight * delta,
     behavior: "instant",
   });
+}
+
+export function clearContent() {
+  contentEl.innerHTML = "";
 }

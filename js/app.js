@@ -1,7 +1,9 @@
 import { menu, Views } from "./content/views.js";
+import { createInvadersApp } from "./games/invaders.js";
 import { render } from "./render.js";
-import { createSnakeApp } from "./snake.js";
-import { createTetrisApp } from "./tetris.js";
+import { createSnakeApp } from "./games/snake.js";
+import { createTetrisApp } from "./games/tetris.js";
+import { createBreakoutApp } from "./games/breakout.js";
 
 export let gameApp = null;
 export const Languages = {
@@ -92,9 +94,8 @@ function setTitle(route) {
 
 export function startGame(screen, name, exitCallback) {
   const history = screen.textContent;
-  state.mode = "game";
 
-  switch (name) {
+  switch (name ?? "invaders") {
     case "snake": {
       gameApp = createSnakeApp(screen, { history });
       break;
@@ -103,11 +104,20 @@ export function startGame(screen, name, exitCallback) {
       gameApp = createTetrisApp(screen, { history });
       break;
     }
+    case "invaders": {
+      gameApp = createInvadersApp(screen, { history });
+      break;
+    }
+    case "breakout": {
+      gameApp = createBreakoutApp(screen, { history });
+      break;
+    }
     default: {
       return false;
     }
   }
 
+  state.mode = "game";
   gameApp.start(() => {
     state.mode = "tui";
     gameApp = null;
