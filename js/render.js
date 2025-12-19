@@ -1,11 +1,11 @@
-import { state, Languages, setLang, DEFAULT_LANG } from "./app.js";
+import { state, Languages, setLang, DEFAULT_LANG, startGame } from "./app.js";
 import { menu, Views } from "./content/views.js";
 import { projects, projectsTitle } from "./content/projects.js";
 import { aboutView } from "./content/about.js";
 import { contactView } from "./content/contact.js";
 import { work, workTitle } from "./content/work.js";
 
-const content = document.getElementById("content");
+const contentEl = document.getElementById("content");
 const blockSeparator = " ".repeat(1);
 
 export function render() {
@@ -27,25 +27,36 @@ function renderMenu() {
 }
 
 function renderView() {
-  content.innerHTML = "";
+  contentEl.innerHTML = "";
 
   switch (state.view) {
     case Views.ABOUT:
-      content.appendChild(renderAbout());
+      contentEl.appendChild(renderAbout());
       break;
     case Views.PROJECTS:
-      content.appendChild(renderProjects());
+      contentEl.appendChild(renderProjects());
       break;
     case Views.WORK:
-      content.appendChild(renderWork());
+      contentEl.appendChild(renderWork());
       break;
     case Views.CONTACT:
-      content.appendChild(renderContact());
+      contentEl.appendChild(renderContact());
       break;
 
     default:
-      content.innerHTML = `<pre>Under development</pre>`;
+      contentEl.innerHTML = `<pre>Under development</pre>`;
   }
+}
+
+export function renderGame(name, exitCallback) {
+  const preEl = document.createElement("pre");
+  startGame(preEl, name, () => {
+    if (exitCallback) exitCallback();
+    renderElement("Game exited.")
+    contentEl.scrollTop = contentEl.scrollHeight;
+  });
+
+  return preEl;
 }
 
 export function renderProjects() {
@@ -167,4 +178,19 @@ function renderText(text) {
 
 function getTranslated(value) {
   return value?.[state.lang] ?? value?.[DEFAULT_LANG];
+}
+
+export function renderElement(element) {
+  let node;
+
+  if (element instanceof Node) {
+    node = element;
+  } else {
+    const pre = document.createElement("pre");
+    pre.textContent = Array.isArray(element) ? element.join("\n") : element;
+    node = pre;
+  }
+
+  contentEl.appendChild(node);
+  contentEl.scrollTop = contentEl.scrollHeight;
 }

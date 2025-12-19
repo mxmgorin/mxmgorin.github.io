@@ -156,8 +156,8 @@ export function createSnakeApp(screen, options = {}) {
 
   /* ------------------ input ------------------ */
 
-  function onKey(e) {
-    switch (e.key) {
+  function handleKey(key) {
+    switch (key) {
       case "ArrowUp":
       case "w":
         nextDir = "up";
@@ -175,13 +175,11 @@ export function createSnakeApp(screen, options = {}) {
         nextDir = "right";
         break;
       case "Escape":
-        stop();
-        if (onExit) onExit();
+        exit();
         break;
       default:
         return;
     }
-    e.preventDefault();
   }
 
   /* ------------------ lifecycle ------------------ */
@@ -192,18 +190,22 @@ export function createSnakeApp(screen, options = {}) {
     onExit = exitCallback;
     alive = true;
     timer = setInterval(tick, TICK_MS);
-    document.addEventListener("keydown", onKey);
     render();
   }
 
   function stop() {
     clearInterval(timer);
     timer = null;
-    document.removeEventListener("keydown", onKey);
+  }
+
+  function exit() {
+    stop();
+    if (onExit) onExit();
   }
 
   return {
     start,
     stop,
+    handleKey,
   };
 }

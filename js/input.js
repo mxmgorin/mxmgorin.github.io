@@ -1,4 +1,4 @@
-import { moveUp, moveDown, select, state } from "./app.js";
+import { moveUp, moveDown, select, state, handleKey } from "./app.js";
 import { render } from "./render.js";
 import { blurCli, focusCli, isCliFocused } from "./cli.js";
 
@@ -18,7 +18,8 @@ export function setupInput() {
     }
 
     if (cliFocused || state.mode == "game") {
-      // allow to cli handle input
+      // allow to handle input
+      handleKey(e.key);
       return;
     }
 

@@ -7,7 +7,7 @@ export const Languages = {
   EN: "en",
   RU: "ru",
 };
-export var state = null;
+export var state = {};
 export const DEFAULT_LANG = Languages.EN;
 const BASE_TITLE = "mxmgorin.dev | Web TUI";
 const routes = [
@@ -89,8 +89,7 @@ function setTitle(route) {
   document.title = `${BASE_TITLE}: ${route.toUpperCase()}`;
 }
 
-export function startGame(name, exitCallback) {
-  const screen = document.querySelector(".tui-content pre");
+export function startGame(screen, name, exitCallback) {
   const history = screen.textContent;
   state.mode = "game";
   gameApp = createSnakeApp(screen, { history });
@@ -100,14 +99,20 @@ export function startGame(name, exitCallback) {
   });
 }
 
+export function handleKey(key) {
+  if (state.mode === "game" && gameApp) {
+    gameApp.handleKey(key);
+  }
+}
+
 export function setupApp() {
-  state = {
-    menuIndex: getViewIndex(),
-    view: getView(),
-    lang: getLang(),
-    mode: "tui",
-  };
+  state.menuIndex = getViewIndex();
+  state.view = getView();
+  state.lang = getLang();
+  state.mode = "tui";
+
   setTitle();
+
   window.addEventListener("popstate", () => {
     state.menuIndex = getViewIndex();
     state.view = getView();
