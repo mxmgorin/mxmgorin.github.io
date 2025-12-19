@@ -43,7 +43,7 @@ export const work = [
   {
     name: "Backed Developer — Booking Platform",
     desc: {
-      en: "Developed backend and frontend components for production systems in finance and travel domains. Worked on API development for high-load system, including a booking platform handling millions of daily requests, and integrations with external providers. Contributed to maintenance, refactoring, task estimation, and technical documentation.",
+      en: "Developed backend and frontend components for systems in finance and travel domains. Worked on API development for high-load, air ticket booking platform handling millions of daily requests, and integrations with external providers. Contributed to maintenance, refactoring, task estimation, and technical documentation.",
       ru: "Разрабатывал бэкенд- и фронтенд-компоненты для высоконагруженной платформы бронирования авиа билетов, обрабатывающую миллионы запросов в день. Занимался разработкой API, а также над интеграциями с внешними провайдерами. Участвовал в сопровождении, рефакторинге, оценке задач и подготовке технической документации.",
     },
     url: "",

@@ -30,7 +30,7 @@ const commands = {
       "play <name>     Start a game: snake, tetris, invaders, breakout",
       "cv              Show CV availability (PDF)",
       "login <user>    Log in as the specified user",
-      "logout          Log out the current user and return to guest mode",
+      "logout          Log out the current user and return to guest",
       "about           Background and profile",
       "projects        List personal and open-source projects",
       "work            Professional experience",
