@@ -30,6 +30,7 @@ const commands = {
       "play <name>     Start a game: snake, tetris, invaders, breakout",
       "cv              Show CV availability (PDF)",
       "login <user>    Log in as the specified user",
+      "logout          Log out the current user and return to guest mode",
       "about           Background and profile",
       "projects        List personal and open-source projects",
       "work            Professional experience",
@@ -79,8 +80,13 @@ const commands = {
     }
 
     enterPasswordMode(user);
-
     renderElement("Password:");
+  },
+
+  logout() {
+    state.user = "guest";
+    updatePrompt();
+    renderElement("Logout successful.");
   },
 
   play(args) {
@@ -133,13 +139,13 @@ export function setupCli() {
 }
 
 function updatePrompt() {
-  promptEl.textContent = `${state.user}:~$`;
+  const symbol = state.user === "admin" ? "#" : "$";
+  promptEl.textContent = `${state.user}:~${symbol}`;
 }
 
 function handlePassword() {
   const password = commandEl.value;
   const user = state.loginUser;
-
   exitPasswordMode();
 
   if (password === USERS[user]?.password) {

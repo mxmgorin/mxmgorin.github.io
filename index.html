@@ -37,28 +37,20 @@
                 </div>
                 <div class="footer-prompt">
                     <form id="input-line" autocomplete="off">
-                        <span id="prompt" for="command" class="prompt"
-                            >guest:~$</span
-                        >
-                        <!-- Honeypot to disable password manager -->
-                        <input
-                            type="text"
-                            name="login_dummy"
-                            style="display: none"
-                            tabindex="-1"
-                        />
-
-                        <input
-                            id="command"
-                            type="text"
-                            aria-label="Command input"
-                            autocomplete="off"
-                            autocorrect="off"
-                            autocapitalize="off"
-                            spellcheck="false"
-                        />
-                        <!-- Required for submit event -->
-                        <button type="submit" hidden></button>
+                        <div class="command-line">
+                            <span id="prompt" for="command" class="prompt"
+                                >guest:~$</span
+                            >
+                            <input
+                                id="command"
+                                type="text"
+                                aria-label="Command input"
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                            />
+                        </div>
                     </form>
                 </div>
             </footer>
