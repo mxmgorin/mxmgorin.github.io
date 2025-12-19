@@ -1,6 +1,14 @@
 import { menu, Views } from "./content/views.js";
 import { render } from "./render.js";
+import { createSnakeApp } from "./snake.js";
 
+let gameApp = null;
+export const Languages = {
+  EN: "en",
+  RU: "ru",
+};
+export var state = null;
+export const DEFAULT_LANG = Languages.EN;
 const BASE_TITLE = "mxmgorin.dev | Web TUI";
 const routes = [
   { view: Views.ABOUT, key: "about" },
@@ -8,14 +16,6 @@ const routes = [
   { view: Views.WORK, key: "work" },
   { view: Views.CONTACT, key: "contact" },
 ];
-
-export function setupApp() {
-  window.addEventListener("popstate", () => {
-    state.menuIndex = getViewIndex();
-    state.view = getView();
-    render();
-  });
-}
 
 function setParam(name, value, replace = false) {
   const params = new URLSearchParams(window.location.search);
@@ -49,12 +49,6 @@ function setView(value, replace = false) {
 }
 
 /* lang handling */
-export const Languages = {
-  EN: "en",
-  RU: "ru",
-};
-export const DEFAULT_LANG = Languages.EN;
-
 function getLang() {
   const params = new URLSearchParams(window.location.search);
   return params.get("l") || DEFAULT_LANG;
@@ -64,13 +58,6 @@ export function setLang(lang, replace = false) {
   setParam("l", lang);
   state.lang = lang;
 }
-
-export const state = {
-  menuIndex: getViewIndex(),
-  view: getView(),
-  lang: getLang(),
-};
-setTitle(state.view);
 
 // debug helper
 if (location.hostname === "localhost") {
@@ -100,4 +87,27 @@ function setTitle(route) {
   }
 
   document.title = `${BASE_TITLE}: ${route.toUpperCase()}`;
+}
+
+export function startGame(name, exitCallback) {
+  const screen = document.querySelector(".tui-content pre");
+  const history = screen.textContent;
+  state.mode = "game";
+  gameApp = createSnakeApp(screen, { history });
+  gameApp.start(() => exitCallback);
+}
+
+export function setupApp() {
+  state = {
+    menuIndex: getViewIndex(),
+    view: getView(),
+    lang: getLang(),
+    mode: "tui",
+  };
+  setTitle();
+  window.addEventListener("popstate", () => {
+    state.menuIndex = getViewIndex();
+    state.view = getView();
+    render();
+  });
 }

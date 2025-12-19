@@ -17,7 +17,7 @@ export function setupInput() {
       return;
     }
 
-    if (cliFocused) {
+    if (cliFocused || state.mode == "game") {
       // allow to cli handle input
       return;
     }

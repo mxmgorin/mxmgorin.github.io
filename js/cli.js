@@ -1,13 +1,12 @@
+import { startGame } from "./app.js";
 import {
   renderAbout,
   renderProjects,
   renderWork,
   renderContact,
 } from "./render.js";
-import { createSnakeApp } from "./snake.js";
 
-let snakeApp = null;
-const state = {
+var state = {
   user: "guest",
   mode: "command", // "command" | "password",
   loginUser: null,
@@ -83,16 +82,7 @@ const commands = {
   },
 
   game() {
-    const screen = document.querySelector(".tui-content pre");
-    const history = screen.textContent;
-    state.mode = "game";
-    snakeApp = createSnakeApp(screen, { history });
-    snakeApp.start(() => {
-      mode = "command";
-      printCli("Exited snake.\nType `help` to continue.");
-      outputEl.scrollTop = outputEl.scrollHeight;
-    });
-
+    startGame();
     outputEl.scrollTop = outputEl.scrollHeight;
   },
 };
