@@ -1,22 +1,24 @@
 import { moveUp, moveDown, select, state } from "./app.js";
 import { render } from "./render.js";
-import { isTermFocused, blurTerm, focusTerm } from "./term.js";
+import { blurCli, focusCli, isCliFocused } from "./cli.js";
 
 export function setupInput() {
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && isTermFocused()) {
+    const cliFocused = isCliFocused();
+    if (e.key === "Escape" && cliFocused) {
       e.preventDefault();
-      blurTerm(true);
+      blurCli(true);
       return;
     }
 
-    if ((e.key === "/" || e.key === ":") && !isTermFocused()) {
+    if ((e.key === "/" || e.key === ":") && !cliFocused) {
       e.preventDefault();
-      focusTerm();
+      focusCli();
       return;
     }
 
-    if (document.activeElement?.id === "command") {
+    if (cliFocused) {
+      // allow to cli handle input
       return;
     }
 
