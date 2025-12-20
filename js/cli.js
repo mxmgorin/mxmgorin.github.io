@@ -1,4 +1,5 @@
 import {
+  render,
   newAbout,
   newProjects,
   newWork,
@@ -6,7 +7,9 @@ import {
   newGame,
   renderElement,
   clearContent,
+  newIntro,
 } from "./render.js";
+import { setLang } from "./app.js";
 
 var state = {
   user: "guest",
@@ -18,7 +21,16 @@ const USERS = {
     password: "admin",
   },
 };
-
+const HINTS = [
+  'Type "help --all" to list all available commands.',
+  // "Tip: Use ↑ and ↓ to navigate command history.",
+  'Type "clear" to reset the screen.',
+  'Try "matrix" for a short visual effect.',
+  "Press Esc to exit the input. Press / or : to focus the command prompt.",
+  "Using commands gives you more control and shortcuts.",
+  // 'Tip: Type "help <command>" to learn more about a command.',
+];
+let hintQueue = [];
 const commandEl = document.getElementById("command");
 const promptEl = document.getElementById("prompt");
 const commands = {
@@ -27,17 +39,32 @@ const commands = {
     if (flag === "--a" || flag === "--all") {
       renderElement([
         "Available commands:",
-        "help            Show available commands",
-        "clear (clr)     Clear the current output",
-        "play <name>     Start a game: snake, tetris, invaders, breakout",
-        "matrix          Show 'Matrix rain' animation",
-        "cv              Show CV availability (PDF)",
-        "login <user>    Log in as the specified user",
-        "logout          Log out the current user and return to guest",
-        "about           Background and profile",
-        "projects        List personal and open-source projects",
-        "work            Professional experience",
-        "contact         Ways to get in touch",
+
+        "",
+        "Core:",
+        "  help            Show available commands",
+        "  hint            Show a random tip",
+        "  clear (clr)     Clear the current output",
+
+        "",
+        "Navigation:",
+        "  intro           Show intro text",
+        "  about           Background and profile",
+        "  projects        List personal and open-source projects",
+        "  work            Professional experience",
+        "  contact         Ways to get in touch",
+        "  cv              Show CV availability (PDF)",
+
+        "",
+        "Misc:",
+        "  play <name>     Start a game (snake, tetris, invaders, breakout)",
+        "  matrix          Show Matrix rain animation",
+        "  lang <code>     Change language",
+
+        "",
+        "Session:",
+        "  login <user>    Log in as the specified user",
+        "  logout          Log out and return to guest",
       ]);
     } else {
       renderElement([
@@ -45,9 +72,7 @@ const commands = {
         "",
         "Try:",
         "  about",
-        "  projects",
         "  work",
-        "  contact",
         "  matrix",
         "",
         "Type 'help --all' to show all commands.",
@@ -70,6 +95,10 @@ const commands = {
 
   work() {
     renderElement(newWork());
+  },
+
+  intro() {
+    renderElement(newIntro());
   },
 
   cv() {
@@ -97,8 +126,12 @@ const commands = {
       return;
     }
 
-    enterPasswordMode(user);
-    renderElement("Password:");
+    if (USERS[user]) {
+      enterPasswordMode(user);
+      renderElement("Password:");
+    } else {
+      loginUser(user);
+    }
   },
 
   logout() {
@@ -115,6 +148,26 @@ const commands = {
 
   matrix() {
     renderElement(newGame("matrix"));
+  },
+
+  lang(args) {
+    const code = args[0];
+
+    if (!code) {
+      renderElement("Usage: lang <code>");
+      return;
+    }
+
+    setLang(code);
+    render();
+  },
+
+  hint() {
+    if (hintQueue.length === 0) {
+      hintQueue = [...HINTS].sort(() => Math.random() - 0.5);
+    }
+    const hint = hintQueue.pop();
+    renderElement(`Tip: ${hint}`);
   },
 };
 
@@ -140,7 +193,10 @@ function handleCommand() {
   renderElement(`\n> ${command}`);
 
   if (!handler) {
-    renderElement(`command not found: ${commandRaw}`);
+    renderElement([
+      "Command not found.",
+      "Type 'help' to see available commands.",
+    ]);
     return;
   }
 
@@ -171,12 +227,16 @@ function handlePassword() {
   exitPasswordMode();
 
   if (password === USERS[user]?.password) {
-    state.user = user;
-    updatePrompt();
-    renderElement("Login successful.");
+    loginUser(user);
   } else {
     renderElement("Authentication failed.");
   }
+}
+
+function loginUser(user) {
+  state.user = user;
+  updatePrompt();
+  renderElement("Login successful.");
 }
 
 function enterPasswordMode(user) {
