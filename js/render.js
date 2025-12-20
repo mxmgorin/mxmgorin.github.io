@@ -217,3 +217,72 @@ export function scroll(delta) {
 export function clearContent() {
   contentEl.innerHTML = "";
 }
+
+function printLines(element, lines, delay = 200) {
+  let index = 0;
+
+  function step() {
+    if (index >= lines.length) return;
+
+    renderElement(lines[index]);
+    index++;
+    setTimeout(step, delay);
+  }
+
+  step();
+}
+
+function printWords(
+  element,
+  text,
+  {
+    delay = 60, // ms between words
+    punctuationDelay = 250,
+  } = {},
+) {
+  const tokens = text.split(/(\s+)/); // keeps spaces
+  let i = 0;
+
+  function step() {
+    if (i >= tokens.length) return;
+
+    element.textContent += tokens[i];
+
+    const isPunctuation = /[.,!?]$/.test(tokens[i]);
+    i++;
+
+    setTimeout(step, isPunctuation ? punctuationDelay : delay);
+  }
+
+  step();
+}
+
+function printLetters(
+  element,
+  text,
+  {
+    delay = 10, // ms between characters
+    newlineDelay = 100,
+  } = {},
+) {
+  let i = 0;
+  console.log("printLetters");
+
+  function step() {
+    if (i >= text.length) return;
+
+    const isNewline = text[i] === "\n";
+
+    if (isNewline) {
+      element.innerHTML += "<br>";
+    } else {
+      element.innerHTML += text[i];
+    }
+
+    i++;
+
+    setTimeout(step, isNewline ? newlineDelay : delay);
+  }
+
+  step();
+}
