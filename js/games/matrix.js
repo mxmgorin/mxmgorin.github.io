@@ -1,11 +1,11 @@
 export function createMatrixApp(screen, options = {}) {
   const history = options.history ?? "";
   const WIDTH = options.width ?? 60;
-  const HEIGHT = options.height ?? 20;
+  const HEIGHT = options.height ?? 24;
   const TICK_MS = options.tickMs ?? 80;
 
   const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const FADE = " *#█"; // low → high intensity
+  const FADE = " |*#█"; // low → high intensity
   const MAX = FADE.length - 1;
 
   let glyph = new Array(WIDTH * HEIGHT).fill(" ");
@@ -93,11 +93,8 @@ export function createMatrixApp(screen, options = {}) {
   /* ------------------ input ------------------ */
 
   function handleKey(key) {
-    if (key === "Escape") {
-      exit();
-      return true;
-    }
-    return false;
+    exit();
+    return true;
   }
 
   /* ------------------ lifecycle ------------------ */

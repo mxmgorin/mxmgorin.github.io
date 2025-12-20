@@ -54,18 +54,7 @@ export function setupInput() {
 
 // returns true when key event is consumed
 function handleKey(e) {
-  var gameHandled = false;
-  if (state.mode === "game" && gameApp) {
-    gameHandled = gameApp.handleKey(e.key);
-  }
-
   const cliFocused = isCliFocused();
-
-  if (e.key === "Escape" && cliFocused) {
-    e.preventDefault();
-    blurCli(true);
-    return true;
-  }
 
   if ((e.key === "/" || e.key === ":") && !cliFocused) {
     e.preventDefault();
@@ -74,9 +63,18 @@ function handleKey(e) {
   }
 
   if (cliFocused) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      blurCli(true);
+    }
+
     // block navigation
     return true;
   }
 
-  return gameHandled;
+  if (state.mode === "game" && gameApp) {
+    return gameApp.handleKey(e.key);
+  }
+
+  return false;
 }

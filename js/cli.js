@@ -11,6 +11,9 @@ import {
 } from "./render.js";
 import { setLang } from "./app.js";
 
+const commandEl = document.getElementById("command");
+const promptEl = document.getElementById("prompt");
+
 var state = {
   user: "guest",
   mode: "command", // "command" | "password",
@@ -23,43 +26,41 @@ const USERS = {
 };
 const HINTS = [
   'Type "help --all" to list all available commands.',
-  // "Tip: Use ↑ and ↓ to navigate command history.",
+  "Tip: Use ↑ and ↓ to navigate command history.",
   'Type "clear" to reset the screen.',
   'Try "matrix" for a short visual effect.',
-  "Press Esc to exit the input. Press / or : to focus the command prompt.",
+  "Press 'Esc' to exit the input. Press / or : to focus the command prompt.",
   "Using commands gives you more control and shortcuts.",
   // 'Tip: Type "help <command>" to learn more about a command.',
 ];
 let hintQueue = [];
-const commandEl = document.getElementById("command");
-const promptEl = document.getElementById("prompt");
+
+const MAX_HISTORY = 100;
+const history = [];
+let historyIndex = -1;
 const commands = {
   help(args) {
     const flag = args[0];
     if (flag === "--a" || flag === "--all") {
       renderElement([
         "Available commands:",
-
         "",
         "Essential:",
         "  help            Show available commands",
         "  hint            Show a random tip",
         "  clear (clr)     Clear the current output",
-
         "",
-        "Views:",
+        "View:",
         "  intro           Show intro text",
         "  about           Background and profile",
         "  projects        List personal and open-source projects",
         "  work            Professional experience",
         "  contact         Ways to get in touch",
         "  cv              Show CV availability (PDF)",
-
         "",
         "Interactive:",
         "  start <name>    Start an app (snake, tetris, invaders, breakout)",
-        "  matrix          Show Matrix rain animation",
-
+        "  matrix          Show 'Matrix rain' animation",
         "",
         "Misc:",
         "  login <user>    Log in as the specified user",
@@ -68,7 +69,7 @@ const commands = {
       ]);
     } else {
       renderElement([
-        "This is an optional command interface.",
+        "This is an optional command line interface.",
         "",
         "Try:",
         "  about",
@@ -141,21 +142,27 @@ const commands = {
   },
 
   start(args) {
-    const name = args[0];
-    blurCli();
-    renderElement(newGame(name));
+    startGame(args);
   },
 
   matrix() {
-    renderElement(newGame("matrix"));
+    startGame(["matrix"]);
   },
 
   snake() {
-    renderElement(newGame("snake"));
+    startGame(["snake"]);
   },
 
   tetris() {
-    renderElement(newGame("tetris"));
+    startGame(["tetris"]);
+  },
+
+  invaders() {
+    startGame(["invaders"]);
+  },
+
+  breakout() {
+    startGame(["breakout"]);
   },
 
   lang(args) {
@@ -193,12 +200,15 @@ export function isCliFocused() {
 }
 
 function handleCommand() {
-  const [commandRaw, ...args] = commandEl.value.trim().split(/\s+/);
-  const command = commandRaw.toLowerCase();
-  const handler = commands[command];
+  const value = commandEl.value.trim();
   commandEl.value = "";
 
-  renderElement(`\n> ${command}`);
+  renderElement(`\n> ${value}`);
+  addToHistory(value);
+
+  const [commandRaw, ...args] = value.split(/\s+/);
+  const command = commandRaw.toLowerCase();
+  const handler = commands[command];
 
   if (!handler) {
     renderElement([
@@ -213,6 +223,7 @@ function handleCommand() {
 
 export function setupCli() {
   updatePrompt();
+
   document.getElementById("input-line").addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -220,6 +231,18 @@ export function setupCli() {
       handlePassword();
     } else {
       handleCommand();
+    }
+  });
+
+  commandEl.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      showPrevCommand();
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      showNextCommand();
     }
   });
 }
@@ -259,4 +282,39 @@ function exitPasswordMode() {
   commandEl.type = "text";
   commandEl.autocomplete = "off";
   commandEl.value = "";
+}
+
+function showPrevCommand() {
+  if (!history.length) return;
+
+  historyIndex = Math.max(0, historyIndex - 1);
+  commandEl.value = history[historyIndex];
+}
+
+function showNextCommand() {
+  if (!history.length) return;
+
+  historyIndex = Math.min(history.length, historyIndex + 1);
+  commandEl.value = history[historyIndex] ?? "";
+}
+
+function addToHistory(command) {
+  if (!command) return;
+
+  // Avoid consecutive duplicates
+  if (history[history.length - 1] === command) return;
+
+  history.push(command);
+
+  if (history.length > MAX_HISTORY) {
+    history.shift(); // remove oldest
+  }
+
+  historyIndex = history.length;
+}
+
+function startGame(args) {
+  const name = args[0];
+  blurCli();
+  renderElement(newGame(name));
 }
