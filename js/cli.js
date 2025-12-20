@@ -22,21 +22,38 @@ const USERS = {
 const commandEl = document.getElementById("command");
 const promptEl = document.getElementById("prompt");
 const commands = {
-  help() {
-    renderElement([
-      "Available commands:",
-      "help            Show available commands",
-      "clear (clr)     Clear the current output",
-      "play <name>     Start a game: snake, tetris, invaders, breakout",
-      "matrix          'Matrix rain' animation",
-      "cv              Show CV availability (PDF)",
-      "login <user>    Log in as the specified user",
-      "logout          Log out the current user and return to guest",
-      "about           Background and profile",
-      "projects        List personal and open-source projects",
-      "work            Professional experience",
-      "contact         Ways to get in touch",
-    ]);
+  help(args) {
+    const flag = args[0];
+    if (flag === "--a" || flag === "--all") {
+      renderElement([
+        "Available commands:",
+        "help            Show available commands",
+        "clear (clr)     Clear the current output",
+        "play <name>     Start a game: snake, tetris, invaders, breakout",
+        "matrix          Show 'Matrix rain' animation",
+        "cv              Show CV availability (PDF)",
+        "login <user>    Log in as the specified user",
+        "logout          Log out the current user and return to guest",
+        "about           Background and profile",
+        "projects        List personal and open-source projects",
+        "work            Professional experience",
+        "contact         Ways to get in touch",
+      ]);
+    } else {
+      renderElement([
+        "This is an optional command interface.",
+        "",
+        "Try:",
+        "  about",
+        "  projects",
+        "  work",
+        "  contact",
+        "  matrix",
+        "",
+        "Type 'help --all' to show all commands.",
+        "Type 'clear' to reset the screen.",
+      ]);
+    }
   },
 
   about() {
