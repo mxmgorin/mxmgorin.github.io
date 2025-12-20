@@ -26,7 +26,7 @@ const USERS = {
 };
 const HINTS = [
   "Type 'commands' to list all available commands.",
-  "Tip: Use ↑ and ↓ to navigate command history.",
+  "Use ↑ and ↓ to navigate command history.",
   "Type 'clear' to reset the screen.",
   "Try 'matrix' for a short visual effect.",
   "Press 'Esc' to exit the input. Press / or : to focus the command prompt.",
@@ -48,6 +48,7 @@ const commands = {
       "Try:",
       "-  about",
       "-  work",
+      "-  hint",
       "-  matrix",
       "",
       "Type 'commands' to show all commands.",
