@@ -25,10 +25,10 @@ const USERS = {
   },
 };
 const HINTS = [
-  'Type "help --all" to list all available commands.',
+  "Type 'commands' to list all available commands.",
   "Tip: Use ↑ and ↓ to navigate command history.",
-  'Type "clear" to reset the screen.',
-  'Try "matrix" for a short visual effect.',
+  "Type 'clear' to reset the screen.",
+  "Try 'matrix' for a short visual effect.",
   "Press 'Esc' to exit the input. Press / or : to focus the command prompt.",
   "Using commands gives you more control and shortcuts.",
   // 'Tip: Type "help <command>" to learn more about a command.',
@@ -41,45 +41,46 @@ let historyIndex = -1;
 const commands = {
   help(args) {
     const flag = args[0];
-    if (flag === "--a" || flag === "--all") {
-      renderElement([
-        "Available commands:",
-        "",
-        "Essential:",
-        "  help            Show available commands",
-        "  hint            Show a random tip",
-        "  clear (clr)     Clear the current output",
-        "",
-        "View:",
-        "  intro           Show intro text",
-        "  about           Background and profile",
-        "  projects        List personal and open-source projects",
-        "  work            Professional experience",
-        "  contact         Ways to get in touch",
-        "  cv              Show CV availability (PDF)",
-        "",
-        "Interactive:",
-        "  start <name>    Start an app (snake, tetris, invaders, breakout)",
-        "  matrix          Show 'Matrix rain' animation",
-        "",
-        "Misc:",
-        "  login <user>    Log in as the specified user",
-        "  logout          Log out and return to guest",
-        "  lang <code>     Change language",
-      ]);
-    } else {
-      renderElement([
-        "This is an optional command line interface.",
-        "",
-        "Try:",
-        "  about",
-        "  work",
-        "  matrix",
-        "",
-        "Type 'help --all' to show all commands.",
-        "Type 'clear' to reset the screen.",
-      ]);
-    }
+
+    renderElement([
+      "This is an optional command line interface.",
+      "",
+      "Try:",
+      "-  about",
+      "-  work",
+      "-  matrix",
+      "",
+      "Type 'commands' to show all commands.",
+      "Type 'clear' to reset the screen.",
+    ]);
+  },
+
+  commands() {
+    renderElement([
+      "Available commands:",
+      "",
+      "Essential:",
+      "  help            Show available commands",
+      "  hint            Show a random tip",
+      "  clear (clr)     Clear the current output",
+      "",
+      "View:",
+      "  intro           Show intro text",
+      "  about           Background and profile",
+      "  projects        List personal and open-source projects",
+      "  work            Professional experience",
+      "  contact         Ways to get in touch",
+      "  cv              Show CV availability (PDF)",
+      "",
+      "Interactive:",
+      "  start <name>    Start an app (snake, tetris, invaders, breakout)",
+      "  matrix          Show 'Matrix rain' animation",
+      "",
+      "Misc:",
+      "  login <user>    Log in as the specified user",
+      "  logout          Log out and return to guest",
+      "  lang <code>     Change language",
+    ]);
   },
 
   about() {
@@ -260,14 +261,14 @@ function handlePassword() {
   if (password === USERS[user]?.password) {
     loginUser(user);
   } else {
-    renderElement("Authentication failed.");
+    renderElement("Invalid password.");
   }
 }
 
 function loginUser(user) {
   state.user = user;
   updatePrompt();
-  renderElement("Login successful.");
+  renderElement(`Welcome, '${user}'. Good to see you.`);
 }
 
 function enterPasswordMode(user) {

@@ -1,5 +1,5 @@
 .tui {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 2rem auto;
     border: 1px solid var(--border);
     background: var(--panel);
@@ -51,7 +51,7 @@
 .tui-menu {
     border-right: 1px solid var(--border);
     padding: 0.5rem 0;
-    width: 175px;
+    width: 165px;
     flex-shrink: 0;
     overflow: hidden;
 }
