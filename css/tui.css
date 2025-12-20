@@ -1,6 +1,6 @@
 .tui {
+    width: calc(100% - 1rem); /* fix borders after transform */
     max-width: 1200px;
-    /*margin: 2rem auto;*/
     border: 1px solid var(--border);
     background: var(--panel);
     display: flex;
@@ -115,8 +115,8 @@
     }
 
     .tui {
-        margin: auto;
-        height: 100dvh;
+        /*margin: auto;*/
+        height: calc(100dvh - 1rem);
         transform: none;
         border-radius: 0;
     }

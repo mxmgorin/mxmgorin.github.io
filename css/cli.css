@@ -14,7 +14,7 @@
     align-items: center;
     font-family: monospace;
     width: 100%;
-    border: 1px solid rgba(199, 208, 217, 0.15);
+    border: 1px solid var(--border);
     padding: 0.2rem 0.4rem;
     background: transparent;
     border-radius: 2px;
