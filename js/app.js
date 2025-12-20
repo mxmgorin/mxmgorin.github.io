@@ -40,7 +40,7 @@ function setParam(name, value, replace = false) {
 /* view navigation */
 function getView() {
   const p = new URLSearchParams(window.location.search).get("v");
-  return routes.find((r) => r.key === p)?.view ?? Views.ABOUT;
+  return routes.find((r) => r.key === p)?.view ?? Views.INTRO;
 }
 
 function getViewIndex() {
