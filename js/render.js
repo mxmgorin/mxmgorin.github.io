@@ -4,6 +4,7 @@ import { projects, projectsTitle } from "./content/projects.js";
 import { aboutView } from "./content/about.js";
 import { contactView } from "./content/contact.js";
 import { work, workTitle } from "./content/work.js";
+import { introView } from "./content/intro.js";
 
 const contentEl = document.getElementById("content");
 const blockSeparator = " ".repeat(1);
@@ -30,6 +31,9 @@ function renderView() {
   contentEl.innerHTML = "";
 
   switch (state.view) {
+    case Views.INTRO:
+      contentEl.appendChild(newIntro());
+      break;
     case Views.ABOUT:
       contentEl.appendChild(newAbout());
       break;
@@ -61,6 +65,10 @@ export function newGame(name, exitCallback) {
   }
 
   return preEl;
+}
+
+export function newIntro() {
+  return newText(introView);
 }
 
 export function newProjects() {

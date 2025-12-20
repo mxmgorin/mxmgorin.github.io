@@ -14,6 +14,7 @@ export var state = {};
 export const DEFAULT_LANG = Languages.EN;
 const BASE_TITLE = "mxmgorin.dev | Web TUI";
 const routes = [
+  { view: Views.INTRO, key: "intro" },
   { view: Views.ABOUT, key: "about" },
   { view: Views.PROJECTS, key: "projects" },
   { view: Views.WORK, key: "work" },
