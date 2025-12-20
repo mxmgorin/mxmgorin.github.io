@@ -23,6 +23,12 @@ body {
     overflow: hidden;
 }
 
+body {
+    display: flex;
+    align-items: center; /* vertical */
+    justify-content: center; /* horizontal */
+}
+
 a {
     color: var(--accent);
     text-decoration: none;
@@ -33,8 +39,8 @@ a:hover {
 }
 
 .tags {
-  font-style: italic;
-  opacity: 0.8;
+    font-style: italic;
+    opacity: 0.8;
 }
 
 .view-title {
