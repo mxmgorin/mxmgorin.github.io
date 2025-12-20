@@ -4,6 +4,7 @@ import { render } from "./render.js";
 import { createSnakeApp } from "./games/snake.js";
 import { createTetrisApp } from "./games/tetris.js";
 import { createBreakoutApp } from "./games/breakout.js";
+import { createMatrixApp } from "./games/matrix.js";
 
 export let gameApp = null;
 export const Languages = {
@@ -111,6 +112,10 @@ export function startGame(screen, name, exitCallback) {
     }
     case "breakout": {
       gameApp = createBreakoutApp(screen, { history });
+      break;
+    }
+    case "matrix": {
+      gameApp = createMatrixApp(screen, { history });
       break;
     }
     default: {

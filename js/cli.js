@@ -28,6 +28,7 @@ const commands = {
       "help            Show available commands",
       "clear (clr)     Clear the current output",
       "play <name>     Start a game: snake, tetris, invaders, breakout",
+      "matrix          'Matrix rain' animation",
       "cv              Show CV availability (PDF)",
       "login <user>    Log in as the specified user",
       "logout          Log out the current user and return to guest",
@@ -93,6 +94,10 @@ const commands = {
     const name = args[0];
     blurCli();
     renderElement(newGame(name));
+  },
+
+  matrix() {
+    renderElement(newGame("matrix"));
   },
 };
 
