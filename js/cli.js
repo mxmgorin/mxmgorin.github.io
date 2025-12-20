@@ -41,13 +41,13 @@ const commands = {
         "Available commands:",
 
         "",
-        "Core:",
+        "Essential:",
         "  help            Show available commands",
         "  hint            Show a random tip",
         "  clear (clr)     Clear the current output",
 
         "",
-        "Navigation:",
+        "Views:",
         "  intro           Show intro text",
         "  about           Background and profile",
         "  projects        List personal and open-source projects",
@@ -56,15 +56,15 @@ const commands = {
         "  cv              Show CV availability (PDF)",
 
         "",
-        "Misc:",
-        "  play <name>     Start a game (snake, tetris, invaders, breakout)",
+        "Interactive:",
+        "  start <name>    Start an app (snake, tetris, invaders, breakout)",
         "  matrix          Show Matrix rain animation",
-        "  lang <code>     Change language",
 
         "",
-        "Session:",
+        "Misc:",
         "  login <user>    Log in as the specified user",
         "  logout          Log out and return to guest",
+        "  lang <code>     Change language",
       ]);
     } else {
       renderElement([
@@ -140,7 +140,7 @@ const commands = {
     renderElement("Logout successful.");
   },
 
-  play(args) {
+  start(args) {
     const name = args[0];
     blurCli();
     renderElement(newGame(name));
@@ -148,6 +148,14 @@ const commands = {
 
   matrix() {
     renderElement(newGame("matrix"));
+  },
+
+  snake() {
+    renderElement(newGame("snake"));
+  },
+
+  tetris() {
+    renderElement(newGame("tetris"));
   },
 
   lang(args) {
