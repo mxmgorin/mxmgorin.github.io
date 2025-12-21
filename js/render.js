@@ -5,6 +5,7 @@ import { aboutView } from "./content/about.js";
 import { contactView } from "./content/contact.js";
 import { work, workTitle } from "./content/work.js";
 import { introView } from "./content/intro.js";
+import { blogView } from "./content/blog.js";
 
 const contentEl = document.getElementById("content");
 const blockSeparator = " ".repeat(1);
@@ -36,6 +37,9 @@ function renderView() {
       break;
     case Views.ABOUT:
       contentEl.appendChild(newAbout());
+      break;
+    case Views.BLOG:
+      contentEl.appendChild(newBlog());
       break;
     case Views.PROJECTS:
       contentEl.appendChild(newProjects());
@@ -81,6 +85,10 @@ export function newWork() {
 
 export function newAbout() {
   return newText(aboutView);
+}
+
+export function newBlog() {
+  return newBlocks(blogView);
 }
 
 export function newContact() {

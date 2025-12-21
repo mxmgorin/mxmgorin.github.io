@@ -18,6 +18,7 @@ const routes = [
   { view: Views.INTRO, key: "intro" },
   { view: Views.ABOUT, key: "about" },
   { view: Views.PROJECTS, key: "projects" },
+  { view: Views.BLOG, key: "blog" },
   { view: Views.WORK, key: "work" },
   { view: Views.CONTACT, key: "contact" },
 ];
