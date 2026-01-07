@@ -107,6 +107,9 @@
     font-size: 0.8rem;
     color: var(--muted);
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 @media (max-width: 700px) {
@@ -139,7 +142,7 @@
         content: "";
     }
 
-    .kbd-hints {
+    .footer-help {
         display: none;
     }
 }
