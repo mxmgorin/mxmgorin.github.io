@@ -8,10 +8,12 @@ export const Views = {
 };
 
 export const menu = [
-  Views.INTRO,
+  // Views.INTRO,
   Views.ABOUT,
   Views.PROJECTS,
   Views.WORK,
   Views.BLOG,
   Views.CONTACT,
 ];
+
+export const homeView = Views.ABOUT;

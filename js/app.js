@@ -1,4 +1,4 @@
-import { menu, Views } from "./content/views.js";
+import { homeView, menu, Views } from "./content/views.js";
 import { createInvadersApp } from "./games/invaders.js";
 import { render } from "./render.js";
 import { createSnakeApp } from "./games/snake.js";
@@ -41,7 +41,7 @@ function setParam(name, value, replace = false) {
 /* view navigation */
 function getView() {
   const p = new URLSearchParams(window.location.search).get("v");
-  return routes.find((r) => r.key === p)?.view ?? Views.INTRO;
+  return routes.find((r) => r.key === p)?.view ?? homeView;
 }
 
 function getViewIndex() {

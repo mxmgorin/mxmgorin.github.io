@@ -1,6 +1,8 @@
 export const aboutView = {
   en: `Hi there, I'm Maxim!
 
+This is my personal website. Here you can read about my projects, professional work, and blog posts. You can browse the content using a command input at the bottom of the screen or by navigating with the keyboard or mouse.
+
 I am a Software Engineer with <b>7+ years</b> of experience building software systems.
 
 I specialize in <b>backend</b> development with <b>Rust</b>, <b>Go</b>, and <b>C#</b>, and also have frontend experience using Blazor, Angular, and Vue.
@@ -11,6 +13,8 @@ Outside of work, I spend time on Linux systems and retro gaming projects, especi
 `,
 
   ru: `Привет! Меня зовут Максим.
+
+Это мой личный сайт. Здесь вы можете узнать о моих проектах, профессиональном опыте и прочитать блог. Вы можете управлять сайтом с помощью командной строки или использовать клавиатуру и мышь.
 
 Я разработчик с <b>7-летним</b> опытом коммерческой разработки приложений.
 
