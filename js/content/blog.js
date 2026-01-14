@@ -1,6 +1,6 @@
 export const blogView = [
   {
-    name: "Testing My CHIP-8 VM: Deterministic Execution and Golden PNG Validation",
+    name: "Testing My CHIP-8 VM: Deterministic Execution and Validation",
     desc: {
       en: "Deterministic testing of a CHIP-8 virtual machine using ROM-based execution and golden file comparison.",
       ru: "Детерминированное тестирование виртуальной машины CHIP-8 используя ROM-файлы с последующим сравнением вывода программы с эталонными результатами (golden-файлами), представленными в виде PNG-изображений.",
