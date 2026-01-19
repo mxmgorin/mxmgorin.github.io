@@ -23,13 +23,21 @@ export const projects = [
     tags: ["Go", "Emulation", "WASM", "CLI", "SDL2"],
   },
   {
+    name: "csbf",
+    desc: {
+      en: "Interpreter, debugger and recompiler for the Brainfuck programming language.",
+      ru: "Интерпретатор, отладчик и рекомпилятор для языка программирования Brainfuck.",
+    },
+    url: "https://github.com/mxmgorin/csbf",
+    tags: ["C#", "CLI"],
+  },  {
     name: "Luar",
     desc: {
       en: "A interpreter for Lua programming language developed to study the internals by implementing a custom lexer, parser, and runtime.",
       ru: "Интерпретатор для языка программирования Lua, созданный для изучения внутреннего устройства через реализацию лексера, парсера и рантайма.",
     },
     url: "https://github.com/mxmgorin/luar",
-    tags: ["Rust", "Lua"],
+    tags: ["Rust", "Lua", "CLI"],
   },
   {
     name: "Retsurf",
