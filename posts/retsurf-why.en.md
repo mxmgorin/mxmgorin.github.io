@@ -1,6 +1,5 @@
 There's a moment that every retro-handheld owner hits eventually. You're deep in
-some obscure SNES RPG on a $60 plastic slab running a Linux distro you've never
-heard of, you get stuck on a boss, and you reach for the thing you'd reach for on
+some obscure SNES RPG on a $60 plastic slab running a Linux, you get stuck on a boss, and you reach for the thing you'd reach for on
 any other computer made in the last twenty-five years: a web browser. To pull up
 a wiki. A FAQ. A map.
 
@@ -20,9 +19,9 @@ stopped seeing them as toys and started seeing them as small Linux computers tha
 were just missing software. Once that clicked, the missing browser became the
 thing I most wanted to build.
 
-## The gap is real, and it's specific
+## The gap
 
-Modern handheld Linux distros — [Knulli](https://knulli.org),
+Randheld Linux distros — [Knulli](https://knulli.org),
 [muOS](https://muos.dev), [ROCKNIX](https://rocknix.org) — are extraordinary
 pieces of work. They turn cheap hardware into focused little game machines. But
 they are *game* machines. The design assumption, top to bottom, is "boot straight
@@ -31,23 +30,19 @@ some buttons." There's no desktop. Usually no window manager. Often not even an
 X11 or Wayland server running — the UI talks to the display directly through
 KMS/DRM.
 
-So when you go looking for a browser, you find that all three obvious options are
-non-starters:
+So when you go looking for a browser, you find that all three obvious options are:
 
 1. **The lightweight browsers don't render the modern web.** Something like
    NetSurf will *launch*, but the web it was built for is gone. Today's
    sites are JavaScript applications. A search results page, a wiki, a forum — all
-   of it assumes a real engine. A browser that can't run JS isn't a smaller
-   browser; it's a different, mostly-broken product.
+   of it assumes a real engine. Drop JS and you don't get a lighter browser, you get a mostly-broken one.
 
 2. **The desktop browsers assume a desktop.** Firefox and Chromium expect a
    compositor to hand them a window, and a mouse and keyboard to drive it. Take
    away X11/Wayland and you've taken away the thing they render *into*. Take away
-   the pointer and the entire interaction model collapses. You can sometimes hack
-   a compositor onto these devices, but now you're fighting the platform instead
-   of using it.
+   the pointer and the entire interaction model collapses.
 
-3. **There's no input model for a browser on a gamepad.** Even if you solved
+4. **There's no input model for a browser on a gamepad.** Even if you solved
    rendering, how do you click a link with a thumbstick? Type a URL with no
    keyboard? Scroll a page with buttons? "Browser" and "gamepad" have never really
    met.
@@ -62,7 +57,7 @@ engine. Nobody should. A browser engine is one of the largest, most
 security-critical, most standards-burdened bodies of software humans build, and
 there are about three of them on the planet.
 
-What changed in the last few years is that one of those three became something
+What changed in the last few years is that one became something
 you can *embed*. [Servo](https://github.com/servo/servo) — the Rust engine that
 started at Mozilla and is now an independent project — exposes its rendering
 pipeline as a library. You hand it a GL context and a URL; it hands you back
