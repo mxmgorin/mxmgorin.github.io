@@ -18,18 +18,23 @@ const routes = [
   // { view: Views.INTRO, key: "intro" },
   { view: Views.ABOUT, key: "about" },
   { view: Views.PROJECTS, key: "projects" },
-  { view: Views.WORK, key: "work" },
   { view: Views.BLOG, key: "blog" },
   { view: Views.CONTACT, key: "contact" },
 ];
 
 function setParam(name, value, replace = false) {
+  setParams({ [name]: value }, replace);
+}
+
+function setParams(updates, replace = false) {
   const params = new URLSearchParams(window.location.search);
 
-  if (value == null) {
-    params.delete(name);
-  } else {
-    params.set(name, value);
+  for (const [name, value] of Object.entries(updates)) {
+    if (value == null) {
+      params.delete(name);
+    } else {
+      params.set(name, value);
+    }
   }
 
   const qs = params.toString();
@@ -50,8 +55,57 @@ function getViewIndex() {
   return i === -1 ? 0 : i;
 }
 
-function setView(value, replace = false) {
-  setParam("v", value);
+/* blog post navigation */
+function getPost() {
+  return new URLSearchParams(window.location.search).get("post");
+}
+
+const blogIndex = routes.findIndex((r) => r.key === "blog");
+
+export function openPost(slug) {
+  state.post = slug;
+  state.view = Views.BLOG;
+  state.menuIndex = blogIndex;
+  setParams({ v: "blog", post: slug });
+  setTitle("blog");
+  render();
+}
+
+export function openBlogList() {
+  state.post = null;
+  state.view = Views.BLOG;
+  state.menuIndex = blogIndex;
+  setParams({ v: "blog", post: null });
+  setTitle("blog");
+  render();
+}
+
+// Navigate to a top-level view by its route key (used by in-site links).
+// `tag` pre-applies a filter when opening the projects or blog view.
+export function openView(key, { tag = null } = {}) {
+  const i = routes.findIndex((r) => r.key === key);
+  if (i === -1) return;
+
+  state.menuIndex = i;
+  state.view = routes[i].view;
+  state.post = null;
+  state.projectTag = key === "projects" ? tag : null;
+  state.blogTag = key === "blog" ? tag : null;
+  setParams({ v: key, post: null });
+  setTitle(key);
+  render();
+}
+
+// Filter the projects view by a tag (null shows all). Transient, not in the URL.
+export function filterProjects(tag) {
+  state.projectTag = tag;
+  render();
+}
+
+// Filter the blog list by a tag (null shows all). Transient, not in the URL.
+export function filterBlog(tag) {
+  state.blogTag = tag;
+  render();
 }
 
 /* lang handling */
@@ -80,7 +134,10 @@ export function moveDown() {
 
 export function select() {
   const route = routes[state.menuIndex]?.key;
-  setView(route);
+  state.post = null;
+  state.projectTag = null;
+  state.blogTag = null;
+  setParams({ v: route, post: null });
   setTitle(route);
   state.view = routes[state.menuIndex].view;
   render();
@@ -137,6 +194,7 @@ export function startGame(screen, name, exitCallback) {
 export function setupApp() {
   state.menuIndex = getViewIndex();
   state.view = getView();
+  state.post = state.view === Views.BLOG ? getPost() : null;
   state.lang = getLang();
   state.mode = "tui";
 
@@ -145,6 +203,9 @@ export function setupApp() {
   window.addEventListener("popstate", () => {
     state.menuIndex = getViewIndex();
     state.view = getView();
+    state.post = state.view === Views.BLOG ? getPost() : null;
+    state.projectTag = null;
+    state.blogTag = null;
     render();
   });
 }

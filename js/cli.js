@@ -2,14 +2,15 @@ import {
   render,
   newAbout,
   newProjects,
-  newWork,
   newContact,
   newGame,
   renderElement,
   clearContent,
   newIntro,
+  newBlogList,
 } from "./render.js";
-import { setLang } from "./app.js";
+import { setLang, openPost } from "./app.js";
+import { blogView } from "./content/blog.js";
 
 const commandEl = document.getElementById("command");
 const promptEl = document.getElementById("prompt");
@@ -47,7 +48,7 @@ const commands = {
       "",
       "Try:",
       "-  about",
-      "-  work",
+      "-  projects",
       "-  hint",
       "-  matrix",
       "",
@@ -69,7 +70,8 @@ const commands = {
       "  intro           Show intro text",
       "  about           Background and profile",
       "  projects        List personal and open-source projects",
-      "  work            Professional experience",
+      "  blog            List blog posts",
+      "  read <n|slug>   Open a blog post",
       "  contact         Ways to get in touch",
       "  cv              Show CV availability (PDF)",
       "",
@@ -96,8 +98,29 @@ const commands = {
     renderElement(newProjects());
   },
 
-  work() {
-    renderElement(newWork());
+  blog() {
+    renderElement(newBlogList());
+  },
+
+  read(args) {
+    const ref = args[0];
+
+    if (!ref) {
+      renderElement("Usage: read <number|slug>  (type 'blog' to list posts)");
+      return;
+    }
+
+    const n = Number(ref);
+    const post = Number.isInteger(n)
+      ? blogView[n - 1]
+      : blogView.find((p) => p.slug === ref);
+
+    if (!post) {
+      renderElement(`No post '${ref}'. Type 'blog' to list posts.`);
+      return;
+    }
+
+    openPost(post.slug);
   },
 
   intro() {
