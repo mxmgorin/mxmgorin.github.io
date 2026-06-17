@@ -1,8 +1,8 @@
-ch8go wasn't my first emulator. Before it I built [GMBoy](https://github.com/mxmgorin/gmboy), a cross-platform Game Boy emulator in Rust, and getting one core to run cleanly on both desktop and Android taught me how easily platform concerns leak into emulation code once you stop watching for them.
+ch8go wasn't my first emulator. Before it I built [GMBoy](https://github.com/mxmgorin/gmboy), a Game Boy emulator in Rust, and getting one core to run cleanly on both desktop and Android taught me how easily platform concerns leak into emulation code once you stop watching for them.
 
 ch8go was also a chance to switch things up: I spend most of my time in Rust, and I wanted a real, self-contained project to get properly hands-on with Go. A CHIP-8 interpreter turned out to be the perfect size for it — small enough to finish, rich enough to actually learn the language.
 
-So I gave myself one rule up front: the emulator core should never know whether it's running in a browser, a terminal, or a desktop window — or which framework happens to be driving it. That single constraint ended up shaping the entire project, so this post is a tour of how the code is organized and why each boundary exists.
+So I gave myself one rule up front: the emulator core should never know whether it's running in a browser, a terminal, or a desktop window — or which framework happens to be driving it. That constraint ended up shaping the entire project, so this post is a tour of how the code is organized and why each boundary exists.
 
 ## The Guest / Host / App split
 
