@@ -91,6 +91,7 @@ const STRINGS = {
       "Command not found.",
       "Type 'help' to see available commands.",
     ],
+    didYouMean: "Did you mean: ",
     invalidPassword: "Invalid password.",
     welcomeUser: (user) => `Welcome, '${user}'. Good to see you.`,
     hints: [
@@ -181,6 +182,7 @@ const STRINGS = {
       "Команда не найдена.",
       "Введите 'help', чтобы увидеть доступные команды.",
     ],
+    didYouMean: "Возможно, вы имели в виду: ",
     invalidPassword: "Неверный пароль.",
     welcomeUser: (user) => `Добро пожаловать, '${user}'. Рад видеть.`,
     hints: [

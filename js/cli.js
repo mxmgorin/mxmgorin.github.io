@@ -9,7 +9,7 @@ import {
   newIntro,
   newBlogList,
 } from "./render.js";
-import { setLang, openPost } from "./app.js";
+import { setLang, openPost, Languages } from "./app.js";
 import { blogView } from "./content/blog.js";
 import { t } from "./i18n.js";
 
@@ -185,11 +185,96 @@ function handleCommand() {
   const handler = commands[command];
 
   if (!handler) {
-    renderElement(t("commandNotFound"));
+    const lines = [...t("commandNotFound")]; // copy: don't mutate the i18n array
+    const suggestion = closestCommand(command);
+    if (suggestion) lines.push(t("didYouMean") + suggestion);
+    renderElement(lines);
     return;
   }
 
   handler(args);
+}
+
+// Tab-completion sources for command arguments, keyed by command name.
+const ARG_COMPLETERS = {
+  read: () => blogView.map((p) => p.slug),
+  start: () => ["snake", "tetris", "invaders", "breakout"],
+  lang: () => Object.values(Languages),
+};
+
+// Complete the current input in place: commands when no argument is being
+// typed yet, otherwise the active command's argument values. On an ambiguous
+// match it fills the shared prefix and lists the candidates, like a real shell.
+function autocomplete() {
+  const value = commandEl.value;
+  if (!value) return;
+
+  const trailingSpace = /\s$/.test(value);
+  const parts = value.split(/\s+/).filter(Boolean);
+  const completingArg = parts.length > 1 || trailingSpace;
+
+  let prefix, partial, pool;
+  if (!completingArg) {
+    prefix = "";
+    partial = parts[0] ?? "";
+    pool = Object.keys(commands);
+  } else {
+    const provider = ARG_COMPLETERS[parts[0]];
+    if (!provider) return;
+    prefix = `${parts[0]} `;
+    partial = trailingSpace ? "" : parts[parts.length - 1];
+    pool = provider();
+  }
+
+  const matches = pool.filter((c) => c.startsWith(partial));
+  if (matches.length === 0) return;
+
+  if (matches.length === 1) {
+    commandEl.value = `${prefix}${matches[0]} `;
+    return;
+  }
+
+  const common = commonPrefix(matches);
+  if (common.length > partial.length) commandEl.value = prefix + common;
+  renderElement(matches.join("    ")); // show the options
+}
+
+function commonPrefix(strs) {
+  let p = strs[0] ?? "";
+  for (const s of strs) {
+    while (!s.startsWith(p)) p = p.slice(0, -1);
+    if (!p) break;
+  }
+  return p;
+}
+
+// Closest command by edit distance, for "did you mean" hints. Returns null if
+// nothing is within a small threshold (so we don't suggest unrelated commands).
+function closestCommand(input) {
+  let best = null;
+  let bestDist = Infinity;
+  for (const name of Object.keys(commands)) {
+    const dist = levenshtein(input, name);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = name;
+    }
+  }
+  return bestDist <= 2 ? best : null;
+}
+
+function levenshtein(a, b) {
+  const rows = a.length + 1;
+  const cols = b.length + 1;
+  const d = Array.from({ length: rows }, (_, i) => [i, ...Array(cols - 1).fill(0)]);
+  for (let j = 0; j < cols; j++) d[0][j] = j;
+  for (let i = 1; i < rows; i++) {
+    for (let j = 1; j < cols; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+    }
+  }
+  return d[a.length][b.length];
 }
 
 export function setupCli() {
@@ -214,6 +299,11 @@ export function setupCli() {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       showNextCommand();
+    }
+
+    if (e.key === "Tab") {
+      e.preventDefault();
+      autocomplete();
     }
   });
 }
