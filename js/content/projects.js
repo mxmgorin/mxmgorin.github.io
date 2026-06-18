@@ -10,7 +10,7 @@ export const projects = [
     name: "GMBoy",
     desc: {
       en: "My first emulator, and still the one I put the most into — a cross-platform Game Boy emulator chasing cycle-accuracy and performance. It started as a way to understand how the hardware really works and grew into a long-term project.",
-      ru: "Мой первый эмулятор — и тот, в который я вкладываю больше всего. Кроссплатформенный эмулятор Game Boy с упором на потактовую точность и производительность. Начинался как способ понять, как на самом деле работает железо, и вырос в долгосрочный проект.",
+      ru: "Мой первый эмулятор — и тот, в который я вкладываю больше всего. Кроссплатформенный эмулятор Game Boy с упором на точность и производительность. Начинался как способ понять, как на самом деле работает железо, и вырос в долгосрочный проект.",
     },
     links: [{ label: "source", url: "https://github.com/mxmgorin/gmboy" }],
     tags: ["Rust", "Emulation", "SDL2", "OpenGL", "Android", "Desktop"],
