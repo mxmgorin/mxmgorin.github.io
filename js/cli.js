@@ -9,7 +9,7 @@ import {
   newIntro,
   newBlogList,
 } from "./render.js";
-import { setLang, openPost, Languages } from "./app.js";
+import { setLang, openPost, Languages, state as appState } from "./app.js";
 import { blogView } from "./content/blog.js";
 import { t } from "./i18n.js";
 
@@ -27,6 +27,17 @@ const USERS = {
   },
 };
 let hintQueue = [];
+
+// Tux, rendered beside the neofetch info card.
+const NEOFETCH_ART = [
+  "    .--.",
+  "   |o_o |",
+  "   |:_/ |",
+  "  //   \\ \\",
+  " (|     | )",
+  "/'\\_   _/`\\",
+  "\\___)=(___/",
+];
 
 const MAX_HISTORY = 100;
 const history = [];
@@ -157,6 +168,83 @@ const commands = {
     }
     const hint = hintQueue.pop();
     renderElement(t("tip", hint));
+  },
+
+  neofetch() {
+    const info = t("neofetchInfo", state.user);
+    const width = Math.max(...NEOFETCH_ART.map((l) => l.length)) + 2;
+    const rows = Math.max(NEOFETCH_ART.length, info.length);
+    const lines = [];
+    for (let i = 0; i < rows; i++) {
+      lines.push((NEOFETCH_ART[i] ?? "").padEnd(width) + (info[i] ?? ""));
+    }
+    renderElement(lines);
+  },
+
+  whoami() {
+    renderElement(state.user);
+  },
+
+  pwd() {
+    renderElement(`/home/${state.user}`);
+  },
+
+  ls() {
+    renderElement("about  projects  blog  contact  cv");
+  },
+
+  cat(args) {
+    const target = args[0];
+    if (!target) {
+      renderElement(t("catUsage"));
+      return;
+    }
+    switch (target) {
+      case "about":
+        renderElement(newAbout());
+        break;
+      case "projects":
+        renderElement(newProjects());
+        break;
+      case "contact":
+        renderElement(newContact());
+        break;
+      case "blog":
+        renderElement(newBlogList());
+        break;
+      default:
+        renderElement(t("catNoSuch", target));
+    }
+  },
+
+  uname() {
+    renderElement(t("uname"));
+  },
+
+  date() {
+    const locale = appState.lang === "ru" ? "ru-RU" : "en-US";
+    renderElement(new Date().toLocaleString(locale));
+  },
+
+  echo(args) {
+    renderElement(args.join(" "));
+  },
+
+  history() {
+    if (!history.length) {
+      renderElement(t("historyEmpty"));
+      return;
+    }
+    renderElement(history.map((c, i) => `  ${i + 1}  ${c}`));
+  },
+
+  sudo() {
+    renderElement(t("sudo"));
+  },
+
+  exit() {
+    renderElement(t("exitMsg"));
+    blurCli();
   },
 };
 
