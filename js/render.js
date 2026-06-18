@@ -10,7 +10,7 @@ import {
   filterProjects,
   filterBlog,
 } from "./app.js";
-import { menu, Views } from "./content/views.js";
+import { menu, Views, homeView } from "./content/views.js";
 import { projects, mainTags } from "./content/projects.js";
 import { aboutView } from "./content/about.js";
 import { contactView } from "./content/contact.js";
@@ -504,13 +504,17 @@ function printWords(
   {
     delay = 60, // ms between words
     punctuationDelay = 250,
+    onDone,
   } = {},
 ) {
   const tokens = text.split(/(\s+)/); // keeps spaces
   let i = 0;
 
   function step() {
-    if (i >= tokens.length) return;
+    if (i >= tokens.length) {
+      if (onDone) onDone();
+      return;
+    }
 
     element.textContent += tokens[i];
 
@@ -521,6 +525,45 @@ function printWords(
   }
 
   step();
+}
+
+// A line of clickable command tokens (with an optional leading label).
+// Clicks are handled by a delegated listener in cli.js via the data-cmd attr.
+export function newCommandSuggestions(labelText, cmds) {
+  const pre = document.createElement("pre");
+  if (labelText) pre.append(document.createTextNode(labelText));
+
+  cmds.forEach((cmd, i) => {
+    if (i) pre.append(document.createTextNode("  "));
+    const a = document.createElement("a");
+    a.href = "#";
+    a.className = "cmd-link";
+    a.dataset.cmd = cmd;
+    a.textContent = cmd;
+    pre.append(a);
+  });
+
+  return pre;
+}
+
+// One-time terminal greeting on the home view: a typed line followed by a row
+// of clickable commands, to signal that the prompt is interactive.
+export function printWelcome() {
+  if (state.post || state.view !== homeView) return;
+
+  const pre = document.createElement("pre");
+  pre.className = "cli-welcome";
+  contentEl.appendChild(pre);
+
+  printWords(pre, t("welcomeLine"), {
+    delay: 35,
+    onDone: () => {
+      contentEl.appendChild(
+        newCommandSuggestions(t("welcomeTry"), ["about", "projects", "neofetch", "snake"]),
+      );
+      contentEl.scrollTop = contentEl.scrollHeight;
+    },
+  });
 }
 
 function printLetters(

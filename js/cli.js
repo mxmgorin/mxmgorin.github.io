@@ -8,6 +8,7 @@ import {
   clearContent,
   newIntro,
   newBlogList,
+  newCommandSuggestions,
 } from "./render.js";
 import { setLang, openPost, Languages, state as appState } from "./app.js";
 import { blogView } from "./content/blog.js";
@@ -190,7 +191,9 @@ const commands = {
   },
 
   ls() {
-    renderElement("about  projects  blog  contact  cv");
+    renderElement(
+      newCommandSuggestions("", ["about", "projects", "blog", "contact", "cv"]),
+    );
   },
 
   cat(args) {
@@ -264,6 +267,13 @@ export function isCliFocused() {
 function handleCommand() {
   const value = commandEl.value.trim();
   commandEl.value = "";
+  runCommand(value);
+}
+
+// Execute a command line as if typed: echo it, record history, dispatch.
+// Exported so clickable command links (data-cmd) can run commands too.
+export function runCommand(value) {
+  if (!value) return;
 
   renderElement(`\n> ${value}`);
   addToHistory(value);
@@ -273,10 +283,11 @@ function handleCommand() {
   const handler = commands[command];
 
   if (!handler) {
-    const lines = [...t("commandNotFound")]; // copy: don't mutate the i18n array
+    renderElement(t("commandNotFound"));
     const suggestion = closestCommand(command);
-    if (suggestion) lines.push(t("didYouMean") + suggestion);
-    renderElement(lines);
+    if (suggestion) {
+      renderElement(newCommandSuggestions(t("didYouMean"), [suggestion]));
+    }
     return;
   }
 
@@ -393,6 +404,14 @@ export function setupCli() {
       e.preventDefault();
       autocomplete();
     }
+  });
+
+  // Clickable command links (welcome row, ls, did-you-mean) run the command.
+  document.getElementById("content").addEventListener("click", (e) => {
+    const link = e.target.closest("a.cmd-link");
+    if (!link) return;
+    e.preventDefault();
+    runCommand(link.dataset.cmd);
   });
 }
 
