@@ -57,18 +57,25 @@ function renderView() {
   contentEl.innerHTML = "";
 
   switch (state.view) {
-    case Views.HOME:
-      contentEl.appendChild(newNeofetch());
-      contentEl.appendChild(
-        newCommandSuggestions(`\n${t("welcomeTry")}`, [
-          "about",
-          "projects",
-          "blog",
-          "contact",
-          "snake",
-        ]),
-      );
+    case Views.HOME: {
+      const pre = document.createElement("pre");
+      contentEl.appendChild(pre);
+      typeLines(pre, neofetchLines(), {
+        onDone: () => {
+          contentEl.appendChild(
+            newCommandSuggestions(`\n${t("welcomeTry")}`, [
+              "about",
+              "projects",
+              "blog",
+              "contact",
+              "snake",
+            ]),
+          );
+          contentEl.scrollTop = contentEl.scrollHeight;
+        },
+      });
       break;
+    }
     case Views.INTRO:
       contentEl.appendChild(newIntro());
       break;
@@ -582,9 +589,8 @@ const NEOFETCH_ART = [
   "\\___)=(___/",
 ];
 
-// The neofetch "system info" card: Tux on the left, an info column on the
-// right. Used both by the `neofetch` command and the home view.
-export function newNeofetch(user = "guest") {
+// The neofetch card lines: Tux on the left, an info column on the right.
+function neofetchLines(user = "guest") {
   const info = t("neofetchInfo", user);
   const width = Math.max(...NEOFETCH_ART.map((l) => l.length)) + 2;
   const rows = Math.max(NEOFETCH_ART.length, info.length);
@@ -593,10 +599,33 @@ export function newNeofetch(user = "guest") {
   for (let i = 0; i < rows; i++) {
     lines.push((NEOFETCH_ART[i] ?? "").padEnd(width) + (info[i] ?? ""));
   }
+  return lines;
+}
 
+// The finished neofetch card (used by the `neofetch` command, printed at once).
+export function newNeofetch(user = "guest") {
   const pre = document.createElement("pre");
-  pre.textContent = lines.join("\n");
+  pre.textContent = neofetchLines(user).join("\n");
   return pre;
+}
+
+// Reveal lines into a <pre> one per tick — a terminal-style "boot" print.
+// Bails if the <pre> is detached (e.g. the user navigated away mid-animation).
+function typeLines(pre, lines, { delay = 80, onDone } = {}) {
+  let i = 0;
+
+  function step() {
+    if (pre.isConnected === false) return;
+    if (i >= lines.length) {
+      if (onDone) onDone();
+      return;
+    }
+    pre.textContent += (i ? "\n" : "") + lines[i];
+    i += 1;
+    setTimeout(step, delay);
+  }
+
+  step();
 }
 
 function printLetters(
