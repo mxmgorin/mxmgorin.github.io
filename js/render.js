@@ -330,7 +330,7 @@ async function fetchPost(slug, lang) {
 
 // Rough reading time at ~200 words per minute, counting word-like tokens only.
 function readingTime(md) {
-  const words = (md.match(/\S+/g) || []).filter((w) => /[A-Za-z0-9]/.test(w)).length;
+  const words = (md.match(/\S+/g) || []).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
   const minutes = Math.max(1, Math.round(words / 200));
   return t("minRead", minutes);
 }
