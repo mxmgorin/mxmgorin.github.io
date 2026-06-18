@@ -17,14 +17,28 @@ import { contactView } from "./content/contact.js";
 import { introView } from "./content/intro.js";
 import { blogView } from "./content/blog.js";
 import { renderMarkdown } from "./markdown.js";
+import { t } from "./i18n.js";
 
 const contentEl = document.getElementById("content");
 const blockSeparator = " ".repeat(1);
 
 export function render() {
+  applyChrome();
   renderLangSelector();
   renderMenu();
   renderView();
+}
+
+// Update the static, non-view chrome that lives in index.html so it reflects
+// the active language (the document language, header hints, input placeholder).
+function applyChrome() {
+  document.documentElement.lang = state.lang;
+
+  const hints = document.querySelector(".kbd-hints");
+  if (hints) hints.textContent = t("kbdHints");
+
+  const command = document.getElementById("command");
+  if (command) command.placeholder = t("placeholder");
 }
 
 function renderMenu() {
@@ -33,7 +47,7 @@ function renderMenu() {
 
   menu.forEach((item, i) => {
     const li = document.createElement("li");
-    li.textContent = item;
+    li.textContent = t(`menu.${item}`);
     if (i === state.menuIndex) li.classList.add("active");
     ul.appendChild(li);
   });
@@ -60,7 +74,7 @@ function renderView() {
       break;
 
     default:
-      renderElement("Under development");
+      renderElement(t("underDevelopment"));
   }
 }
 
@@ -68,12 +82,12 @@ export function newGame(name, exitCallback) {
   const preEl = document.createElement("pre");
   const ok = startGame(preEl, name, () => {
     if (exitCallback) exitCallback();
-    renderElement("\nGame exited.");
+    renderElement(t("gameExited"));
     contentEl.scrollTop = contentEl.scrollHeight;
   });
 
   if (!ok) {
-    preEl.innerHTML = `Not found game '${name}'`;
+    preEl.innerHTML = t("gameNotFound", name);
   }
 
   return preEl;
@@ -110,8 +124,8 @@ function uniqueTags(items) {
 function newTagFilterBar(allTags, active, onSelect) {
   const bar = document.createElement("div");
   bar.className = "tag-filter";
-  bar.append(document.createTextNode("filter: "));
-  bar.append(newTagFilter("all", active == null, () => onSelect(null)));
+  bar.append(document.createTextNode(t("filterLabel")));
+  bar.append(newTagFilter(t("filterAll"), active == null, () => onSelect(null)));
   allTags.forEach((t) => {
     bar.append(document.createTextNode(" · "));
     bar.append(newTagFilter(t, t === active, () => onSelect(t)));
@@ -155,7 +169,7 @@ export function newBlogList() {
     link.href = `/?v=blog&post=${encodeURIComponent(post.slug)}`;
     const title = getTranslated(post.name);
     link.textContent = title;
-    link.setAttribute("aria-label", `Read: ${title}`);
+    link.setAttribute("aria-label", t("readAria", title));
     link.onclick = (e) => {
       e.preventDefault();
       openPost(post.slug);
@@ -195,7 +209,7 @@ function newBlogPost(slug) {
 
   if (!post) {
     const err = document.createElement("p");
-    err.textContent = `Post '${slug}' not found.`;
+    err.textContent = t("postNotFound", slug);
     container.append(err);
     return container;
   }
@@ -216,7 +230,7 @@ function newBlogPost(slug) {
 
   const body = document.createElement("div");
   body.className = "article-body";
-  body.textContent = "Loading…";
+  body.textContent = t("loading");
   container.append(body);
 
   if (post.source) {
@@ -226,8 +240,8 @@ function newBlogPost(slug) {
     a.href = post.source;
     a.target = "_blank";
     a.rel = "noopener noreferrer";
-    a.textContent = "view the original";
-    footer.append(document.createTextNode("Also published as a wiki page — "), a, document.createTextNode("."));
+    a.textContent = t("viewOriginal");
+    footer.append(document.createTextNode(t("alsoPublishedPrefix")), a, document.createTextNode("."));
     container.append(footer);
   }
 
@@ -242,7 +256,7 @@ function backLink() {
   const a = document.createElement("a");
   a.href = "/?v=blog";
   a.className = "back-link";
-  a.textContent = "← back to blog";
+  a.textContent = t("backToBlog");
   a.onclick = (e) => {
     e.preventDefault();
     openBlogList();
@@ -254,7 +268,7 @@ async function loadPostBody(body, post, readingEl) {
   const md = await fetchPost(post.slug, state.lang);
 
   if (md == null) {
-    body.textContent = "Could not load this post.";
+    body.textContent = t("couldNotLoadPost");
     return;
   }
 
@@ -299,7 +313,7 @@ async function fetchPost(slug, lang) {
 function readingTime(md) {
   const words = (md.match(/\S+/g) || []).filter((w) => /[A-Za-z0-9]/.test(w)).length;
   const minutes = Math.max(1, Math.round(words / 200));
-  return `${minutes} min read`;
+  return t("minRead", minutes);
 }
 
 // Map wiki-link titles ([[...]]) to internal post slugs.

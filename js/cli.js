@@ -11,6 +11,7 @@ import {
 } from "./render.js";
 import { setLang, openPost } from "./app.js";
 import { blogView } from "./content/blog.js";
+import { t } from "./i18n.js";
 
 const commandEl = document.getElementById("command");
 const promptEl = document.getElementById("prompt");
@@ -25,65 +26,18 @@ const USERS = {
     password: "admin",
   },
 };
-const HINTS = [
-  "Type 'commands' to list all available commands.",
-  "Use ↑ and ↓ to navigate command history.",
-  "Type 'clear' to reset the screen.",
-  "Try 'matrix' for a short visual effect.",
-  "Press 'Esc' to exit the input. Press / or : to focus the command prompt.",
-  "Using commands gives you more control and shortcuts.",
-  // 'Tip: Type "help <command>" to learn more about a command.',
-];
 let hintQueue = [];
 
 const MAX_HISTORY = 100;
 const history = [];
 let historyIndex = -1;
 const commands = {
-  help(args) {
-    const flag = args[0];
-
-    renderElement([
-      "This is an optional command line interface.",
-      "",
-      "Try:",
-      "-  about",
-      "-  projects",
-      "-  hint",
-      "-  matrix",
-      "",
-      "Type 'commands' to show all commands.",
-      "Type 'clear' to reset the screen.",
-    ]);
+  help() {
+    renderElement(t("cliHelp"));
   },
 
   commands() {
-    renderElement([
-      "Available commands:",
-      "",
-      "Essential:",
-      "  help            Show available commands",
-      "  hint            Show a random tip",
-      "  clear (clr)     Clear the current output",
-      "",
-      "View:",
-      "  intro           Show intro text",
-      "  about           Background and profile",
-      "  projects        List personal and open-source projects",
-      "  blog            List blog posts",
-      "  read <n|slug>   Open a blog post",
-      "  contact         Ways to get in touch",
-      "  cv              Show CV availability (PDF)",
-      "",
-      "Interactive:",
-      "  start <name>    Start an app (snake, tetris, invaders, breakout)",
-      "  matrix          Show 'Matrix rain' animation",
-      "",
-      "Misc:",
-      "  login <user>    Log in as the specified user",
-      "  logout          Log out and return to guest",
-      "  lang <code>     Change language",
-    ]);
+    renderElement(t("cliCommands"));
   },
 
   about() {
@@ -106,7 +60,7 @@ const commands = {
     const ref = args[0];
 
     if (!ref) {
-      renderElement("Usage: read <number|slug>  (type 'blog' to list posts)");
+      renderElement(t("readUsage"));
       return;
     }
 
@@ -116,7 +70,7 @@ const commands = {
       : blogView.find((p) => p.slug === ref);
 
     if (!post) {
-      renderElement(`No post '${ref}'. Type 'blog' to list posts.`);
+      renderElement(t("noPost", ref));
       return;
     }
 
@@ -128,12 +82,7 @@ const commands = {
   },
 
   cv() {
-    renderElement([
-      "Curriculum Vitae",
-      "────────────────",
-      "Available upon request (PDF).",
-      "Feel free to use `contact` to ask for a copy.",
-    ]);
+    renderElement(t("cv"));
   },
 
   clear() {
@@ -148,13 +97,13 @@ const commands = {
     const user = args[0];
 
     if (!user) {
-      renderElement("Usage: login <user>");
+      renderElement(t("loginUsage"));
       return;
     }
 
     if (USERS[user]) {
       enterPasswordMode(user);
-      renderElement("Password:");
+      renderElement(t("passwordPrompt"));
     } else {
       loginUser(user);
     }
@@ -163,7 +112,7 @@ const commands = {
   logout() {
     state.user = "guest";
     updatePrompt();
-    renderElement("Logout successful.");
+    renderElement(t("logoutSuccess"));
   },
 
   start(args) {
@@ -194,7 +143,7 @@ const commands = {
     const code = args[0];
 
     if (!code) {
-      renderElement("Usage: lang <code>");
+      renderElement(t("langUsage"));
       return;
     }
 
@@ -204,10 +153,10 @@ const commands = {
 
   hint() {
     if (hintQueue.length === 0) {
-      hintQueue = [...HINTS].sort(() => Math.random() - 0.5);
+      hintQueue = [...t("hints")].sort(() => Math.random() - 0.5);
     }
     const hint = hintQueue.pop();
-    renderElement(`Tip: ${hint}`);
+    renderElement(t("tip", hint));
   },
 };
 
@@ -236,10 +185,7 @@ function handleCommand() {
   const handler = commands[command];
 
   if (!handler) {
-    renderElement([
-      "Command not found.",
-      "Type 'help' to see available commands.",
-    ]);
+    renderElement(t("commandNotFound"));
     return;
   }
 
@@ -285,14 +231,14 @@ function handlePassword() {
   if (password === USERS[user]?.password) {
     loginUser(user);
   } else {
-    renderElement("Invalid password.");
+    renderElement(t("invalidPassword"));
   }
 }
 
 function loginUser(user) {
   state.user = user;
   updatePrompt();
-  renderElement(`Welcome, '${user}'. Good to see you.`);
+  renderElement(t("welcomeUser", user));
 }
 
 function enterPasswordMode(user) {

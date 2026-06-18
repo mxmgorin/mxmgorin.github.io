@@ -1,0 +1,204 @@
+// Central UI string table for site "chrome": menu labels, CLI output, and the
+// bits of interface text that render.js / cli.js generate at runtime. Longer
+// prose (about, intro, projects, blog) is localized in js/content/* instead.
+//
+// Usage: t("loading") -> string for the active language. Values may be a
+// string, an array of lines (for multi-line CLI blocks), or a function that
+// takes interpolation args and returns one of those. Missing keys fall back to
+// the default language, then to the key itself.
+import { state, DEFAULT_LANG } from "./app.js";
+
+const STRINGS = {
+  en: {
+    // menu / navigation labels, keyed by route key
+    "menu.about": "about",
+    "menu.projects": "projects",
+    "menu.blog": "blog",
+    "menu.contact": "contact",
+
+    // static chrome (header hints, command input)
+    kbdHints: "nav: ↑↓ | scroll: PgUp/PgDn | select: Enter | Mouse",
+    placeholder: "type 'help'",
+
+    // render.js UI
+    underDevelopment: "Under development",
+    gameExited: "\nGame exited.",
+    gameNotFound: (name) => `Not found game '${name}'`,
+    filterLabel: "filter: ",
+    filterAll: "all",
+    postNotFound: (slug) => `Post '${slug}' not found.`,
+    loading: "Loading…",
+    couldNotLoadPost: "Could not load this post.",
+    backToBlog: "← back to blog",
+    readAria: (title) => `Read: ${title}`,
+    minRead: (m) => `${m} min read`,
+    viewOriginal: "view the original",
+    alsoPublishedPrefix: "Also published as a wiki page — ",
+
+    // cli.js
+    cliHelp: [
+      "This is an optional command line interface.",
+      "",
+      "Try:",
+      "-  about",
+      "-  projects",
+      "-  hint",
+      "-  matrix",
+      "",
+      "Type 'commands' to show all commands.",
+      "Type 'clear' to reset the screen.",
+    ],
+    cliCommands: [
+      "Available commands:",
+      "",
+      "Essential:",
+      "  help            Show available commands",
+      "  hint            Show a random tip",
+      "  clear (clr)     Clear the current output",
+      "",
+      "View:",
+      "  intro           Show intro text",
+      "  about           Background and profile",
+      "  projects        List personal and open-source projects",
+      "  blog            List blog posts",
+      "  read <n|slug>   Open a blog post",
+      "  contact         Ways to get in touch",
+      "  cv              Show CV availability (PDF)",
+      "",
+      "Interactive:",
+      "  start <name>    Start an app (snake, tetris, invaders, breakout)",
+      "  matrix          Show 'Matrix rain' animation",
+      "",
+      "Misc:",
+      "  login <user>    Log in as the specified user",
+      "  logout          Log out and return to guest",
+      "  lang <code>     Change language",
+    ],
+    readUsage: "Usage: read <number|slug>  (type 'blog' to list posts)",
+    noPost: (ref) => `No post '${ref}'. Type 'blog' to list posts.`,
+    cv: [
+      "Curriculum Vitae",
+      "────────────────",
+      "Available upon request (PDF).",
+      "Feel free to use `contact` to ask for a copy.",
+    ],
+    loginUsage: "Usage: login <user>",
+    passwordPrompt: "Password:",
+    logoutSuccess: "Logout successful.",
+    langUsage: "Usage: lang <code>",
+    tip: (hint) => `Tip: ${hint}`,
+    commandNotFound: [
+      "Command not found.",
+      "Type 'help' to see available commands.",
+    ],
+    invalidPassword: "Invalid password.",
+    welcomeUser: (user) => `Welcome, '${user}'. Good to see you.`,
+    hints: [
+      "Type 'commands' to list all available commands.",
+      "Use ↑ and ↓ to navigate command history.",
+      "Type 'clear' to reset the screen.",
+      "Try 'matrix' for a short visual effect.",
+      "Press 'Esc' to exit the input. Press / or : to focus the command prompt.",
+      "Using commands gives you more control and shortcuts.",
+    ],
+  },
+
+  ru: {
+    "menu.about": "обо мне",
+    "menu.projects": "проекты",
+    "menu.blog": "блог",
+    "menu.contact": "контакты",
+
+    kbdHints: "навигация: ↑↓ | прокрутка: PgUp/PgDn | выбор: Enter | мышь",
+    placeholder: "введите 'help'",
+
+    underDevelopment: "В разработке",
+    gameExited: "\nИгра завершена.",
+    gameNotFound: (name) => `Игра '${name}' не найдена`,
+    filterLabel: "фильтр: ",
+    filterAll: "все",
+    postNotFound: (slug) => `Пост '${slug}' не найден.`,
+    loading: "Загрузка…",
+    couldNotLoadPost: "Не удалось загрузить этот пост.",
+    backToBlog: "← назад к блогу",
+    readAria: (title) => `Читать: ${title}`,
+    minRead: (m) => `${m} мин чтения`,
+    viewOriginal: "открыть оригинал",
+    alsoPublishedPrefix: "Также опубликовано как вики-страница — ",
+
+    cliHelp: [
+      "Это необязательная командная строка.",
+      "",
+      "Попробуйте:",
+      "-  about",
+      "-  projects",
+      "-  hint",
+      "-  matrix",
+      "",
+      "Введите 'commands', чтобы показать все команды.",
+      "Введите 'clear', чтобы очистить экран.",
+    ],
+    cliCommands: [
+      "Доступные команды:",
+      "",
+      "Основные:",
+      "  help            Показать доступные команды",
+      "  hint            Показать случайный совет",
+      "  clear (clr)     Очистить вывод",
+      "",
+      "Разделы:",
+      "  intro           Показать вступление",
+      "  about           Обо мне и профиль",
+      "  projects        Список личных и open-source проектов",
+      "  blog            Список постов блога",
+      "  read <n|slug>   Открыть пост блога",
+      "  contact         Способы связаться",
+      "  cv              Доступность резюме (PDF)",
+      "",
+      "Интерактив:",
+      "  start <name>    Запустить приложение (snake, tetris, invaders, breakout)",
+      "  matrix          Анимация «дождя» из «Матрицы»",
+      "",
+      "Прочее:",
+      "  login <user>    Войти под указанным пользователем",
+      "  logout          Выйти и вернуться к guest",
+      "  lang <code>     Сменить язык",
+    ],
+    readUsage: "Использование: read <номер|slug>  (введите 'blog' для списка постов)",
+    noPost: (ref) => `Нет поста '${ref}'. Введите 'blog' для списка постов.`,
+    cv: [
+      "Резюме (CV)",
+      "───────────",
+      "Доступно по запросу (PDF).",
+      "Используйте `contact`, чтобы запросить копию.",
+    ],
+    loginUsage: "Использование: login <user>",
+    passwordPrompt: "Пароль:",
+    logoutSuccess: "Вы вышли из системы.",
+    langUsage: "Использование: lang <code>",
+    tip: (hint) => `Совет: ${hint}`,
+    commandNotFound: [
+      "Команда не найдена.",
+      "Введите 'help', чтобы увидеть доступные команды.",
+    ],
+    invalidPassword: "Неверный пароль.",
+    welcomeUser: (user) => `Добро пожаловать, '${user}'. Рад видеть.`,
+    hints: [
+      "Введите 'commands', чтобы показать все доступные команды.",
+      "Используйте ↑ и ↓ для навигации по истории команд.",
+      "Введите 'clear', чтобы очистить экран.",
+      "Попробуйте 'matrix' для короткого визуального эффекта.",
+      "Нажмите 'Esc', чтобы выйти из ввода. Нажмите / или :, чтобы перейти к командной строке.",
+      "Команды дают больше контроля и быстрых действий.",
+    ],
+  },
+};
+
+export function t(key, ...args) {
+  const lang = state.lang ?? DEFAULT_LANG;
+  const table = STRINGS[lang] ?? STRINGS[DEFAULT_LANG];
+  let value = table[key];
+  if (value === undefined) value = STRINGS[DEFAULT_LANG][key];
+  if (value === undefined) return key;
+  return typeof value === "function" ? value(...args) : value;
+}

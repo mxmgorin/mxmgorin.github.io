@@ -5,6 +5,7 @@ import { createSnakeApp } from "./games/snake.js";
 import { createTetrisApp } from "./games/tetris.js";
 import { createBreakoutApp } from "./games/breakout.js";
 import { createMatrixApp } from "./games/matrix.js";
+import { t } from "./i18n.js";
 
 export let gameApp = null;
 export const Languages = {
@@ -117,6 +118,8 @@ function getLang() {
 export function setLang(lang, replace = false) {
   setParam("l", lang);
   state.lang = lang;
+  // keep the document title in the new language (render() handles the rest)
+  setTitle(routes.find((r) => r.view === state.view)?.key);
 }
 
 // debug helper
@@ -149,7 +152,7 @@ function setTitle(route) {
     return;
   }
 
-  document.title = `${BASE_TITLE}: ${route.toUpperCase()}`;
+  document.title = `${BASE_TITLE}: ${t(`menu.${route}`).toUpperCase()}`;
 }
 
 export function startGame(screen, name, exitCallback) {
