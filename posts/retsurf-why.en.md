@@ -21,7 +21,7 @@ thing I most wanted to build.
 
 ## The gap
 
-Randheld Linux distros — [Knulli](https://knulli.org),
+Handheld Linux distros — [Knulli](https://knulli.org),
 [muOS](https://muos.dev), [ROCKNIX](https://rocknix.org) — are extraordinary
 pieces of work. They turn cheap hardware into focused little game machines. But
 they are *game* machines. The design assumption, top to bottom, is "boot straight
@@ -42,7 +42,7 @@ So when you go looking for a browser, you find that all three obvious options ar
    away X11/Wayland and you've taken away the thing they render *into*. Take away
    the pointer and the entire interaction model collapses.
 
-4. **There's no input model for a browser on a gamepad.** Even if you solved
+3. **There's no input model for a browser on a gamepad.** Even if you solved
    rendering, how do you click a link with a thumbstick? Type a URL with no
    keyboard? Scroll a page with buttons? "Browser" and "gamepad" have never really
    met.
@@ -98,8 +98,7 @@ Anbernic RG35XX SP. It renders the real, JavaScript-heavy web through Servo. It 
 navigation with a cursor and link hints, an on-screen keyboard with multiple
 layouts, real page zoom that reflows the layout (not a magnifier), a reader mode,
 background downloads, and network-level ad blocking. It has a native start page
-with a speed-dial grid. And — almost by accident, because the rendering path was
-designed cleanly — the same code builds an Android APK.
+with a speed-dial grid. And the same code builds an Android APK.
 
 It's experimental. It has rough edges. But it answers the boss-fight question:
 you can now pull up the wiki on the thing in your hands.

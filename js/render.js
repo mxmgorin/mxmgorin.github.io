@@ -153,8 +153,9 @@ export function newBlogList() {
     const name = document.createElement("strong");
     const link = document.createElement("a");
     link.href = `/?v=blog&post=${encodeURIComponent(post.slug)}`;
-    link.textContent = post.name;
-    link.setAttribute("aria-label", `Read: ${post.name}`);
+    const title = getTranslated(post.name);
+    link.textContent = title;
+    link.setAttribute("aria-label", `Read: ${title}`);
     link.onclick = (e) => {
       e.preventDefault();
       openPost(post.slug);
@@ -200,7 +201,7 @@ function newBlogPost(slug) {
   }
 
   const h1 = document.createElement("h1");
-  h1.textContent = post.name;
+  h1.textContent = getTranslated(post.name);
   container.append(h1);
 
   const meta = document.createElement("p");
@@ -305,7 +306,9 @@ function readingTime(md) {
 const wikiMap = new Map();
 blogView.forEach((p) => {
   wikiMap.set(normalizeWiki(p.slug), p.slug);
-  wikiMap.set(normalizeWiki(p.name), p.slug);
+  // name may be a plain string or a { lang: title } map — register every title
+  const titles = typeof p.name === "string" ? [p.name] : Object.values(p.name);
+  titles.forEach((t) => wikiMap.set(normalizeWiki(t), p.slug));
   (p.aliases ?? []).forEach((a) => wikiMap.set(normalizeWiki(a), p.slug));
 });
 
@@ -437,6 +440,7 @@ function newText(text) {
 }
 
 function getTranslated(value) {
+  if (typeof value === "string") return value; // plain (unlocalized) strings pass through
   return value?.[state.lang] ?? value?.[DEFAULT_LANG];
 }
 

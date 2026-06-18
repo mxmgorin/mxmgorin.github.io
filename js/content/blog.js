@@ -4,7 +4,10 @@
 export const blogView = [
   {
     slug: "retsurf-why",
-    name: "Why I built a web browser for a retro handheld",
+    name: {
+      en: "Why I built a web browser for a retro handheld",
+      ru: "Почему я сделал веб-браузер для ретро-консоли",
+    },
     date: "2026-06-17",
     desc: {
       en: "Retro handhelds have Wi-Fi, a GPU, and a gigabyte of RAM — but no usable web browser. Why that gap exists, and how I'm closing it with retsurf, built on Servo, SDL2, and egui.",
