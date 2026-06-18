@@ -41,7 +41,7 @@ export const projects = [
     name: "PortMaster",
     desc: {
       en: "My open-source habit — porting games to ARM-based Linux handhelds as a PortMaster contributor.",
-      ru: "Моя open-source привычка — портирую игры на портативные консоли на базе ARM-Linux как участник PortMaster.",
+      ru: "Мое open-source хобби — портирую игры на портативные консоли на базе ARM-Linux как участник PortMaster.",
     },
     links: [
       { label: "profile", url: "https://portmaster.games/profile.html?porter=Troidem" },
