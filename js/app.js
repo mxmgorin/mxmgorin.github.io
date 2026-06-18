@@ -81,6 +81,18 @@ export function openBlogList() {
   render();
 }
 
+// Navigate to the home view (clean console + neofetch), clearing the URL.
+export function openHome() {
+  state.post = null;
+  state.menuIndex = -1;
+  state.projectTag = null;
+  state.blogTag = null;
+  state.view = homeView;
+  setParams({ v: null, post: null });
+  setTitle();
+  render();
+}
+
 // Navigate to a top-level view by its route key (used by in-site links).
 // `tag` pre-applies a filter when opening the projects or blog view.
 export function openView(key, { tag = null } = {}) {
@@ -214,6 +226,15 @@ export function setupApp() {
     state.blogTag = null;
     render();
   });
+
+  // The "mxmgorin.dev" header acts as a home link (clean console + neofetch).
+  const status = document.querySelector(".tui-header .status");
+  if (status) {
+    status.addEventListener("click", (e) => {
+      e.preventDefault();
+      openHome();
+    });
+  }
 
   // Re-render when the viewport crosses the phone breakpoint so width-dependent
   // layouts (e.g. the neofetch card) switch between side-by-side and stacked.
