@@ -578,18 +578,27 @@ export function newCommandSuggestions(labelText, cmds) {
   return newCliBlock(parts);
 }
 
-// Tux, rendered beside the neofetch info card.
+// A low-res ASCII portrait (from a photo), shown beside the neofetch card.
 const NEOFETCH_ART = [
-  "    .--.",
-  "   |o_o |",
-  "   |:_/ |",
-  "  //   \\ \\",
-  " (|     | )",
-  "/'\\_   _/`\\",
-  "\\___)=(___/",
+  "         :+#%@%%#*=.",
+  "       :#@@@@@@@@@@%=:",
+  "      .%@%#*****++=*%%*:",
+  "      .%*=--:::::::-=*@+",
+  "      .#+=--:::::::--=#=",
+  "      .*+==-::::::--=+#:",
+  "      -*+*##*+--+*#**+*+.",
+  "      -+=======-=-==--+=.",
+  "      .++--::==:=-:--=+-",
+  "       .=+=--++++---=+.",
+  "        .++==+======+-",
+  "         -*+==+++==++",
+  "         :+++=====++=",
+  "        -+==++++++=-+-.",
+  "   ..:--=+=--==----====-::.",
+  ".::-----====------====-------:.",
 ];
 
-// The neofetch card lines: Tux on the left, an info column on the right.
+// The neofetch card lines: a low-res ASCII portrait on the left, info on the right.
 function neofetchLines(user = "guest") {
   const info = t("neofetchInfo", user);
   const width = Math.max(...NEOFETCH_ART.map((l) => l.length)) + 2;
