@@ -12,7 +12,7 @@ browsed the web comfortably in 2010 — and yet a browser that actually works, t
 single most universal piece of software on Earth, is missing. That gap is the
 whole reason **[retsurf](https://github.com/mxmgorin/retsurf)** exists.
 
-I came at this from a particular angle. I'd spent a while as a
+I came to this with vision. I'd spent a while as a
 [PortMaster](https://portmaster.games/profile.html?porter=Troidem) contributor,
 porting games to these ARM-Linux handhelds — and somewhere in the middle of that I
 stopped seeing them as toys and started seeing them as small Linux computers that
@@ -23,10 +23,10 @@ thing I most wanted to build.
 
 Handheld Linux distros — [Knulli](https://knulli.org),
 [muOS](https://muos.dev), [ROCKNIX](https://rocknix.org) — are extraordinary
-pieces of work. They turn cheap hardware into focused little game machines. But
-they are *game* machines. The design assumption, top to bottom, is "boot straight
+pieces of work. They turn cheap hardware into little game machines. But
+they are *game* machines. The design assumption, is "boot straight
 into a game launcher, render through the GPU, drive everything with a D-pad and
-some buttons." There's no desktop. Usually no window manager. Often not even an
+some buttons." There's no desktop. Usually no window manager. Often not an
 X11 or Wayland server running — the UI talks to the display directly through
 KMS/DRM.
 
