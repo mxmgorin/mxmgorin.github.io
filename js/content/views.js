@@ -1,4 +1,5 @@
 export const Views = {
+  HOME: "home",
   INTRO: "intro",
   ABOUT: "about",
   PROJECTS: "projects",
@@ -14,4 +15,6 @@ export const menu = [
   Views.CONTACT,
 ];
 
-export const homeView = Views.ABOUT;
+// The landing state when no page is selected (no ?v= param): a clean console
+// that auto-prints the neofetch card and a row of suggestions.
+export const homeView = Views.HOME;

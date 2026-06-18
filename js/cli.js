@@ -9,6 +9,8 @@ import {
   newIntro,
   newBlogList,
   newCommandSuggestions,
+  newCliBlock,
+  newNeofetch,
 } from "./render.js";
 import { setLang, openPost, Languages, state as appState } from "./app.js";
 import { blogView } from "./content/blog.js";
@@ -29,23 +31,24 @@ const USERS = {
 };
 let hintQueue = [];
 
-// Tux, rendered beside the neofetch info card.
-const NEOFETCH_ART = [
-  "    .--.",
-  "   |o_o |",
-  "   |:_/ |",
-  "  //   \\ \\",
-  " (|     | )",
-  "/'\\_   _/`\\",
-  "\\___)=(___/",
-];
-
 const MAX_HISTORY = 100;
 const history = [];
 let historyIndex = -1;
 const commands = {
   help() {
-    renderElement(t("cliHelp"));
+    renderElement(
+      newCliBlock([
+        t("cliHelpIntro"),
+        "\n\n",
+        t("helpExplore"),
+        { cmd: "about" }, "  ", { cmd: "projects" }, "  ", { cmd: "blog" }, "  ", { cmd: "contact" },
+        "\n",
+        t("helpFun"),
+        { cmd: "neofetch" }, "  ", { cmd: "snake" }, "  ", { cmd: "tetris" }, "  ", { cmd: "matrix" },
+        "\n\n",
+        t("cliHelpFooter"),
+      ]),
+    );
   },
 
   commands() {
@@ -172,14 +175,7 @@ const commands = {
   },
 
   neofetch() {
-    const info = t("neofetchInfo", state.user);
-    const width = Math.max(...NEOFETCH_ART.map((l) => l.length)) + 2;
-    const rows = Math.max(NEOFETCH_ART.length, info.length);
-    const lines = [];
-    for (let i = 0; i < rows; i++) {
-      lines.push((NEOFETCH_ART[i] ?? "").padEnd(width) + (info[i] ?? ""));
-    }
-    renderElement(lines);
+    renderElement(newNeofetch(state.user));
   },
 
   whoami() {

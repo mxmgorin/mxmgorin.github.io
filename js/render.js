@@ -10,7 +10,7 @@ import {
   filterProjects,
   filterBlog,
 } from "./app.js";
-import { menu, Views, homeView } from "./content/views.js";
+import { menu, Views } from "./content/views.js";
 import { projects, mainTags } from "./content/projects.js";
 import { aboutView } from "./content/about.js";
 import { contactView } from "./content/contact.js";
@@ -57,6 +57,18 @@ function renderView() {
   contentEl.innerHTML = "";
 
   switch (state.view) {
+    case Views.HOME:
+      contentEl.appendChild(newNeofetch());
+      contentEl.appendChild(
+        newCommandSuggestions(`\n${t("welcomeTry")}`, [
+          "about",
+          "projects",
+          "blog",
+          "contact",
+          "snake",
+        ]),
+      );
+      break;
     case Views.INTRO:
       contentEl.appendChild(newIntro());
       break;
@@ -527,43 +539,64 @@ function printWords(
   step();
 }
 
-// A line of clickable command tokens (with an optional leading label).
+// Build a single <pre> from mixed parts: plain strings become text (newlines
+// included), and { cmd, label? } objects become clickable command links.
 // Clicks are handled by a delegated listener in cli.js via the data-cmd attr.
-export function newCommandSuggestions(labelText, cmds) {
+export function newCliBlock(parts) {
   const pre = document.createElement("pre");
-  if (labelText) pre.append(document.createTextNode(labelText));
 
-  cmds.forEach((cmd, i) => {
-    if (i) pre.append(document.createTextNode("  "));
+  for (const part of parts) {
+    if (typeof part === "string") {
+      pre.append(document.createTextNode(part));
+      continue;
+    }
     const a = document.createElement("a");
     a.href = "#";
     a.className = "cmd-link";
-    a.dataset.cmd = cmd;
-    a.textContent = cmd;
+    a.dataset.cmd = part.cmd;
+    a.textContent = part.label ?? part.cmd;
     pre.append(a);
-  });
+  }
 
   return pre;
 }
 
-// One-time terminal greeting on the home view: a typed line followed by a row
-// of clickable commands, to signal that the prompt is interactive.
-export function printWelcome() {
-  if (state.post || state.view !== homeView) return;
+// A line of clickable command tokens with an optional leading label.
+export function newCommandSuggestions(labelText, cmds) {
+  const parts = labelText ? [labelText] : [];
+  cmds.forEach((cmd, i) => {
+    if (i) parts.push("  ");
+    parts.push({ cmd });
+  });
+  return newCliBlock(parts);
+}
+
+// Tux, rendered beside the neofetch info card.
+const NEOFETCH_ART = [
+  "    .--.",
+  "   |o_o |",
+  "   |:_/ |",
+  "  //   \\ \\",
+  " (|     | )",
+  "/'\\_   _/`\\",
+  "\\___)=(___/",
+];
+
+// The neofetch "system info" card: Tux on the left, an info column on the
+// right. Used both by the `neofetch` command and the home view.
+export function newNeofetch(user = "guest") {
+  const info = t("neofetchInfo", user);
+  const width = Math.max(...NEOFETCH_ART.map((l) => l.length)) + 2;
+  const rows = Math.max(NEOFETCH_ART.length, info.length);
+
+  const lines = [];
+  for (let i = 0; i < rows; i++) {
+    lines.push((NEOFETCH_ART[i] ?? "").padEnd(width) + (info[i] ?? ""));
+  }
 
   const pre = document.createElement("pre");
-  pre.className = "cli-welcome";
-  contentEl.appendChild(pre);
-
-  printWords(pre, t("welcomeLine"), {
-    delay: 35,
-    onDone: () => {
-      contentEl.appendChild(
-        newCommandSuggestions(t("welcomeTry"), ["about", "projects", "neofetch", "snake"]),
-      );
-      contentEl.scrollTop = contentEl.scrollHeight;
-    },
-  });
+  pre.textContent = lines.join("\n");
+  return pre;
 }
 
 function printLetters(

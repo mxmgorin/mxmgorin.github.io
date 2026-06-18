@@ -52,8 +52,8 @@ function getView() {
 
 function getViewIndex() {
   const p = new URLSearchParams(window.location.search).get("v");
-  const i = routes.findIndex((r) => r.key === p);
-  return i === -1 ? 0 : i;
+  // -1 (no highlight) on the home view, where no page is selected.
+  return routes.findIndex((r) => r.key === p);
 }
 
 /* blog post navigation */
@@ -136,13 +136,16 @@ export function moveDown() {
 }
 
 export function select() {
-  const route = routes[state.menuIndex]?.key;
+  // On the home view nothing is highlighted (menuIndex === -1); default to the
+  // first menu item so pressing Enter still navigates somewhere sensible.
+  const i = state.menuIndex < 0 ? 0 : state.menuIndex;
+  state.menuIndex = i;
   state.post = null;
   state.projectTag = null;
   state.blogTag = null;
-  setParams({ v: route, post: null });
-  setTitle(route);
-  state.view = routes[state.menuIndex].view;
+  setParams({ v: routes[i].key, post: null });
+  setTitle(routes[i].key);
+  state.view = routes[i].view;
   render();
 }
 
