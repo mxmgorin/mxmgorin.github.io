@@ -214,4 +214,15 @@ export function setupApp() {
     state.blogTag = null;
     render();
   });
+
+  // Re-render when the viewport crosses the phone breakpoint so width-dependent
+  // layouts (e.g. the neofetch card) switch between side-by-side and stacked.
+  const narrow = window.matchMedia("(max-width: 700px)");
+  let wasNarrow = narrow.matches;
+  window.addEventListener("resize", () => {
+    if (narrow.matches !== wasNarrow) {
+      wasNarrow = narrow.matches;
+      render();
+    }
+  });
 }

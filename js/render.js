@@ -596,9 +596,23 @@ const NEOFETCH_ART = [
   "    -%%*=+**++=*%*",
 ];
 
-// The neofetch card lines: a low-res ASCII portrait on the left, info on the right.
+// True on phone-width viewports (matches the CSS breakpoint in tui.css).
+function isNarrow() {
+  return typeof window !== "undefined" && typeof window.matchMedia === "function"
+    ? window.matchMedia("(max-width: 700px)").matches
+    : false;
+}
+
+// The neofetch card lines. On wide screens the portrait sits to the left of the
+// info column; on narrow (phone) screens they stack so lines stay short and the
+// ASCII art doesn't wrap and break apart.
 function neofetchLines(user = "guest") {
   const info = t("neofetchInfo", user);
+
+  if (isNarrow()) {
+    return [...NEOFETCH_ART, "", ...info];
+  }
+
   const width = Math.max(...NEOFETCH_ART.map((l) => l.length)) + 2;
   const rows = Math.max(NEOFETCH_ART.length, info.length);
 
