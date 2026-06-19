@@ -1,27 +1,30 @@
 export const aboutView = {
   en: `Hi, I'm Maxim! 👋
 
-This is my corner of the internet — projects, experiments, and the occasional blog post.
+This is my corner of the internet — a place for projects, experiments, and the occasional note about things I find interesting.
 
-I'm a software engineer who fell hard for the low-level side of things. Mostly <b>Rust</b> and <b>Go</b> now, with years of <b>C#</b> behind me. The best part is always getting under the hood to see how something really works — emulating old hardware, writing interpreters, taking a system apart just to rebuild it better.
+Professionally, I build trading and financial systems. I'm particularly interested in performance, reliability, and the architecture of complex software. These days I primarily work with Rust and Go, though I spent many years developing in C#.
 
-Almost everything here started as "I wonder if I could…": a Game Boy emulator, a CHIP-8 VM, a Lua interpreter, a web browser for retro handhelds. I build them to learn, and keep them around because the learning never really stops.
+Outside of work, I've long been fascinated by low-level programming and the inner workings of computer systems. I enjoy digging beneath the surface: building emulators, virtual machines, interpreters, and other projects that help me better understand the technology we use every day.
 
-Off the clock, I'm a Linux tinkerer and retro-gaming hobbyist — emulation, open source, a growing pile of handhelds, and weird hardware that refuses to die.
+Many of the projects you'll find here started with a simple question: "Can I build this myself?" That's how a Game Boy emulator, a CHIP-8 virtual machine, a Lua interpreter, and a browser for retro consoles came to life. I build these projects primarily to learn, but rarely abandon them after the first milestone — most become a playground for further experimentation and new ideas.
 
-Have a look around — keyboard, mouse, or the command line at the bottom (try 'help').
+When I'm not coding, I'm a Linux enthusiast and retro gaming fan. I'm interested in emulation, open-source software, computer history, and unusual hardware. I also seem to have a growing collection of handheld consoles and other interesting gadgets.
+
+Make yourself at home. Explore the site using your mouse, keyboard, or the built-in terminal below. If you're not sure where to start, try "help". 
 `,
 
   ru: `Привет! Меня зовут Максим 👋
 
-Это мой уголок интернета — проекты, эксперименты и редкие записи в блоге.
+Это мой уголок интернета — место для проектов, экспериментов и редких заметок о том, что мне интересно.
 
-Я разработчик, которого всерьёз затянуло на низкий уровень. Сейчас в основном <b>Rust</b> и <b>Go</b>, а за плечами — годы <b>C#</b>. Больше всего люблю залезть внутрь и понять, как оно действительно работает: эмулировать старое железо, писать интерпретаторы, разбирать систему на части, чтобы собрать её лучше.
+Профессионально я разрабатываю торговые и финансовые системы. В работе мне особенно интересны производительность, надёжность и архитектура сложных приложений. Сейчас в основном использую Rust и Go, а до этого много лет работал с C#.
 
-Почти всё здесь началось с мысли «а смогу ли я…»: эмулятор Game Boy, виртуальная машина CHIP-8, интерпретатор Lua, браузер для ретро-консолей. Делаю их, чтобы учиться, и не выбрасываю — учиться ведь никогда не перестаёшь.
+За пределами рабочих задач меня давно увлекает низкоуровневое программирование и внутреннее устройство компьютерных систем. Люблю разбираться, как всё устроено под капотом: писать эмуляторы, виртуальные машины, интерпретаторы и другие проекты, которые помогают лучше понять технологии, которыми мы пользуемся каждый день.
 
-Вне работы — Linux-энтузиаст и любитель ретро-игр: эмуляция, open-source, растущая стопка хендхелдов и необычные устройства.
+Многие проекты здесь начались с простого вопроса: «А смогу ли я это сделать?» Так появились эмулятор Game Boy, виртуальная машина CHIP-8, интерпретатор Lua и браузер для ретро-консолей. Я создаю их прежде всего для обучения, но не забрасываю после первого результата — почти каждый из них становится площадкой для новых экспериментов и идей.
+Вне работы я Linux-энтузиаст и любитель ретро-игр. Меня интересуют эмуляция, open-source проекты, компьютерная история и всевозможные необычные устройства. А ещё у меня постоянно растёт коллекция портативных консолей и другого интересного железа.
 
-Осмотритесь — клавиатура, мышь или командная строка внизу (попробуйте 'help').
+Чувствуйте себя как дома. Исследуйте сайт с помощью мыши, клавиатуры или встроенного терминала. Если не знаете, с чего начать — попробуйте "help".
 `,
 };
