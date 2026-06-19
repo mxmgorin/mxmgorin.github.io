@@ -3,7 +3,7 @@ export const aboutView = {
 
 This is my corner of the internet — a place for projects, experiments, and the occasional note about things I find interesting.
 
-Professionally, I build trading and financial systems. I'm particularly interested in performance, reliability, and the architecture of complex software. These days I primarily work with Rust and Go, though I spent many years developing in C#.
+Professionally, I build trading and financial systems. I'm particularly interested in performance, reliability, and the architecture of complex software. These days I primarily work with Rust, while much of my earlier career was spent developing in C#. I also enjoy using Go for personal projects and experimentation.
 
 Outside of work, I've long been fascinated by low-level programming and the inner workings of computer systems. I enjoy digging beneath the surface: building emulators, virtual machines, interpreters, and other projects that help me better understand the technology we use every day.
 
