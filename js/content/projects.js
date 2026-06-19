@@ -9,8 +9,8 @@ export const projects = [
   {
     name: "GMBoy",
     desc: {
-      en: "My first emulator and the one I keep coming back to — a cross-platform Game Boy emulator chasing cycle-accuracy and performance. What started as \"how does this hardware actually work?\" became a long-term project.",
-      ru: "Мой первый эмулятор — и тот, к которому я постоянно возвращаюсь. Кроссплатформенный эмулятор Game Boy с упором на точность и производительность. Начиналось с вопроса «как это железо вообще работает?», а выросло в долгосрочный проект.",
+      en: "My first emulator. It all started with a simple question: \"How does this hardware actually work?\" What began as curiosity grew into a cross-platform Game Boy emulator focused on accuracy and performance — and a project I’m still improving years later.",
+      ru: "Мой первый эмулятор. Всё началось с вопроса: «Как это железо вообще работает?» Из любопытства вырос кроссплатформенный эмулятор Game Boy с упором на точность и производительность — и проект, который я продолжаю развивать спустя годы.",
     },
     links: [{ label: "source", url: "https://github.com/mxmgorin/gmboy" }],
     tags: ["Rust", "Emulation", "SDL2", "OpenGL", "Android", "Desktop"],
@@ -18,8 +18,8 @@ export const projects = [
   {
     name: "retsurf",
     desc: {
-      en: "Retro handhelds have Wi-Fi and a GPU but no usable web browser — so I built one. Servo renders the modern web; SDL2 and egui drive it from a gamepad, all in Rust.",
-      ru: "У ретро-консолей есть Wi-Fi и GPU, но нет нормального браузера — поэтому я сделал свой. Servo рисует современный веб, а SDL2 и egui дают управление с геймпада, всё на Rust.",
+      en: "It felt odd that modern retro handhelds come with Wi-Fi and capable graphics hardware, yet still lack a decent web browser. So I built one. The browser uses Servo for rendering modern websites, SDL2 and egui for a gamepad-friendly user interface, and is written entirely in Rust.",
+      ru: "У современных ретро-консолей есть Wi-Fi, GPU и вполне приличное железо, но нормального браузера для них практически нет. Этот проект — попытка исправить ситуацию. За отображение страниц отвечает Servo, а SDL2 и egui обеспечивают интерфейс и управление с геймпада.",
     },
     links: [
       { label: "source", url: "https://github.com/mxmgorin/retsurf" },
@@ -30,8 +30,8 @@ export const projects = [
   {
     name: "ch8go",
     desc: {
-      en: "A multi-frontend CHIP-8 / SCHIP / XO-CHIP emulator, built to get properly hands-on with Go — and to wrestle with the platform's many historical variants and quirks.",
-      ru: "Мультифронтендный эмулятор CHIP-8 / SCHIP / XO-CHIP — сделал, чтобы как следует освоить Go и побороться с его многочисленными историческими вариантами и их особенностями (quirks).",
+      en: "I started this project to get hands-on experience with Go. It eventually grew into a multi-frontend CHIP-8, SCHIP, and XO-CHIP emulator, while teaching me just how many incompatible variations and quirks have accumulated throughout the platform's history.",
+      ru: "Начинал этот проект, чтобы как следует освоить Go. В итоге получил мультифронтендный эмулятор CHIP-8, SCHIP и XO-CHIP и гораздо лучшее понимание того, насколько запутанной может быть история платформы с десятками несовместимых вариаций.",
     },
     links: [
       { label: "demo", url: "https://mxmgorin.github.io/ch8go/web/" },
@@ -43,8 +43,8 @@ export const projects = [
   {
     name: "PortMaster",
     desc: {
-      en: "My open-source habit — porting games to ARM-based Linux handhelds as a PortMaster contributor.",
-      ru: "Мое open-source хобби — портирую игры на портативные консоли на базе ARM-Linux как участник PortMaster.",
+      en: "One of my favorite open-source activities is porting games to ARM Linux handhelds as a contributor to PortMaster, helping bring games to devices they were never originally designed for.",
+      ru: "Одно из моих любимых open-source занятий — портировать игры на портативные ARM Linux-консоли в рамках проекта PortMaster и делать их доступными на устройствах, для которых они изначально не предназначались.",
     },
     links: [
       { label: "profile", url: "https://portmaster.games/profile.html?porter=Troidem" },
@@ -54,8 +54,8 @@ export const projects = [
   {
     name: "egui-sdl2",
     desc: {
-      en: "A small library that grew out of my own projects: it wires egui to SDL2 — input handling and a few rendering backends — so you can drop an egui UI into an SDL2 app.",
-      ru: "Небольшая библиотека, выросшая из моих собственных проектов: связывает egui с SDL2 — обработка ввода и несколько бэкендов рендеринга, — чтобы можно было встроить интерфейс на egui в SDL2-приложение.",
+      en: "A small library that grew out of my own projects. It bridges egui and SDL2, providing input handling and multiple rendering backends to make embedding egui interfaces into SDL2 applications straightforward.",
+      ru: "Небольшая библиотека, выросшая из моих собственных проектов. Она связывает egui и SDL2, предоставляя обработку ввода и несколько бэкендов рендеринга, чтобы интерфейсы на egui можно было легко встраивать в SDL2-приложения.",
     },
     links: [{ label: "source", url: "https://github.com/mxmgorin/egui-sdl2" }],
     tags: ["Rust", "GUI", "SDL2", "OpenGL"],
@@ -63,8 +63,8 @@ export const projects = [
   {
     name: "csbf",
     desc: {
-      en: "My take on Brainfuck: an interpreter, a debugger, and a recompiler, written in C# to play with different execution strategies.",
-      ru: "Мой подход к Brainfuck: интерпретатор, отладчик и рекомпилятор на C# — написал, чтобы поэкспериментировать с разными стратегиями исполнения.",
+      en: "A Brainfuck interpreter, debugger, and recompiling compiler written in C#. Originally created to explore different execution strategies, from straightforward interpretation to runtime recompilation.",
+      ru: "Интерпретатор, отладчик и рекомпилятор Brainfuck на C#. Начинался как эксперимент с разными подходами к исполнению кода и со временем превратился в полноценный набор инструментов для работы с языком.",
     },
     links: [{ label: "source", url: "https://github.com/mxmgorin/csbf" }],
     tags: ["C#", "CLI"],
@@ -72,8 +72,8 @@ export const projects = [
   {
     name: "luar",
     desc: {
-      en: "A Lua interpreter I wrote to learn how languages work from the inside — a custom lexer, parser, and runtime, built from scratch.",
-      ru: "Интерпретатор Lua, который я написал, чтобы понять, как языки устроены изнутри — собственные лексер, парсер и рантайм, с нуля.",
+      en: "An ongoing attempt to build a Lua interpreter from scratch. The project serves as a hands-on exploration of language implementation, from lexing and parsing to runtime execution.",
+      ru: "Попытка реализовать собственный интерпретатор Lua с нуля. Проект помогает мне изучать устройство языков программирования на практике: лексер, парсер, рантайм и всё, что находится между исходным кодом и его выполнением.",
     },
     links: [{ label: "source", url: "https://github.com/mxmgorin/luar" }],
     tags: ["Rust", "Lua", "CLI"],
