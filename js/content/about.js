@@ -1,27 +1,27 @@
 export const aboutView = {
   en: `Hi, I'm Maxim! 👋
 
-This is my corner of the internet — a place for my projects, experiments, and the occasional blog post.
+This is my corner of the internet — projects, experiments, and the occasional blog post.
 
-I'm a software engineer who fell for the low-level side of things. I write mostly <b>Rust</b>, with some <b>Go</b>, and I'm happiest figuring out how something works underneath — emulating old hardware, writing interpreters, taking a system apart just to rebuild it better.
+I'm a software engineer who fell hard for the low-level side of things. Mostly <b>Rust</b> and <b>Go</b> now, with years of <b>C#</b> behind me. The best part is always getting under the hood to see how something really works — emulating old hardware, writing interpreters, taking a system apart just to rebuild it better.
 
-Most of what's here started as "I wonder if I could…": a Game Boy emulator, a CHIP-8 VM, a Lua interpreter, a browser for retro handhelds. I build them to learn, and keep them around because the learning never really stops.
+Almost everything here started as "I wonder if I could…": a Game Boy emulator, a CHIP-8 VM, a Lua interpreter, a web browser for retro handhelds. I build them to learn, and keep them around because the learning never really stops.
 
-In my free time, I'm a Linux enthusiast and retro-gaming hobbyist — into emulation, open source, collecting handhelds, and old hardware that refuses to die.
+Off the clock, I'm a Linux tinkerer and retro-gaming hobbyist — emulation, open source, a growing pile of handhelds, and weird hardware that refuses to die.
 
-Look around: navigate with the keyboard, the mouse, or the command line at the bottom (try 'help').
+Have a look around — keyboard, mouse, or the command line at the bottom (try 'help').
 `,
 
   ru: `Привет! Меня зовут Максим 👋
 
-Это мой уголок интернета — место для моих проектов, экспериментов и редких записей в блоге.
+Это мой уголок интернета — проекты, эксперименты и редкие записи в блоге.
 
-Я разработчик, и больше всего меня увлекает низкоуровневая сторона программирования. Пишу в основном на <b>Rust</b>, иногда на <b>Go</b>, и люблю разбираться, как всё устроено внутри — эмулировать старое железо, писать интерпретаторы, разбирать систему на части, чтобы собрать её лучше.
+Я разработчик, которого всерьёз затянуло на низкий уровень. Сейчас в основном <b>Rust</b> и <b>Go</b>, а за плечами — годы <b>C#</b>. Больше всего люблю залезть внутрь и понять, как оно действительно работает: эмулировать старое железо, писать интерпретаторы, разбирать систему на части, чтобы собрать её лучше.
 
-Почти всё здесь началось с мысли «а смогу ли я…»: эмулятор Game Boy, виртуальная машина CHIP-8, интерпретатор Lua, браузер для ретро-консолей. Я делаю их, чтобы учиться, и оставляю, потому что учиться никогда не перестаёшь.
+Почти всё здесь началось с мысли «а смогу ли я…»: эмулятор Game Boy, виртуальная машина CHIP-8, интерпретатор Lua, браузер для ретро-консолей. Делаю их, чтобы учиться, и не выбрасываю — учиться ведь никогда не перестаёшь.
 
-В свободное время увлекаюсь Linux и ретро-играми — эмуляцией, open-source и старым железом, которое отказывается умирать. Собираю хендхелды.
+Вне работы — Linux-энтузиаст и любитель ретро-игр: эмуляция, open-source, растущая стопка хендхелдов и необычные устройства.
 
-Перемещаться по сайту можно клавиатурой, мышью или через командную строку внизу (попробуйте 'help').
+Осмотритесь — клавиатура, мышь или командная строка внизу (попробуйте 'help').
 `,
 };

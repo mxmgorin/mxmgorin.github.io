@@ -9,8 +9,8 @@ export const projects = [
   {
     name: "GMBoy",
     desc: {
-      en: "My first emulator, and still the one I put the most into — a cross-platform Game Boy emulator chasing cycle-accuracy and performance. It started as a way to understand how the hardware really works and grew into a long-term project.",
-      ru: "Мой первый эмулятор — и тот, в который я вкладываю больше всего. Кроссплатформенный эмулятор Game Boy с упором на точность и производительность. Начинался как способ понять, как на самом деле работает железо, и вырос в долгосрочный проект.",
+      en: "My first emulator and the one I keep coming back to — a cross-platform Game Boy emulator chasing cycle-accuracy and performance. What started as \"how does this hardware actually work?\" became a long-term project.",
+      ru: "Мой первый эмулятор — и тот, к которому я постоянно возвращаюсь. Кроссплатформенный эмулятор Game Boy с упором на точность и производительность. Начиналось с вопроса «как это железо вообще работает?», а выросло в долгосрочный проект.",
     },
     links: [{ label: "source", url: "https://github.com/mxmgorin/gmboy" }],
     tags: ["Rust", "Emulation", "SDL2", "OpenGL", "Android", "Desktop"],
@@ -18,17 +18,20 @@ export const projects = [
   {
     name: "retsurf",
     desc: {
-      en: "An experiment in embedding the Servo engine: a lightweight web browser aimed at retro and low-resource handhelds.",
-      ru: "Эксперимент со встраиванием движка Servo: лёгкий веб-браузер для ретро- и малоресурсных устройств.",
+      en: "Retro handhelds have Wi-Fi and a GPU but no usable web browser — so I built one. Servo renders the modern web; SDL2 and egui drive it from a gamepad, all in Rust.",
+      ru: "У ретро-консолей есть Wi-Fi и GPU, но нет нормального браузера — поэтому я сделал свой. Servo рисует современный веб, а SDL2 и egui дают управление с геймпада, всё на Rust.",
     },
-    links: [{ label: "source", url: "https://github.com/mxmgorin/retsurf" }],
+    links: [
+      { label: "source", url: "https://github.com/mxmgorin/retsurf" },
+      { label: "posts", view: "blog", tag: "Servo" },
+    ],
     tags: ["Rust", "Web"],
   },
   {
     name: "ch8go",
     desc: {
-      en: "A multi-frontend CHIP-8 / SCHIP / XO-CHIP emulator I built to get properly hands-on with Go, aiming for broad compatibility across the platform's many historical variants and quirks.",
-      ru: "Мультифронтендный эмулятор CHIP-8 / SCHIP / XO-CHIP, который я сделал, чтобы как следует освоить Go. Цель — широкая совместимость с историческими вариантами платформы и их особенностями (quirks).",
+      en: "A multi-frontend CHIP-8 / SCHIP / XO-CHIP emulator, built to get properly hands-on with Go — and to wrestle with the platform's many historical variants and quirks.",
+      ru: "Мультифронтендный эмулятор CHIP-8 / SCHIP / XO-CHIP — сделал, чтобы как следует освоить Go и побороться с его многочисленными историческими вариантами и их особенностями (quirks).",
     },
     links: [
       { label: "demo", url: "https://mxmgorin.github.io/ch8go/web/" },
@@ -51,8 +54,8 @@ export const projects = [
   {
     name: "egui-sdl2",
     desc: {
-      en: "A small library that grew out of my own needs — it wires egui up to SDL2 with input handling and a few rendering backends.",
-      ru: "Небольшая библиотека, выросшая из моих собственных задач: связывает egui с SDL2 — обработка ввода и несколько бэкендов рендеринга.",
+      en: "A small library that grew out of my own projects: it wires egui to SDL2 — input handling and a few rendering backends — so you can drop an egui UI into an SDL2 app.",
+      ru: "Небольшая библиотека, выросшая из моих собственных проектов: связывает egui с SDL2 — обработка ввода и несколько бэкендов рендеринга, — чтобы можно было встроить интерфейс на egui в SDL2-приложение.",
     },
     links: [{ label: "source", url: "https://github.com/mxmgorin/egui-sdl2" }],
     tags: ["Rust", "GUI", "SDL2", "OpenGL"],
@@ -60,8 +63,8 @@ export const projects = [
   {
     name: "csbf",
     desc: {
-      en: "My take on Brainfuck — an interpreter, debugger, and recompiler for the language, written in C# to experiment with different execution strategies.",
-      ru: "Мой подход к Brainfuck — интерпретатор, отладчик и рекомпилятор языка на C#, написанные чтобы поэкспериментировать со способами исполнения.",
+      en: "My take on Brainfuck: an interpreter, a debugger, and a recompiler, written in C# to play with different execution strategies.",
+      ru: "Мой подход к Brainfuck: интерпретатор, отладчик и рекомпилятор на C# — написал, чтобы поэкспериментировать с разными стратегиями исполнения.",
     },
     links: [{ label: "source", url: "https://github.com/mxmgorin/csbf" }],
     tags: ["C#", "CLI"],

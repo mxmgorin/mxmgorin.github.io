@@ -3,6 +3,19 @@
 // post from inside Markdown ([[...]]). `source` is an optional external original.
 export const blogView = [
   {
+    slug: "retsurf-servo-sdl2",
+    name: {
+      en: "One GPU, three libraries: a browser engine in SDL2, and 5 ways it crashed",
+      ru: "Один GPU на троих: браузерный движок в SDL2 и 5 способов сломаться",
+    },
+    date: "2026-06-19",
+    desc: {
+      en: "Servo renders the web, SDL2 owns the window on bare hardware, egui draws the UI — and getting all three to share one GPU with no compositor and an old driver was a string of crashes. The unabridged tour, in the order they happened.",
+      ru: "Servo рисует веб, SDL2 владеет окном на голом железе, egui — интерфейс. Заставить все три делить один GPU без композитора и со старым драйвером — это вереница крашей. Полный разбор, в том порядке, в котором они случались.",
+    },
+    tags: ["Rust", "Servo", "SDL2", "OpenGL"],
+  },
+  {
     slug: "retsurf-why",
     name: {
       en: "Why I built a web browser for a retro handheld",
