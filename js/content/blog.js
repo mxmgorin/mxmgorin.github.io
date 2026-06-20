@@ -42,7 +42,10 @@ export const blogView = [
   },
   {
     slug: "chip8-architecture",
-    name: "How I Structured My CHIP-8 Emulator (and Why)",
+    name: {
+      en: "How I Structured My CHIP-8 Emulator (and Why)",
+      ru: "Архитектура моего эмулятора CHIP-8 и почему именно так",
+    },
     date: "2026-01-12",
     desc: {
       en: "After a Game Boy emulator taught me how platform code leaks into the core, I built ch8go around one rule: the core shouldn't know its frontend. A tour of its Guest / Host / App structure.",

@@ -7,20 +7,26 @@ no compositor and an old graphics driver.
 This is the full breakdown: how Servo and SDL2 actually connect, and every way it broke on the way to run on a retro-handheld. In order, because the order
 is the story — each crash is what pushed the architecture to the next iteration.
 
-## The constraint that decides everything: who owns the GL context?
+## First attempt — surfman from SDL2's window handle
 
-Servo doesn't ask you for pixels; it asks you for a `RenderingContext`. Normally
-Servo's surface library, [surfman](https://github.com/servo/surfman), creates its
-*own* GL context from the window's raw handle — it wants to be in charge of the
-GPU connection.
+The obvious thing to try first is the path Servo gives you. Servo doesn't
+ask you for pixels; it asks you for a `RenderingContext`, and its surface library
+[surfman](https://github.com/servo/surfman) will happily build its *own* GL context
+from the window's raw handle — it wants to be in charge of the GPU connection. The
+`sdl2` crate can hand out that raw handle via `raw-window-handle`, so you wire the
+two together and let Servo own the GPU connection end to end.
 
-On a handheld, it can't. These devices (Knulli, muOS, ROCKNIX) run on bare
-KMS/DRM with no X11 or Wayland compositor. And the `sdl2` Rust crate, as of 0.38,
-exposes a raw-window-handle for Wayland, X11, Win32 — but **not for
-DRM/GBM**. So on the device, surfman has nothing to build a context *from*. It's
-stuck.
+On my Linux desktop that worked immediately — `sdl2` returns an X11 (or Wayland)
+handle, surfman builds its context from it, and pages rendered. It looked solved.
 
-That forces the whole design:
+Then I ran the same binary on the handheld and it crashed. These
+devices (Knulli, muOS, ROCKNIX) run on bare KMS/DRM with no X11 or Wayland
+compositor, and the `sdl2` Rust crate, as of 0.38, exposes a raw-window-handle for
+Wayland, X11, Win32 — but **not for DRM/GBM**. So surfman had nothing to build a
+context *from*: the call that returned a handle on my desktop returned nothing on
+the device. The default path simply isn't available.
+
+That decides the whole design:
 
 > **SDL2 must own the one and only GL context** — it already knows how to create
 > one on bare KMS/DRM via EGL/GBM, the same way every other SDL2 handheld port
@@ -63,10 +69,11 @@ let gl: Rc<dyn Gl> = unsafe {
 Two GL bindings, one context. Hold that thought — it's the source of half the
 crashes below.
 
-## First attempt — software rendering
+## Second attempt — software rendering
 
-Before fighting the GPU, I wanted to prove the pipeline end to end. So I used
-Servo's `SoftwareRenderingContext` (an offscreen llvmpipe rasterizer). Each frame:
+With the default GPU path dead on the device, I wanted to prove the rest of the
+pipeline end to end before fighting the GPU again. So I used Servo's
+`SoftwareRenderingContext` (an offscreen llvmpipe rasterizer). Each frame:
 Servo rasterizes the page on the CPU, retsurf calls `read_to_image()` to pull the
 pixels out, uploads them as an egui texture, and egui composites that texture with
 the toolbar.
