@@ -27,7 +27,7 @@ It has never heard of SDL, doesn't know what a file is, and can't render a pixel
 - sound output generation
 - input state
 
-That sounds restrictive, but it's the reason the same core runs unchanged behind every frontend. It also stays trivial to test, which matters a lot for something as quirk-laden as CHIP-8.
+That sounds restrictive, but it's the reason the same core runs unchanged behind every frontend. It's also easy to test — and that matters a lot for CHIP-8: there's no single standard, just a whole [[chip8-system|family of variants and quirks]] where "correct" behavior depends on exactly which variant you're emulating. An isolated core lets me exercise each of them on its own and confirm the behavior hasn't drifted, without touching any platform code.
 
 ## The glue layer — `pkg/host`
 
