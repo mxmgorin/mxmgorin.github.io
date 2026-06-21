@@ -56,8 +56,3 @@ Each subdirectory under `cmd/` is a standalone executable that wires the core, t
 - orchestrating the execution loop
 
 Today that's four frontends — a headless/terminal **CLI**, a native **SDL2** desktop app, a portable Go-based **Ebiten** build, and a **WASM** target for the browser — and every one of them reuses the exact same `pkg/host`, `pkg/chip8`, and `pkg/db`. Adding a fifth would mean writing only the glue, not another emulator — which is exactly the payoff GMBoy taught me to design for from the start.
-
-## Related posts
-
-- [[chip8-system|Getting to know CHIP-8]]
-- [[chip8-testing|How I test it when there's no "correct"]]

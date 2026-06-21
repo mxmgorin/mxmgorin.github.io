@@ -47,7 +47,10 @@ export const blogView = [
   {
     slug: "chip8-testing",
     series: "ch8go",
-    name: "How I Test a CHIP-8 Emulator (When There's No \"Correct\")",
+    name: {
+      en: "How I Test a CHIP-8 Emulator (When There's No \"Correct\")",
+      ru: "Как я тестирую эмулятор CHIP-8 (когда нет «правильного»)",
+    },
     date: "2026-01-14",
     desc: {
       en: "CHIP-8 has no single correct output, so here's how I test ch8go anyway — variant-aware ROM automation and byte-exact golden-file comparison.",

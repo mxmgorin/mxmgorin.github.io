@@ -42,8 +42,3 @@ During a normal test run the flow is simple: render a frame, compare it byte-for
 Finally, all of this runs in CI so regressions surface on every change rather than whenever I happen to notice them. The pipeline sets up the Go toolchain, runs the unit and integration tests, and validates the golden files.
 
 It's a fairly small setup, but combined with the variant-aware harness it turns "I think this still works" into something I can actually trust.
-
-## Related posts
-
-- [[chip8-system|Getting to know CHIP-8]]
-- [[chip8-architecture|How I structured the emulator]]

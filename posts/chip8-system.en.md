@@ -43,8 +43,3 @@ The differences between variants are usually called *quirks*, and they're where 
 - **Vertical-blank wait on draw** — the COSMAC VIP waited for vblank before each draw to avoid tearing, which also capped execution speed. Some games rely on that limit to be playable, so it has to be modeled rather than ignored.
 
 Knowing these existed *before* writing the interpreter saved me a lot of "why does this one game look wrong" debugging later. With this picture in place, the next step was deciding how to actually structure the emulator.
-
-## Related posts
-
-- [[chip8-architecture|How I structured the emulator]]
-- [[chip8-testing|How I test it when there's no "correct"]]
