@@ -322,7 +322,3 @@ The reward is anticlimactic, which is how you know it's done: the device boots, 
 real JavaScript-heavy page renders on the Mali GPU through one shared GLES context,
 no readbacks, no GL errors, no panics. Just a browser, on a thing that was built to
 run Game Boy ROMs.
-
----
-
-*Back to [[retsurf-why|the start of the series]].*

@@ -329,7 +329,3 @@ surfman .../egl_bindings.rs: egl function was not loaded
 и настоящая, напичканная JavaScript страница рисуется на Mali-GPU через один общий
 GLES-контекст — без readback-ов, без GL-ошибок, без паник. Просто браузер на штуке,
 которую делали под ROM-ы Game Boy.
-
----
-
-*Назад к [[retsurf-why|началу серии]].*

@@ -193,6 +193,12 @@ export function newBlogList() {
       e.preventDefault();
       openPost(post.slug);
     };
+    if (post.series) {
+      const badge = document.createElement("span");
+      badge.className = "post-series";
+      badge.textContent = `[${post.series}] `;
+      pre.append(badge);
+    }
     name.append(link);
     pre.append(name, document.createTextNode("\n"));
 
@@ -245,6 +251,7 @@ function newBlogPost(slug) {
   meta.append(document.createTextNode(bits.join("  —  ")));
   const readingEl = document.createElement("span");
   meta.append(readingEl);
+  meta.append(document.createTextNode("   "), copyLinkButton(post));
   container.append(meta);
 
   const body = document.createElement("div");
@@ -264,11 +271,117 @@ function newBlogPost(slug) {
     container.append(footer);
   }
 
+  const series = newSeriesBlock(post);
+  if (series) container.append(series);
+
   container.append(backLink());
 
   loadPostBody(body, post, readingEl);
 
   return container;
+}
+
+// Posts in the same series, in reading (chronological) order.
+function seriesPosts(series) {
+  return blogView
+    .filter((p) => p.series === series)
+    .sort((a, b) => (a.date < b.date ? -1 : 1));
+}
+
+// A "part of the <series> series" nav listing every post in the series, in
+// order, with the current one marked. Returns null when the post has no series
+// or is the only one in it.
+function newSeriesBlock(post) {
+  if (!post.series) return null;
+  const siblings = seriesPosts(post.series);
+  if (siblings.length < 2) return null;
+
+  const nav = document.createElement("nav");
+  nav.className = "article-series";
+  nav.setAttribute("aria-label", t("seriesLabel", post.series));
+
+  const title = document.createElement("p");
+  title.className = "article-series-title";
+  title.textContent = t("seriesLabel", post.series);
+  nav.append(title);
+
+  const ol = document.createElement("ol");
+  siblings.forEach((p) => {
+    const li = document.createElement("li");
+    const label = getTranslated(p.name);
+    if (p.slug === post.slug) {
+      li.setAttribute("aria-current", "true");
+      const strong = document.createElement("strong");
+      strong.textContent = label;
+      const here = document.createElement("span");
+      here.className = "series-here";
+      here.textContent = ` — ${t("seriesCurrent")}`;
+      li.append(strong, here);
+    } else {
+      const a = document.createElement("a");
+      a.href = `/?v=blog&post=${encodeURIComponent(p.slug)}`;
+      a.textContent = label;
+      a.onclick = (e) => {
+        e.preventDefault();
+        openPost(p.slug);
+      };
+      li.append(a);
+    }
+    ol.append(li);
+  });
+  nav.append(ol);
+  return nav;
+}
+
+// The shareable, crawlable URL for a post: the static page generated under
+// /blog/<slug>/ (and /ru/ when a Russian version exists). location.origin keeps
+// it correct in dev and prod, and through any future custom domain. A Russian
+// page exists exactly for posts whose name is translated (object with `ru`),
+// which mirrors the presence of a <slug>.ru.md body the generator builds from.
+function postShareUrl(post) {
+  const hasRu = typeof post.name === "object" && post.name.ru;
+  const langSeg = state.lang === Languages.RU && hasRu ? "ru/" : "";
+  return `${location.origin}/blog/${post.slug}/${langSeg}`;
+}
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (_) {
+    // fall through to the legacy path (e.g. insecure context)
+  }
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.append(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    ta.remove();
+    return ok;
+  } catch (_) {
+    return false;
+  }
+}
+
+function copyLinkButton(post) {
+  const a = document.createElement("a");
+  a.href = postShareUrl(post);
+  a.className = "back-link copy-link";
+  a.textContent = t("copyLink");
+  a.onclick = async (e) => {
+    e.preventDefault();
+    const ok = await copyText(postShareUrl(post));
+    a.textContent = ok ? t("copyLinkDone") : t("copyLinkFail");
+    setTimeout(() => {
+      a.textContent = t("copyLink");
+    }, 1800);
+  };
+  return a;
 }
 
 function backLink() {

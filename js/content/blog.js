@@ -3,10 +3,25 @@
 // post from inside Markdown ([[...]]). `source` is an optional external original.
 export const blogView = [
   {
-    slug: "retsurf-servo-sdl2",
+    slug: "retsurf-controls",
+    series: "retsurf",
     name: {
-      en: "One GPU, three libraries: a browser engine in SDL2, and 5 ways it crashed",
-      ru: "Один GPU на троих: браузерный движок в SDL2 и 5 способов сломаться",
+      en: "A browser you drive with a gamepad",
+      ru: "Браузер, которым управляешь с геймпада",
+    },
+    date: "2026-06-21",
+    desc: {
+      en: "A web browser assumes a mouse and a keyboard — a retro handheld has neither. How retsurf drives a full browser from a gamepad: intents not buttons, a virtual cursor, link hints with a gamepad alphabet, an on-screen keyboard, and in-app rebinding.",
+      ru: "Веб-браузер рассчитан на мышь и клавиатуру — у ретро-консоли нет ни того, ни другого. Как retsurf управляет браузером с геймпада: намерения вместо кнопок, виртуальный курсор, подсказки-ссылки с геймпад-алфавитом, экранная клавиатура и перепривязка прямо в приложении.",
+    },
+    tags: ["Rust", "egui", "Gamepad", "UX"],
+  },
+  {
+    slug: "retsurf-servo-sdl2",
+    series: "retsurf",
+    name: {
+      en: "Embedding Servo in SDL2 — one GPU, too many bugs",
+      ru: "Servo в SDL2 — один GPU и слишком много багов",
     },
     date: "2026-06-19",
     desc: {
@@ -17,9 +32,10 @@ export const blogView = [
   },
   {
     slug: "retsurf-why",
+    series: "retsurf",
     name: {
-      en: "Why I built a web browser for a retro handheld",
-      ru: "Почему я сделал веб-браузер для ретро-консоли",
+      en: "Building a Rust web browser for retro handhelds",
+      ru: "Веб-браузер на Rust для ретро-консолей",
     },
     date: "2026-06-17",
     desc: {
@@ -30,6 +46,7 @@ export const blogView = [
   },
   {
     slug: "chip8-testing",
+    series: "ch8go",
     name: "How I Test a CHIP-8 Emulator (When There's No \"Correct\")",
     date: "2026-01-14",
     desc: {
@@ -42,6 +59,7 @@ export const blogView = [
   },
   {
     slug: "chip8-architecture",
+    series: "ch8go",
     name: {
       en: "How I Structured My CHIP-8 Emulator (and Why)",
       ru: "Архитектура моего эмулятора CHIP-8 и почему именно так",
@@ -57,7 +75,11 @@ export const blogView = [
   },
   {
     slug: "chip8-system",
-    name: "Getting to Know CHIP-8 Before Emulating It",
+    series: "ch8go",
+    name: {
+      en: "What CHIP-8 actually is (before you emulate it)",
+      ru: "Что такое CHIP-8 на самом деле (прежде чем писать эмулятор)",
+    },
     date: "2026-01-09",
     desc: {
       en: "The mental model I built before writing ch8go — what CHIP-8 really is, the variants that complicate it, and the quirks that bite every emulator author.",

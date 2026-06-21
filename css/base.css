@@ -70,6 +70,46 @@ a:hover {
     text-decoration: underline;
 }
 
+/* series: badge in the blog list + a "part of the series" nav on a post */
+.post-series {
+    color: var(--accent);
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.article-series {
+    margin: 2rem 0 0;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+}
+
+.article-series-title {
+    margin: 0 0 0.4rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+}
+
+.article-series ol {
+    margin: 0;
+    padding-left: 1.4rem;
+}
+
+.article-series li {
+    margin: 0.2rem 0;
+}
+
+.article-series li[aria-current="true"] strong {
+    color: var(--accent);
+}
+
+.series-here {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
 /* blog post (article) view */
 .article {
     max-width: 72ch;

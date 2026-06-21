@@ -34,6 +34,11 @@ const STRINGS = {
     minRead: (m) => `${m} min read`,
     viewOriginal: "view the original",
     alsoPublishedPrefix: "Also published as a wiki page — ",
+    copyLink: "🔗 copy link",
+    copyLinkDone: "✓ copied!",
+    copyLinkFail: "press Ctrl+C to copy",
+    seriesLabel: (s) => `${s} series`,
+    seriesCurrent: "you are here",
 
     // cli.js
     cliHelpIntro: "This is an optional command line — the whole site works from here.",
@@ -149,6 +154,11 @@ const STRINGS = {
     minRead: (m) => `${m} мин чтения`,
     viewOriginal: "открыть оригинал",
     alsoPublishedPrefix: "Также опубликовано как вики-страница — ",
+    copyLink: "🔗 копировать ссылку",
+    copyLinkDone: "✓ скопировано!",
+    copyLinkFail: "нажмите Ctrl+C для копирования",
+    seriesLabel: (s) => `Серия ${s}`,
+    seriesCurrent: "вы здесь",
 
     cliHelpIntro: "Это необязательная командная строка — отсюда работает весь сайт.",
     helpExplore: "Разделы: ",
