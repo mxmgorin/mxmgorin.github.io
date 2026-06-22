@@ -1,11 +1,9 @@
 At its core, [retsurf](https://github.com/mxmgorin/retsurf) is three big pieces:
 **Servo** renders the web, **SDL2** owns the window and input on bare
-hardware, and **egui** draws the browser's own UI on top. None of those is the
-hard part. The hard part is getting all three to share *one GPU* on a device with
+hardware, and **egui** draws the browser's own UI on top. None of those is particularly difficult on its own. The hard part is getting all three to share *one GPU* on a device with
 no compositor and an old graphics driver.
 
-This is the full breakdown: how Servo and SDL2 actually connect, and every way it broke on the way to run on a retro-handheld. In order, because the order
-is the story — each crash is what pushed the architecture to the next iteration.
+This post is the full story: how Servo and SDL2 ended up sharing a single GPU context, and every way that arrangement broke before it finally worked on a retro handheld.
 
 ## First attempt — surfman from SDL2's window handle
 
@@ -156,7 +154,7 @@ self.browser.shutdown();   // flushes cookies / localStorage to disk
 std::process::exit(0);
 ```
 
-Inelegant, but correct: the process is ending, the kernel reclaims the GPU
+Inelegant, but practical: the process is ending, the kernel reclaims the GPU
 resources, and skipping the destructor costs nothing.
 
 ## Crash #4 — SDL and surfman on different display servers
@@ -191,10 +189,12 @@ contexts in the thread, fighting over global EGL state.** My original plan was t
 make surfman use SDL's context so they'd be the same one. But the cleaner move
 turned out to be the opposite — get surfman out of the rendering path entirely.
 
-The key realization: `servo::RenderingContext` is a *trait*. I don't have to use
+The key realization was that I had been solving the wrong problem.
+
+I started out trying to make surfman and SDL2 share a context. Eventually I realized the better solution was to stop having two rendering contexts in the first place. `servo::RenderingContext` is a *trait*. I don't have to use
 surfman's implementation; I can write my own over SDL's single context. And
 WebRender renders into **whatever framebuffer is bound** after it calls
-`prepare_for_rendering()`. So I just bind my own framebuffer object (FBO) there,
+`prepare_for_rendering()`. So I just bind my own framebuffer object there,
 let Servo draw into it, and hand egui the FBO's color texture to composite.
 
 That's `SdlRenderingContext` in `src/platform/render.rs`. The whole trait
@@ -273,7 +273,7 @@ That one bug taught me the most, and the lesson is the whole reason it cost a
 weekend: *your desktop drivers are not the target, and a library that panics on a
 missing optional capability robs you of graceful degradation.*
 
-## Honorable mentions (the small ones)
+## Smaller Problems
 
 Not every problem was a full crash. A few that ate an afternoon each:
 
@@ -320,4 +320,4 @@ Four things, roughly in order of how much they hurt:
 
 The reward is anticlimactic, which is usually a sign that the work is finished. The device boots, a real JavaScript-heavy page renders on the Mali GPU through a single shared GLES context, and nothing interesting happens: no readbacks, no GL errors, no panics.
 
-Just a browser running on a device that was originally built to emulate Game Boy ROMs.
+Just a browser, running on a device that most people bought to emulate Game Boy ROMs.
