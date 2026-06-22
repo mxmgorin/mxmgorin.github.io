@@ -318,7 +318,6 @@ Four things, roughly in order of how much they hurt:
    instead of returning `Err`, it became an unrecoverable crash three layers up. Be
    the library that returns `Option`.
 
-The reward is anticlimactic, which is how you know it's done: the device boots, a
-real JavaScript-heavy page renders on the Mali GPU through one shared GLES context,
-no readbacks, no GL errors, no panics. Just a browser, on a thing that was built to
-run Game Boy ROMs.
+The reward is anticlimactic, which is usually a sign that the work is finished. The device boots, a real JavaScript-heavy page renders on the Mali GPU through a single shared GLES context, and nothing interesting happens: no readbacks, no GL errors, no panics.
+
+Just a browser running on a device that was originally built to emulate Game Boy ROMs.
