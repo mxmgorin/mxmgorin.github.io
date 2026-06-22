@@ -33,6 +33,26 @@ html.no-crt {
     --crt-scanline-opacity: 0;
 }
 
+html.no-crt body {
+    animation: none; /* stop the screen flicker too, not just the glow */
+}
+
+/* Honour the OS "reduce motion" setting: kill the flicker animation and the
+   glow/scanline effects, same as the .no-crt opt-out. */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --crt-glow-inner: 0;
+        --crt-glow-outer: 0;
+        --crt-active-inner: 0;
+        --crt-active-outer: 0;
+        --crt-scanline-opacity: 0;
+    }
+
+    body {
+        animation: none;
+    }
+}
+
 body {
     color: var(--fg);
     text-shadow:

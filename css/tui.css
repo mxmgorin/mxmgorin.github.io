@@ -1,11 +1,11 @@
 .tui {
-    width: calc(100% - 1rem); /* fix borders after transform */
-    max-width: 1200px;
+    width: calc(100vw - 1rem); /* 1rem inset keeps the scaled border off-screen */
+    max-width: 1500px;
     border: 1px solid var(--border);
     background: var(--panel);
     display: flex;
     flex-direction: column;
-    height: 90vh;
+    height: 98vh;
 }
 
 .tui-header {
@@ -32,20 +32,102 @@
     text-decoration: underline;
 }
 
+.tui-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+}
+
+/* Header controls (lang switcher + CRT toggle) share a compact status-bar
+   "chip" look: subtle accent border, dim when idle, accent-lit when active. */
+.tui-header .lang,
+.crt-toggle {
+    font-size: 0.75em;
+    font-weight: normal;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(var(--accent-rgb), 0.25);
+    border-radius: 3px;
+}
+
+/* lang switcher — a two-segment control (EN | RU) */
 .tui-header .lang {
     margin-left: 1em;
-    font-size: 0.9em;
-    opacity: 0.7;
+    display: inline-flex;
+    overflow: hidden;
 }
 
 .tui-header .lang a {
+    padding: 0.15em 0.55em;
+    color: var(--muted);
     text-decoration: none;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.tui-header .lang a + a {
+    border-left: 1px solid rgba(var(--accent-rgb), 0.25);
+}
+
+.tui-header .lang a:hover {
+    background: rgba(var(--accent-rgb), 0.1);
+    color: var(--fg);
 }
 
 .tui-header .lang .active {
+    background: rgba(var(--accent-rgb), 0.18);
+    color: var(--accent);
+}
+
+/* CRT toggle — a chip with an LED dot that lights up when effects are on. */
+.crt-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: 0.15em 0.55em;
+    background: none;
+    color: var(--muted);
+    font-family: inherit;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.crt-toggle::before {
+    content: "";
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.45;
+    transition:
+        background 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.crt-toggle:hover {
+    background: rgba(var(--accent-rgb), 0.1);
+    color: var(--fg);
+}
+
+.crt-toggle[aria-pressed="true"] {
+    color: var(--accent);
+    border-color: rgba(var(--accent-rgb), 0.55);
+}
+
+.crt-toggle[aria-pressed="true"]::before {
+    background: var(--accent);
     opacity: 1;
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
+    box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.9);
+}
+
+.crt-toggle:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .tui-body {
@@ -79,7 +161,7 @@
 }
 
 .tui-menu li.active {
-    background: rgba(122, 162, 247, 0.15);
+    background: rgba(var(--accent-rgb), 0.12);
     color: var(--accent);
 }
 
@@ -101,6 +183,30 @@
     padding: 1rem;
     overflow-y: auto;
     flex: 1;
+    /* CRT-tinted scrollbar so it doesn't break the terminal illusion (Firefox) */
+    scrollbar-width: auto;
+    scrollbar-color: rgba(var(--accent-rgb), 0.7) rgba(var(--accent-rgb), 0.1);
+}
+
+/* WebKit/Blink scrollbar */
+.tui-content::-webkit-scrollbar {
+    width: 14px;
+}
+
+.tui-content::-webkit-scrollbar-track {
+    background: rgba(var(--accent-rgb), 0.08);
+    border-left: 1px solid rgba(var(--accent-rgb), 0.2);
+}
+
+.tui-content::-webkit-scrollbar-thumb {
+    background: rgba(var(--accent-rgb), 0.55);
+    border: 2px solid var(--panel); /* inset look */
+    border-radius: 7px;
+    box-shadow: 0 0 6px rgba(var(--accent-rgb), 0.4); /* CRT glow */
+}
+
+.tui-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--accent-rgb), 0.85);
 }
 
 .tui-content pre {

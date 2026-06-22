@@ -1,4 +1,6 @@
 :root {
+    color-scheme: dark; /* render native UI (scrollbars, form controls) dark */
+
     --bg: #0b0f0c; /* near-black with green tint */
     --panel: #0f1612;
     --border: #1f2a23;
@@ -6,6 +8,7 @@
     --fg: #cfe8d8; /* main text */
     --muted: #8fb3a0; /* secondary text */
     --accent: #6fd19c; /* selection / highlights */
+    --accent-rgb: 111, 209, 156; /* --accent as r,g,b for rgba() */
 }
 
 * {
@@ -36,6 +39,19 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+/* Tint text selection with the CRT accent instead of the browser default. */
+::selection {
+    background: rgba(var(--accent-rgb), 0.3);
+    color: var(--fg);
+}
+
+/* Visible focus ring for keyboard users (mouse clicks stay clean). */
+a:focus-visible,
+.tui-menu li:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .tags {

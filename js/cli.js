@@ -14,6 +14,7 @@ import {
 } from "./render.js";
 import { setLang, openPost, Languages, state as appState } from "./app.js";
 import { blogView } from "./content/blog.js";
+import { setCrt, toggleCrt } from "./crt.js";
 import { t } from "./i18n.js";
 
 const commandEl = document.getElementById("command");
@@ -166,6 +167,26 @@ const commands = {
     render();
   },
 
+  crt(args) {
+    const arg = (args[0] || "toggle").toLowerCase();
+    let on;
+    switch (arg) {
+      case "on":
+        setCrt((on = true));
+        break;
+      case "off":
+        setCrt((on = false));
+        break;
+      case "toggle":
+        on = toggleCrt();
+        break;
+      default:
+        renderElement(t("crtUsage"));
+        return;
+    }
+    renderElement(on ? t("crtOn") : t("crtOff"));
+  },
+
   hint() {
     if (hintQueue.length === 0) {
       hintQueue = [...t("hints")].sort(() => Math.random() - 0.5);
@@ -295,6 +316,7 @@ const ARG_COMPLETERS = {
   read: () => blogView.map((p) => p.slug),
   start: () => ["snake", "tetris", "invaders", "breakout"],
   lang: () => Object.values(Languages),
+  crt: () => ["on", "off", "toggle"],
 };
 
 // Complete the current input in place: commands when no argument is being

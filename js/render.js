@@ -17,6 +17,7 @@ import { contactView } from "./content/contact.js";
 import { introView } from "./content/intro.js";
 import { blogView } from "./content/blog.js";
 import { renderMarkdown } from "./markdown.js";
+import { isCrtOn, toggleCrt } from "./crt.js";
 import { t } from "./i18n.js";
 
 const contentEl = document.getElementById("content");
@@ -25,6 +26,7 @@ const blockSeparator = " ".repeat(1);
 export function render() {
   applyChrome();
   renderLangSelector();
+  renderCrtToggle();
   renderMenu();
   renderView();
 }
@@ -488,6 +490,24 @@ export function newContact() {
   return pre;
 }
 
+// The header CRT toggle mirrors the `crt` CLI command: dim/un-pressed when off,
+// accent-lit/pressed when on. State + persistence live in crt.js.
+function renderCrtToggle() {
+  const btn = document.querySelector(".tui-header .crt-toggle");
+  if (!btn) return;
+
+  const sync = () => {
+    btn.setAttribute("aria-pressed", String(isCrtOn()));
+    btn.title = t("crtToggleTitle");
+  };
+
+  sync();
+  btn.onclick = () => {
+    toggleCrt();
+    sync();
+  };
+}
+
 function renderLangSelector() {
   const el = document.querySelector(".tui-header .lang");
   if (!el) return;
@@ -509,10 +529,8 @@ function renderLangSelector() {
       render();
     };
 
-    el.append(a, document.createTextNode(" | "));
+    el.append(a); // segments are divided by CSS borders, not text separators
   });
-
-  el.lastChild.remove(); // remove trailing separator
 }
 
 function newBlocks(items, title) {

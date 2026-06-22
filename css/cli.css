@@ -39,9 +39,10 @@
     color: inherit;
     font: inherit;
     outline: none;
+    caret-color: var(--accent);
 }
 
 #command::placeholder {
     color: var(--muted);
-    opacity: 0.2;
+    opacity: 0.4;
 }

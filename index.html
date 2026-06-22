@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <link rel="icon" type="image/x-icon" href="./icon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#0b0f0c" />
         <title>mxmgorin.dev | Web TUI</title>
         <meta
             name="description"
@@ -33,13 +34,33 @@
         <link rel="stylesheet" href="css/tui.css" />
         <link rel="stylesheet" href="css/retro.css" />
         <link rel="stylesheet" href="css/cli.css" />
+
+        <script>
+            // Apply the saved CRT preference before first paint so a visitor who
+            // turned the effects off never sees them flash on. Runtime toggling
+            // lives in js/crt.js (the `crt` command).
+            try {
+                if (localStorage.getItem("crt") === "off") {
+                    document.documentElement.classList.add("no-crt");
+                }
+            } catch (e) {}
+        </script>
     </head>
 
     <body>
         <main class="tui">
             <header class="tui-header">
                 <span class="title"><span class="lang"></span></span>
-                <a href="/" class="status">mxmgorin.dev</a>
+                <span class="tui-header-actions">
+                    <button
+                        type="button"
+                        class="crt-toggle"
+                        aria-pressed="true"
+                    >
+                        <span class="crt-label">CRT</span>
+                    </button>
+                    <a href="/" class="status">mxmgorin.dev</a>
+                </span>
             </header>
 
             <div class="tui-body">
@@ -61,7 +82,7 @@
                 <div class="footer-prompt">
                     <form id="input-line" autocomplete="off">
                         <div class="command-line">
-                            <span id="prompt" for="command" class="prompt"
+                            <span id="prompt" class="prompt" aria-hidden="true"
                                 >guest:~$</span
                             >
                             <input
