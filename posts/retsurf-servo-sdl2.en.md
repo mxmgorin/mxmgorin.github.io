@@ -24,15 +24,17 @@ Wayland, X11, Win32 — but **not for DRM/GBM**. So surfman had nothing to build
 context *from*: the call that returned a handle on my desktop returned nothing on
 the device. The default path simply isn't available.
 
-That decides the whole design:
+That dead end decides the whole design:
 
 > **SDL2 must own the one and only GL context** — it already knows how to create
 > one on bare KMS/DRM via EGL/GBM, the same way every other SDL2 handheld port
 > does — and **Servo renders *into* it.**
 
-Here's SDL2 taking ownership, in `src/platform/window.rs`. Note it asks for a
-**GLES** context (the Mali blobs on these SoCs only speak GLES; WebRender needs
-≥ 3.0):
+## Second attempt — software rendering
+
+So SDL2 creates the context itself. Here's it taking ownership, in
+`src/platform/window.rs`. Note it asks for a **GLES** context (the Mali blobs on
+these SoCs only speak GLES; WebRender needs ≥ 3.0):
 
 ```rust
 let gl_attr = video_subsystem.gl_attr();
@@ -67,9 +69,7 @@ let gl: Rc<dyn Gl> = unsafe {
 Two GL bindings, one context. Hold that thought — it's the source of half the
 crashes below.
 
-## Second attempt — software rendering
-
-With the default GPU path dead on the device, I wanted to prove the rest of the
+With the window and context in place, I wanted to prove the rest of the
 pipeline end to end before fighting the GPU again. So I used Servo's
 `SoftwareRenderingContext` (an offscreen llvmpipe rasterizer). Each frame:
 Servo rasterizes the page on the CPU, retsurf calls `read_to_image()` to pull the
