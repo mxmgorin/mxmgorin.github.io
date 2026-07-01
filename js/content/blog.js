@@ -3,6 +3,20 @@
 // post from inside Markdown ([[...]]). `source` is an optional external original.
 export const blogView = [
   {
+    slug: "retsurf-performance",
+    series: "retsurf",
+    name: {
+      en: "Every Megabyte Counts: A Browser on a 1 GB Handheld",
+      ru: "Каждый мегабайт на счету: браузер для консоли с 1 ГБ памяти",
+    },
+    date: "2026-07-01",
+    desc: {
+      en: "A modern browser on a handheld with no dedicated VRAM and weak in-order cores. What actually moved the needle — deleting allocations, tuning Servo's prefs, and shipping three per-core binaries to dodge a SIGILL — and, just as important, what I chose not to do.",
+      ru: "Современный браузер на консоли без выделенной VRAM и со слабыми in-order-ядрами. Что действительно дало результат — удаление аллокаций, тюнинг prefs у Servo, три бинарника под разные ядра ради обхода SIGILL — и, что не менее важно, чего я решил не делать.",
+    },
+    tags: ["Rust", "Performance", "Servo", "Memory"],
+  },
+  {
     slug: "retsurf-controls",
     series: "retsurf",
     name: {
