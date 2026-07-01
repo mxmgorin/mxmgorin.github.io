@@ -7,7 +7,7 @@ export const blogView = [
     series: "retsurf",
     name: {
       en: "Every Megabyte Counts: A Browser on a 1 GB Handheld",
-      ru: "Каждый мегабайт на счету: браузер для консоли с 1 ГБ памяти",
+      ru: "Каждый мегабайт на счету: браузер для консолeй с 1 ГБ ОЗУ",
     },
     date: "2026-07-01",
     desc: {
