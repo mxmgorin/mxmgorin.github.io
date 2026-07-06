@@ -41,6 +41,18 @@ export const projects = [
     tags: ["Go", "Emulation", "WASM", "CLI", "SDL2"],
   },
   {
+    name: "csbf",
+    desc: {
+      en: "A Brainfuck interpreter, debugger, and transpiler written in C#. Originally created to explore different execution strategies, from straightforward interpretation to runtime recompilation.",
+      ru: "Интерпретатор, отладчик и рекомпилятор Brainfuck на C#. Начинался как эксперимент с разными подходами к исполнению кода, но превратился в полноценный набор инструментов для работы с языком.",
+    },
+    links: [
+      { label: "demo", url: "https://mxmgorin.github.io/csbf/" },
+      { label: "source", url: "https://github.com/mxmgorin/csbf" }
+    ],
+    tags: ["C#", "CLI"],
+  },
+  {
     name: "PortMaster",
     desc: {
       en: "One of my favorite open-source activities is porting games to ARM Linux handhelds as a contributor to PortMaster, helping bring games to devices they were never originally designed for.",
@@ -59,15 +71,6 @@ export const projects = [
     },
     links: [{ label: "source", url: "https://github.com/mxmgorin/egui-sdl2" }],
     tags: ["Rust", "GUI", "SDL2", "OpenGL"],
-  },
-  {
-    name: "csbf",
-    desc: {
-      en: "A Brainfuck interpreter, debugger, and recompiling compiler written in C#. Originally created to explore different execution strategies, from straightforward interpretation to runtime recompilation.",
-      ru: "Интерпретатор, отладчик и рекомпилятор Brainfuck на C#. Начинался как эксперимент с разными подходами к исполнению кода и со временем превратился в полноценный набор инструментов для работы с языком.",
-    },
-    links: [{ label: "source", url: "https://github.com/mxmgorin/csbf" }],
-    tags: ["C#", "CLI"],
   },
   {
     name: "luar",
