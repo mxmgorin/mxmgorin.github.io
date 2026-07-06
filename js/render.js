@@ -141,17 +141,47 @@ function uniqueTags(items) {
   return all;
 }
 
-// A clickable "filter: all · tag · tag" bar. onSelect(tag|null) is called on click.
+// A collapsible "filter ▸ <active>" spoiler. Collapsed by default to stay
+// compact; expands to an "all · tag · tag" row. onSelect(tag|null) fires on
+// click, which re-renders — so the spoiler snaps shut showing the new choice.
 function newTagFilterBar(allTags, active, onSelect) {
-  const bar = document.createElement("div");
-  bar.className = "tag-filter";
-  bar.append(document.createTextNode(t("filterLabel")));
-  bar.append(newTagFilter(t("filterAll"), active == null, () => onSelect(null)));
-  allTags.forEach((t) => {
-    bar.append(document.createTextNode(" · "));
-    bar.append(newTagFilter(t, t === active, () => onSelect(t)));
+  const details = document.createElement("details");
+  details.className = "tag-filter";
+
+  const summary = document.createElement("summary");
+  summary.className = "tag-filter-summary";
+
+  const label = document.createElement("span");
+  label.className = "tag-filter-label";
+  label.textContent = t("filterLabel");
+
+  const caret = document.createElement("span");
+  caret.className = "tag-filter-caret";
+  caret.setAttribute("aria-hidden", "true");
+
+  const activeLabel = document.createElement("span");
+  activeLabel.className = "tag-filter-active";
+  activeLabel.textContent = active == null ? t("filterAll") : active;
+
+  summary.append(
+    label,
+    document.createTextNode(" "),
+    caret,
+    document.createTextNode(" "),
+    activeLabel,
+  );
+  details.append(summary);
+
+  const list = document.createElement("div");
+  list.className = "tag-filter-list";
+  list.append(newTagFilter(t("filterAll"), active == null, () => onSelect(null)));
+  allTags.forEach((tag) => {
+    list.append(document.createTextNode(" · "));
+    list.append(newTagFilter(tag, tag === active, () => onSelect(tag)));
   });
-  return bar;
+  details.append(list);
+
+  return details;
 }
 
 function newTagFilter(label, isActive, onClick) {

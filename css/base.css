@@ -77,6 +77,35 @@ a:focus-visible,
     line-height: 1.7;
 }
 
+.tag-filter-summary {
+    cursor: pointer;
+    list-style: none; /* hide the default disclosure triangle */
+    color: var(--muted);
+    user-select: none;
+    width: fit-content;
+}
+
+.tag-filter-summary::-webkit-details-marker {
+    display: none;
+}
+
+.tag-filter-caret::before {
+    content: "\25B8"; /* ▸ */
+}
+
+.tag-filter[open] .tag-filter-caret::before {
+    content: "\25BE"; /* ▾ */
+}
+
+.tag-filter-active {
+    color: var(--accent);
+}
+
+.tag-filter-list {
+    margin-top: 0.4rem;
+    padding-left: 0.2rem;
+}
+
 .tag-filter-item {
     color: var(--muted);
 }
