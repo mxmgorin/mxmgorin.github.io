@@ -6,8 +6,8 @@ export const blogView = [
     slug: "csbf-toolchain",
     series: "csbf",
     name: {
-      en: "Eight Instructions, a Whole Compiler: A Brainfuck Toolchain in C#",
-      ru: "Восемь инструкций — целый компилятор: тулчейн Brainfuck на C#",
+      en: "A Language With No Syntax: A Brainfuck Compiler in C#",
+      ru: "Язык без синтаксиса: компилятор Brainfuck на C#",
     },
     date: "2026-07-06",
     desc: {
