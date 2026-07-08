@@ -9,10 +9,13 @@ export const projects = [
   {
     name: "GMBoy",
     desc: {
-      en: "My first emulator and one of my longest-running projects. It started as an attempt to understand how the Game Boy works under the hood and gradually evolved into a cross-platform emulator focused on accuracy and performance.",
-      ru: "Мой первый эмулятор и проект, к которому я постоянно возвращаюсь. Начинался как попытка разобраться в устройстве Game Boy, а со временем вырос в кроссплатформенный эмулятор с упором на точность и производительность.",
+      en: "My first emulator and one of my longest-running projects. It started as an attempt to understand how the Game Boy works under the hood and grew into a full Game Boy / Game Boy Color emulator in Rust: cycle-accurate emulation, a GUI with save states, rewind and shaders, and up to 10× speed on weak ARM hardware.",
+      ru: "Мой первый эмулятор и проект, к которому я постоянно возвращаюсь. Начинался как попытка разобраться в устройстве Game Boy, а вырос в полноценный эмулятор Game Boy и Game Boy Color на Rust: потактовая точность, GUI с сейв-стейтами, перемоткой и шейдерами — и до 10× скорости на слабом ARM-железе.",
     },
-    links: [{ label: "source", url: "https://github.com/mxmgorin/gmboy" }],
+    links: [
+      { label: "download", url: "https://github.com/mxmgorin/gmboy/releases/latest" },
+      { label: "source", url: "https://github.com/mxmgorin/gmboy" },
+    ],
     tags: ["Rust", "Emulation", "SDL2", "OpenGL", "Android", "Desktop"],
   },
   {
@@ -43,14 +46,15 @@ export const projects = [
   {
     name: "csbf",
     desc: {
-      en: "A Brainfuck interpreter, debugger, and transpiler written in C#. Originally created to explore different execution strategies, from straightforward interpretation to runtime recompilation.",
-      ru: "Интерпретатор, отладчик и рекомпилятор Brainfuck на C#. Начинался как эксперимент с разными подходами к исполнению кода, но превратился в полноценный набор инструментов для работы с языком.",
+      en: "After building emulators that run someone else's bytecode, I wanted to write a compiler that produces it instead — in the simplest language I could find. Brainfuck has almost no syntax, so the compiler itself gets all the attention: an optimizing IR and a handful of backends on top of it — from an interpreter with reversible debugging to a native IL JIT. And it's a great way to actually see how a compiler works on the inside.",
+      ru: "После эмуляторов, исполняющих чужой байткод, захотелось написать компилятор, который его создаёт, — и на максимально простом языке. У Brainfuck почти нет синтаксиса, поэтому всё внимание достаётся самому компилятору: оптимизирующему IR и нескольким бэкендам поверх него — от интерпретатора с обратимой отладкой до нативного IL-JIT. Заодно отличный способ увидеть, как компилятор устроен изнутри.",
     },
     links: [
       { label: "demo", url: "https://mxmgorin.github.io/csbf/" },
-      { label: "source", url: "https://github.com/mxmgorin/csbf" }
+      { label: "source", url: "https://github.com/mxmgorin/csbf" },
+      { label: "posts", view: "blog", tag: "Brainfuck" },
     ],
-    tags: ["C#", "CLI"],
+    tags: ["C#", "Compilers", "Brainfuck", "WASM", "CLI"],
   },
   {
     name: "PortMaster",
