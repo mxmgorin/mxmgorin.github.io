@@ -3,6 +3,20 @@
 // post from inside Markdown ([[...]]). `source` is an optional external original.
 export const blogView = [
   {
+    slug: "csbf-toolchain",
+    series: "csbf",
+    name: {
+      en: "Eight Instructions, a Whole Compiler: A Brainfuck Toolchain in C#",
+      ru: "Восемь инструкций — целый компилятор: тулчейн Brainfuck на C#",
+    },
+    date: "2026-07-06",
+    desc: {
+      en: "Brainfuck has no syntax worth parsing, which makes it the perfect language to build a compiler for. csbf is a full C# toolchain: an optimizing IR, a reversible VM with time-travel debugging, a Go transpiler, an IL JIT, and a Blazor playground that runs most of it in the browser.",
+      ru: "У Brainfuck нет синтаксиса, который стоит парсить, — и именно поэтому это идеальный язык, чтобы написать для него компилятор. csbf — полный тулчейн на C#: оптимизирующий IR, обратимая виртуальная машина с отладкой «назад во времени», транспайлер в Go, IL-JIT и плейграунд на Blazor, который запускает бо́льшую часть этого прямо в браузере.",
+    },
+    tags: ["C#", "Compilers", "Brainfuck", "WASM"],
+  },
+  {
     slug: "retsurf-performance",
     series: "retsurf",
     name: {
