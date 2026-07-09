@@ -1,4 +1,4 @@
-ch8go wasn't my first emulator. Before it I built [GMBoy](https://github.com/mxmgorin/gmboy), a Game Boy emulator in Rust, and getting one core to run cleanly on both desktop and Android taught me how easily platform concerns leak into emulation code once you stop watching for them.
+ch8go wasn't my first emulator. Before it I built [oxGBC](https://github.com/mxmgorin/oxgbc), a Game Boy emulator in Rust, and getting one core to run cleanly on both desktop and Android taught me how easily platform concerns leak into emulation code once you stop watching for them.
 
 ch8go was also a chance to switch things up: I spend most of my time in Rust, and I wanted a real, self-contained project to get properly hands-on with Go. A CHIP-8 interpreter turned out to be the perfect size for it — small enough to finish, rich enough to actually learn the language.
 
@@ -55,4 +55,4 @@ Each subdirectory under `cmd/` is a standalone executable that wires the core, t
 - sound, video, and input
 - orchestrating the execution loop
 
-Today that's four frontends — a headless/terminal **CLI**, a native **SDL2** desktop app, a portable Go-based **Ebiten** build, and a **WASM** target for the browser — and every one of them reuses the exact same `pkg/host`, `pkg/chip8`, and `pkg/db`. Adding a fifth would mean writing only the glue, not another emulator — which is exactly the payoff GMBoy taught me to design for from the start.
+Today that's four frontends — a headless/terminal **CLI**, a native **SDL2** desktop app, a portable Go-based **Ebiten** build, and a **WASM** target for the browser — and every one of them reuses the exact same `pkg/host`, `pkg/chip8`, and `pkg/db`. Adding a fifth would mean writing only the glue, not another emulator — which is exactly the payoff oxGBC taught me to design for from the start.

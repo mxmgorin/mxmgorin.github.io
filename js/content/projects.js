@@ -7,14 +7,14 @@ export const mainTags = ["Rust", "Go", "C#", "Lua"];
 
 export const projects = [
   {
-    name: "GMBoy",
+    name: "oxGBC",
     desc: {
       en: "My first emulator and one of my longest-running projects. It started as an attempt to understand how the Game Boy works under the hood and grew into a full Game Boy / Game Boy Color emulator in Rust: cycle-accurate emulation, a GUI with save states, rewind and shaders, and up to 10× speed on weak ARM hardware.",
       ru: "Мой первый эмулятор и проект, к которому я постоянно возвращаюсь. Начинался как попытка разобраться в устройстве Game Boy, а вырос в полноценный эмулятор Game Boy и Game Boy Color на Rust: потактовая точность, GUI с сейв-стейтами, перемоткой и шейдерами — и до 10× скорости на слабом ARM-железе.",
     },
     links: [
-      { label: "download", url: "https://github.com/mxmgorin/gmboy/releases/latest" },
-      { label: "source", url: "https://github.com/mxmgorin/gmboy" },
+      { label: "download", url: "https://github.com/mxmgorin/oxgbc/releases/latest" },
+      { label: "source", url: "https://github.com/mxmgorin/oxgbc" },
     ],
     tags: ["Rust", "Emulation", "SDL2", "OpenGL", "Android", "Desktop"],
   },
