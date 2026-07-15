@@ -211,7 +211,22 @@ export function newBlogList() {
     : blogView;
 
   const wrap = document.createElement("div");
-  wrap.append(newTagFilterBar(uniqueTags(blogView), active, filterBlog));
+
+  // Tag filter and the RSS link share one row so the feed link costs no extra
+  // vertical space.
+  const top = document.createElement("div");
+  top.className = "blog-top";
+  top.append(newTagFilterBar(uniqueTags(blogView), active, filterBlog));
+
+  const rss = document.createElement("a");
+  rss.href = "/feed.xml";
+  rss.textContent = t("blogRss");
+  rss.className = "blog-rss";
+  rss.target = "_blank";
+  rss.rel = "noopener noreferrer";
+  top.append(rss);
+
+  wrap.append(top);
 
   const pre = document.createElement("pre");
   list.forEach((post, i) => {
@@ -517,6 +532,29 @@ export function newContact() {
     pre.append(a, document.createTextNode("\n\n"));
   });
 
+  return pre;
+}
+
+// The feed subscribe panel: RSS + JSON Feed URLs as external links. Backs the
+// `rss` CLI command and mirrors newContact's link style. URLs are built from the
+// live origin so they're correct on whatever host the page is served from.
+export function newFeed() {
+  const pre = document.createElement("pre");
+  pre.append(document.createTextNode(`${t("feedTitle")}\n\n`));
+
+  const addRow = (label, path) => {
+    pre.append(document.createTextNode(`  ${label.padEnd(6)}`));
+    const a = document.createElement("a");
+    a.href = path;
+    a.textContent = location.origin + path;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    pre.append(a, document.createTextNode("\n"));
+  };
+
+  addRow(t("feedRss"), "/feed.xml");
+  addRow(t("feedJson"), "/feed.json");
+  pre.append(document.createTextNode(`\n${t("feedHint")}`));
   return pre;
 }
 

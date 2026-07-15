@@ -30,6 +30,7 @@ const SITE_NAME = "mxmgorin.dev";
 const DEFAULT_LANG = "en";
 const AUTHOR = "Maxim Gorin";
 const AUTHOR_URL = "https://github.com/mxmgorin";
+const RIGHTS = { en: "All rights reserved.", ru: "Все права защищены." };
 
 const LOCALES = { en: "en_US", ru: "ru_RU" };
 const MIN_READ = {
@@ -66,6 +67,7 @@ const BLOG_INDEX = {
 const OG_W = 1200;
 const OG_H = 630;
 const SITE_TAGLINE = "Systems programming, mostly out of curiosity — and for fun.";
+const FEED_DESC = "Projects and notes on emulation, compilers, and low-level systems.";
 
 /* ----------------------------------------------------------------- helpers */
 
@@ -112,6 +114,13 @@ function escXml(s) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+// Copyright notice. `year` is included per-post (its publication year); omit it
+// for site-wide surfaces (hub, feed) where a single year would be arbitrary.
+function copyrightLine(lang, year) {
+  const r = RIGHTS[lang] ?? RIGHTS[DEFAULT_LANG];
+  return year ? `© ${year} ${AUTHOR} · ${r}` : `© ${AUTHOR} · ${r}`;
 }
 
 // Mirror of render.js: word-like tokens only. Shared by readingTime + wordCount.
@@ -241,6 +250,8 @@ function renderArticleHtml(post, lang, md, langs, ogImage, slugLangs) {
     url,
     wordCount: countWords(md),
     isAccessibleForFree: true,
+    copyrightHolder: { "@type": "Person", name: AUTHOR, url: AUTHOR_URL },
+    copyrightYear: Number(post.date.slice(0, 4)),
     keywords: tags.join(", "),
   };
   if (ogImage) jsonLd.image = ORIGIN + ogImage;
@@ -301,11 +312,13 @@ ${alternates}
     <meta property="og:url" content="${url}" />
     <meta property="og:locale" content="${LOCALES[lang] ?? lang}" />
     <meta property="article:published_time" content="${isoDate(post.date)}" />
+    <meta name="copyright" content="${escAttr(copyrightLine(lang, post.date.slice(0, 4)))}" />
 ${tagMeta}
 ${imageMeta}
     <meta name="twitter:title" content="${escAttr(title)}" />
     <meta name="twitter:description" content="${escAttr(desc)}" />
     <link rel="alternate" type="application/rss+xml" title="${SITE_NAME} blog" href="/feed.xml" />
+    <link rel="alternate" type="application/feed+json" title="${SITE_NAME} blog" href="/feed.json" />
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/article.css" />
     <script type="application/ld+json">
@@ -326,6 +339,7 @@ ${JSON.stringify(breadcrumbLd, null, 2)}
         ${bodyHtml}${sourceHtml}${seriesNav}
         <p class="open-tui"><a href="${escAttr(tuiHref)}">${escAttr(OPEN_TUI[lang])}</a></p>
       </article>
+      <footer class="page-footer">${escAttr(copyrightLine(lang, post.date.slice(0, 4)))}</footer>
     </main>
   </body>
 </html>
@@ -388,6 +402,7 @@ function renderBlogIndexHtml(posts, lang, langs, slugLangs, readingMap) {
     url,
     inLanguage: lang,
     author: { "@type": "Person", name: AUTHOR, url: AUTHOR_URL },
+    copyrightHolder: { "@type": "Person", name: AUTHOR, url: AUTHOR_URL },
     blogPost: posts.map((p) => {
       const linkLang = linkLangFor(p);
       return {
@@ -436,7 +451,9 @@ ${alternates}
     <meta name="twitter:image" content="${ogImage}" />
     <meta name="twitter:title" content="${escAttr(strings.title)} — ${SITE_NAME}" />
     <meta name="twitter:description" content="${escAttr(strings.desc)}" />
+    <meta name="copyright" content="${escAttr(copyrightLine(lang))}" />
     <link rel="alternate" type="application/rss+xml" title="${SITE_NAME} blog" href="/feed.xml" />
+    <link rel="alternate" type="application/feed+json" title="${SITE_NAME} blog" href="/feed.json" />
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/article.css" />
     <script type="application/ld+json">
@@ -459,6 +476,7 @@ ${JSON.stringify(breadcrumbLd, null, 2)}
 ${items}
       </ul>
       <p class="open-tui"><a href="${escAttr(tuiHref)}">${escAttr(OPEN_TUI[lang])}</a></p>
+      <footer class="page-footer">${escAttr(copyrightLine(lang))}</footer>
     </main>
   </body>
 </html>
@@ -518,9 +536,38 @@ ${urls}
 `;
 }
 
+// AI / LLM crawlers to keep out: model-training + dataset scrapers, plus the
+// AI-answer bots that republish content. Search engines are NOT listed here, so
+// they still fall under the permissive `*` group below. robots.txt is advisory —
+// compliant bots (these are) obey it; a hostile scraper can still ignore it.
+const AI_CRAWLERS = [
+  "GPTBot",            // OpenAI training
+  "OAI-SearchBot",     // OpenAI (ChatGPT search)
+  "ChatGPT-User",      // OpenAI (user-triggered fetch)
+  "Google-Extended",   // Google Gemini/Vertex training (NOT Googlebot search)
+  "CCBot",             // Common Crawl (feeds many LLM datasets)
+  "ClaudeBot",         // Anthropic
+  "anthropic-ai",      // Anthropic (legacy)
+  "Claude-Web",        // Anthropic
+  "PerplexityBot",     // Perplexity
+  "Bytespider",        // ByteDance
+  "Amazonbot",         // Amazon
+  "Applebot-Extended", // Apple AI training (NOT Applebot search)
+  "Meta-ExternalAgent", // Meta AI
+  "Diffbot",
+  "Omgilibot",
+  "cohere-ai",         // Cohere
+];
+
 function renderRobots() {
-  return `User-agent: *
+  const aiBlock = AI_CRAWLERS.map((ua) => `User-agent: ${ua}`).join("\n");
+  return `# Search engines welcome.
+User-agent: *
 Allow: /
+
+# AI / LLM training and scraping crawlers: not welcome.
+${aiBlock}
+Disallow: /
 
 Sitemap: ${ORIGIN}/sitemap.xml
 `;
@@ -554,14 +601,45 @@ ${cats}
   <channel>
     <title>${SITE_NAME}</title>
     <link>${ORIGIN}/</link>
-    <description>Projects and notes on emulation, low-level systems, Rust and Go.</description>
+    <description>${FEED_DESC}</description>
     <language>en</language>
+    <copyright>© ${AUTHOR}. ${RIGHTS.en}</copyright>
     <lastBuildDate>${buildDate}</lastBuildDate>
     <atom:link href="${ORIGIN}/feed.xml" rel="self" type="application/rss+xml"/>
 ${items}
   </channel>
 </rss>
 `;
+}
+
+// JSON Feed 1.1 (https://jsonfeed.org) — a modern alternative to RSS accepted by
+// many readers (NetNewsWire, Feedbin, …). Mirrors renderFeed: English titles,
+// summaries and dates, newest first.
+function renderJsonFeed(posts) {
+  const feed = {
+    version: "https://jsonfeed.org/version/1.1",
+    title: SITE_NAME,
+    home_page_url: `${ORIGIN}/`,
+    feed_url: `${ORIGIN}/feed.json`,
+    description: FEED_DESC,
+    language: "en",
+    authors: [{ name: AUTHOR, url: AUTHOR_URL }],
+    items: posts.map((p) => {
+      const url = ORIGIN + pagePath(p.slug, DEFAULT_LANG);
+      const desc = getTranslated(p.desc, DEFAULT_LANG);
+      const item = {
+        id: url,
+        url,
+        title: getTranslated(p.name, DEFAULT_LANG),
+        summary: desc,
+        content_html: `<p>${escXml(desc)}</p>`,
+        date_published: isoDate(p.date),
+      };
+      if (p.tags?.length) item.tags = p.tags;
+      return item;
+    }),
+  };
+  return `${JSON.stringify(feed, null, 2)}\n`;
 }
 
 // Crawlable, no-JS fallback list injected into index.html between markers.
@@ -667,6 +745,7 @@ async function main() {
   );
   await writeFile(path.join(ROOT, "robots.txt"), renderRobots());
   await writeFile(path.join(ROOT, "feed.xml"), renderFeed(posts));
+  await writeFile(path.join(ROOT, "feed.json"), renderJsonFeed(posts));
 
   // Refresh the <noscript> block in index.html between the SEO markers.
   const indexPath = path.join(ROOT, "index.html");

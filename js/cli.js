@@ -11,6 +11,7 @@ import {
   newCommandSuggestions,
   newCliBlock,
   newNeofetch,
+  newFeed,
 } from "./render.js";
 import { setLang, openPost, Languages, state as appState } from "./app.js";
 import { blogView } from "./content/blog.js";
@@ -70,6 +71,14 @@ const commands = {
 
   blog() {
     renderElement(newBlogList());
+  },
+
+  rss() {
+    renderElement(newFeed());
+  },
+
+  feed() {
+    renderElement(newFeed());
   },
 
   read(args) {

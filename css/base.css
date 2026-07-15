@@ -70,6 +70,30 @@ a:focus-visible,
     font-style: italic;
 }
 
+/* Blog list top row: tag filter on the left, "rss ↗" on the right — one line,
+   so the feed link adds no extra vertical space. */
+.blog-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.blog-top .tag-filter {
+    margin-bottom: 0;
+}
+
+.blog-rss {
+    font-size: 0.8rem;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.blog-rss:hover {
+    color: var(--accent);
+}
+
 .tag-filter {
     margin-bottom: 1rem;
     font-size: 0.8rem;
@@ -246,10 +270,26 @@ a:focus-visible,
 }
 
 .article img {
+    display: block;
     max-width: 100%;
     height: auto;
+    margin: 1rem auto;
     border: 1px solid var(--border);
     border-radius: 4px;
+}
+
+/* GB framebuffer screenshots are 160x144 pixel art: keep them crisp when scaled
+   up, and cap the width so a register dump doesn't fill the whole column. */
+.article img[src$=".png"] {
+    image-rendering: pixelated;
+    max-width: 320px;
+}
+
+/* The timing diagrams are dark-on-transparent SVGs; a light pad keeps them
+   legible on the dark theme (they also bake in a white background rect). */
+.article img[src$=".svg"] {
+    background: #fff;
+    padding: 0.5rem;
 }
 
 .article-meta {

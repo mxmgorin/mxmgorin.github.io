@@ -20,6 +20,7 @@
     <meta property="og:url" content="https://mxmgorin.dev/blog/csbf-toolchain/ru/" />
     <meta property="og:locale" content="ru_RU" />
     <meta property="article:published_time" content="2026-07-06T00:00:00.000Z" />
+    <meta name="copyright" content="© 2026 Maxim Gorin · Все права защищены." />
     <meta property="article:tag" content="C#">
     <meta property="article:tag" content="Compilers">
     <meta property="article:tag" content="Brainfuck">
@@ -33,6 +34,7 @@
     <meta name="twitter:title" content="Язык без синтаксиса: компилятор Brainfuck на C#" />
     <meta name="twitter:description" content="У Brainfuck нет синтаксиса, который стоит парсить, — и именно поэтому это идеальный язык, чтобы написать для него компилятор. csbf — полный тулчейн на C#: оптимизирующий IR, обратимая виртуальная машина с отладкой «назад во времени», транспайлер в Go, IL-JIT и плейграунд на Blazor, который запускает бо́льшую часть этого прямо в браузере." />
     <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="alternate" type="application/feed+json" title="mxmgorin.dev blog" href="/feed.json" />
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/article.css" />
     <script type="application/ld+json">
@@ -61,6 +63,12 @@
   "url": "https://mxmgorin.dev/blog/csbf-toolchain/ru/",
   "wordCount": 1506,
   "isAccessibleForFree": true,
+  "copyrightHolder": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "copyrightYear": 2026,
   "keywords": "C#, Compilers, Brainfuck, WASM",
   "image": "https://mxmgorin.dev/og/csbf-toolchain.ru.png",
   "articleSection": "csbf"
@@ -185,6 +193,7 @@ case OpKind.Jz:
 <p>Brainfuck задумывался как язык-шутка, но его минимализм делает его отличной площадкой для изучения компиляторов. Когда парсер сводится практически к одному проходу по исходному коду, на первый план выходят промежуточное представление (IR), оптимизации, виртуальная машина, кодогенерация и JIT. Оказалось, что восьми инструкций вполне достаточно, чтобы построить вокруг них полноценный компилятор.</p>
         <p class="open-tui"><a href="/?v=blog&amp;post=csbf-toolchain&amp;l=ru">▶ открыть в терминале</a></p>
       </article>
+      <footer class="page-footer">© 2026 Maxim Gorin · Все права защищены.</footer>
     </main>
   </body>
 </html>

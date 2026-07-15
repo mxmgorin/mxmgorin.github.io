@@ -3,8 +3,9 @@
   <channel>
     <title>mxmgorin.dev</title>
     <link>https://mxmgorin.dev/</link>
-    <description>Projects and notes on emulation, low-level systems, Rust and Go.</description>
+    <description>Projects and notes on emulation, compilers, and low-level systems.</description>
     <language>en</language>
+    <copyright>© Maxim Gorin. All rights reserved.</copyright>
     <lastBuildDate>Mon, 06 Jul 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://mxmgorin.dev/feed.xml" rel="self" type="application/rss+xml"/>
     <item>

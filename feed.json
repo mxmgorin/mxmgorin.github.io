@@ -1,0 +1,123 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "mxmgorin.dev",
+  "home_page_url": "https://mxmgorin.dev/",
+  "feed_url": "https://mxmgorin.dev/feed.json",
+  "description": "Projects and notes on emulation, compilers, and low-level systems.",
+  "language": "en",
+  "authors": [
+    {
+      "name": "Maxim Gorin",
+      "url": "https://github.com/mxmgorin"
+    }
+  ],
+  "items": [
+    {
+      "id": "https://mxmgorin.dev/blog/csbf-toolchain/",
+      "url": "https://mxmgorin.dev/blog/csbf-toolchain/",
+      "title": "A Language With No Syntax: A Brainfuck Compiler in C#",
+      "summary": "Brainfuck has no syntax worth parsing, which makes it the perfect language to build a compiler for. csbf is a full C# toolchain: an optimizing IR, a reversible VM with time-travel debugging, a Go transpiler, an IL JIT, and a Blazor playground that runs most of it in the browser.",
+      "content_html": "<p>Brainfuck has no syntax worth parsing, which makes it the perfect language to build a compiler for. csbf is a full C# toolchain: an optimizing IR, a reversible VM with time-travel debugging, a Go transpiler, an IL JIT, and a Blazor playground that runs most of it in the browser.</p>",
+      "date_published": "2026-07-06T00:00:00.000Z",
+      "tags": [
+        "C#",
+        "Compilers",
+        "Brainfuck",
+        "WASM"
+      ]
+    },
+    {
+      "id": "https://mxmgorin.dev/blog/retsurf-performance/",
+      "url": "https://mxmgorin.dev/blog/retsurf-performance/",
+      "title": "Every Megabyte Counts: A Browser on a 1 GB Handheld",
+      "summary": "A modern browser on a handheld with no dedicated VRAM and weak in-order cores. What actually moved the needle — deleting allocations, tuning Servo's prefs, and shipping three per-core binaries to dodge a SIGILL — and, just as important, what I chose not to do.",
+      "content_html": "<p>A modern browser on a handheld with no dedicated VRAM and weak in-order cores. What actually moved the needle — deleting allocations, tuning Servo's prefs, and shipping three per-core binaries to dodge a SIGILL — and, just as important, what I chose not to do.</p>",
+      "date_published": "2026-07-01T00:00:00.000Z",
+      "tags": [
+        "Rust",
+        "Performance",
+        "Servo",
+        "Memory"
+      ]
+    },
+    {
+      "id": "https://mxmgorin.dev/blog/retsurf-controls/",
+      "url": "https://mxmgorin.dev/blog/retsurf-controls/",
+      "title": "A browser you drive with a gamepad",
+      "summary": "A web browser assumes a mouse and a keyboard — a retro handheld has neither. How retsurf drives a full browser from a gamepad: intents not buttons, a virtual cursor, link hints with a gamepad alphabet, an on-screen keyboard, and in-app rebinding.",
+      "content_html": "<p>A web browser assumes a mouse and a keyboard — a retro handheld has neither. How retsurf drives a full browser from a gamepad: intents not buttons, a virtual cursor, link hints with a gamepad alphabet, an on-screen keyboard, and in-app rebinding.</p>",
+      "date_published": "2026-06-21T00:00:00.000Z",
+      "tags": [
+        "Rust",
+        "egui",
+        "Gamepad",
+        "UX"
+      ]
+    },
+    {
+      "id": "https://mxmgorin.dev/blog/retsurf-servo-sdl2/",
+      "url": "https://mxmgorin.dev/blog/retsurf-servo-sdl2/",
+      "title": "Embedding Servo in SDL2 — one GPU, too many bugs",
+      "summary": "Servo renders the web, SDL2 owns the window on bare hardware, egui draws the UI — and getting all three to share one GPU with no compositor and an old driver was a string of crashes. The unabridged tour, in the order they happened.",
+      "content_html": "<p>Servo renders the web, SDL2 owns the window on bare hardware, egui draws the UI — and getting all three to share one GPU with no compositor and an old driver was a string of crashes. The unabridged tour, in the order they happened.</p>",
+      "date_published": "2026-06-19T00:00:00.000Z",
+      "tags": [
+        "Rust",
+        "Servo",
+        "SDL2",
+        "OpenGL"
+      ]
+    },
+    {
+      "id": "https://mxmgorin.dev/blog/retsurf-why/",
+      "url": "https://mxmgorin.dev/blog/retsurf-why/",
+      "title": "Building a Rust web browser for retro handhelds",
+      "summary": "Retro handhelds have Wi-Fi, a GPU, and a gigabyte of RAM — but no usable web browser. Why that gap exists, and how I'm closing it with retsurf, built on Servo, SDL2, and egui.",
+      "content_html": "<p>Retro handhelds have Wi-Fi, a GPU, and a gigabyte of RAM — but no usable web browser. Why that gap exists, and how I'm closing it with retsurf, built on Servo, SDL2, and egui.</p>",
+      "date_published": "2026-06-17T00:00:00.000Z",
+      "tags": [
+        "Rust",
+        "Web",
+        "Servo"
+      ]
+    },
+    {
+      "id": "https://mxmgorin.dev/blog/chip8-testing/",
+      "url": "https://mxmgorin.dev/blog/chip8-testing/",
+      "title": "How I Test a CHIP-8 Emulator (When There's No \"Correct\")",
+      "summary": "CHIP-8 has no single correct output, so here's how I test ch8go anyway — variant-aware ROM automation and byte-exact golden-file comparison.",
+      "content_html": "<p>CHIP-8 has no single correct output, so here's how I test ch8go anyway — variant-aware ROM automation and byte-exact golden-file comparison.</p>",
+      "date_published": "2026-01-14T00:00:00.000Z",
+      "tags": [
+        "Go",
+        "Emulation",
+        "CHIP-8"
+      ]
+    },
+    {
+      "id": "https://mxmgorin.dev/blog/chip8-architecture/",
+      "url": "https://mxmgorin.dev/blog/chip8-architecture/",
+      "title": "How I Structured My CHIP-8 Emulator (and Why)",
+      "summary": "After a Game Boy emulator taught me how platform code leaks into the core, I built ch8go around one rule: the core shouldn't know its frontend. A tour of its Guest / Host / App structure.",
+      "content_html": "<p>After a Game Boy emulator taught me how platform code leaks into the core, I built ch8go around one rule: the core shouldn't know its frontend. A tour of its Guest / Host / App structure.</p>",
+      "date_published": "2026-01-12T00:00:00.000Z",
+      "tags": [
+        "Go",
+        "Emulation",
+        "CHIP-8"
+      ]
+    },
+    {
+      "id": "https://mxmgorin.dev/blog/chip8-system/",
+      "url": "https://mxmgorin.dev/blog/chip8-system/",
+      "title": "What CHIP-8 actually is (before you emulate it)",
+      "summary": "The mental model I built before writing ch8go — what CHIP-8 really is, the variants that complicate it, and the quirks that bite every emulator author.",
+      "content_html": "<p>The mental model I built before writing ch8go — what CHIP-8 really is, the variants that complicate it, and the quirks that bite every emulator author.</p>",
+      "date_published": "2026-01-09T00:00:00.000Z",
+      "tags": [
+        "CHIP-8",
+        "docs"
+      ]
+    }
+  ]
+}

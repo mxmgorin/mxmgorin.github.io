@@ -76,3 +76,10 @@ body {
 .blog-index a:hover {
     color: var(--accent);
 }
+
+/* Copyright line at the foot of every generated page. */
+.page-footer {
+    margin-top: 2.5rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+}

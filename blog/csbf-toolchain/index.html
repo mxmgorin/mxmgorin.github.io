@@ -20,6 +20,7 @@
     <meta property="og:url" content="https://mxmgorin.dev/blog/csbf-toolchain/" />
     <meta property="og:locale" content="en_US" />
     <meta property="article:published_time" content="2026-07-06T00:00:00.000Z" />
+    <meta name="copyright" content="© 2026 Maxim Gorin · All rights reserved." />
     <meta property="article:tag" content="C#">
     <meta property="article:tag" content="Compilers">
     <meta property="article:tag" content="Brainfuck">
@@ -33,6 +34,7 @@
     <meta name="twitter:title" content="A Language With No Syntax: A Brainfuck Compiler in C#" />
     <meta name="twitter:description" content="Brainfuck has no syntax worth parsing, which makes it the perfect language to build a compiler for. csbf is a full C# toolchain: an optimizing IR, a reversible VM with time-travel debugging, a Go transpiler, an IL JIT, and a Blazor playground that runs most of it in the browser." />
     <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="alternate" type="application/feed+json" title="mxmgorin.dev blog" href="/feed.json" />
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/article.css" />
     <script type="application/ld+json">
@@ -61,6 +63,12 @@
   "url": "https://mxmgorin.dev/blog/csbf-toolchain/",
   "wordCount": 1786,
   "isAccessibleForFree": true,
+  "copyrightHolder": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "copyrightYear": 2026,
   "keywords": "C#, Compilers, Brainfuck, WASM",
   "image": "https://mxmgorin.dev/og/csbf-toolchain.png",
   "articleSection": "csbf"
@@ -185,6 +193,7 @@ case OpKind.Jz:
 <p>Brainfuck was conceived as a joke language, but its minimalism makes it a great playground for learning about compilers. When the parser collapses to essentially a single pass over the source, what comes to the fore is the intermediate representation (IR), the optimizations, the virtual machine, code generation, and the JIT. Eight instructions, it turns out, are more than enough to build a real compiler around.</p>
         <p class="open-tui"><a href="/?v=blog&amp;post=csbf-toolchain">▶ open in the terminal UI</a></p>
       </article>
+      <footer class="page-footer">© 2026 Maxim Gorin · All rights reserved.</footer>
     </main>
   </body>
 </html>
