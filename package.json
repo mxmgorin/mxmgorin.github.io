@@ -1,0 +1,10 @@
+{
+  "name": "mxmgorin.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Web TUI personal site + blog",
+  "scripts": {
+    "seo": "node tools/build-seo.mjs"
+  }
+}

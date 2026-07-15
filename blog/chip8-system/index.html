@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>What CHIP-8 actually is (before you emulate it) — mxmgorin.dev</title>
+    <meta name="description" content="The mental model I built before writing ch8go — what CHIP-8 really is, the variants that complicate it, and the quirks that bite every emulator author." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/chip8-system/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-system/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-system/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="What CHIP-8 actually is (before you emulate it)" />
+    <meta property="og:description" content="The mental model I built before writing ch8go — what CHIP-8 really is, the variants that complicate it, and the quirks that bite every emulator author." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/chip8-system/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:published_time" content="2026-01-09T00:00:00.000Z" />
+    <meta property="article:tag" content="CHIP-8">
+    <meta property="article:tag" content="docs">
+    <meta property="og:image" content="https://mxmgorin.dev/og/chip8-system.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="What CHIP-8 actually is (before you emulate it)" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/chip8-system.png" />
+    <meta name="twitter:title" content="What CHIP-8 actually is (before you emulate it)" />
+    <meta name="twitter:description" content="The mental model I built before writing ch8go — what CHIP-8 really is, the variants that complicate it, and the quirks that bite every emulator author." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "What CHIP-8 actually is (before you emulate it)",
+  "description": "The mental model I built before writing ch8go — what CHIP-8 really is, the variants that complicate it, and the quirks that bite every emulator author.",
+  "datePublished": "2026-01-09",
+  "dateModified": "2026-01-09",
+  "inLanguage": "en",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/chip8-system/"
+  },
+  "url": "https://mxmgorin.dev/blog/chip8-system/",
+  "wordCount": 658,
+  "isAccessibleForFree": true,
+  "keywords": "CHIP-8, docs",
+  "image": "https://mxmgorin.dev/og/chip8-system.png",
+  "articleSection": "ch8go"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "What CHIP-8 actually is (before you emulate it)",
+      "item": "https://mxmgorin.dev/blog/chip8-system/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/">← back to blog</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>What CHIP-8 actually is (before you emulate it)</h1>
+        <p class="article-meta">2026-01-09  —  CHIP-8 · docs  —  3 min read</p>
+        <p>Before I wrote a single opcode for ch8go, I spent time just getting to know CHIP-8 as a system. This post is the mental model I built — what CHIP-8 actually is, the variants that make it messier than it looks, and the quirks that trip up every emulator author at least once.</p>
+<h2>What CHIP-8 actually is</h2>
+<p>CHIP-8 gets called a "language" a lot, and that confused me at first. It's better thought of as a tiny <strong>virtual platform</strong>: an interpreted virtual machine from the 1970s, designed to run small programs on very constrained hardware.</p>
+<p>The whole system fits in your head. There's a CPU, a few kilobytes of memory, two timers, a monochrome display, a hex keypad, and a single beep. That minimalism is exactly what makes it such a good first emulator to build.</p>
+<h2>The pieces I had to model</h2>
+<p>Everything in CHIP-8 maps to one of a handful of components:</p>
+<ul><li><strong>CPU</strong> — 16 general-purpose 8-bit registers (V0–VF), one 16-bit index register (I), a program counter and a stack, and a fixed instruction width.</li><li><strong>Memory</strong> — a 4 KB address space in classic CHIP-8, with programs loaded at 0x200 and font data in a reserved region.</li><li><strong>Timers</strong> — a delay timer and a sound timer, both counting down at 60 Hz.</li><li><strong>Display</strong> — a monochrome bitmap drawn with an XOR model. Resolution depends on the variant: 64×32 for CHIP-8, 128×64 for SUPER-CHIP.</li><li><strong>Input</strong> — a 16-key hexadecimal keypad that programs poll directly.</li><li><strong>Sound</strong> — a single tone that plays while the sound timer is non-zero. What that actually sounds like is left to the host.</li></ul>
+<p>None of these is complicated on its own. The interesting part is how much disagreement there is about how they should behave.</p>
+<h2>Why there isn't one "CHIP-8"</h2>
+<p>This is the thing that surprised me most: CHIP-8 has no single authoritative spec. Over the decades, different interpreters and extensions drifted apart, leaving a family of related-but-incompatible variants. "Correct" behavior depends entirely on which variant you're targeting, and some instructions are genuinely ambiguous without that context.</p>
+<p>The ones I cared about most:</p>
+<ul><li><strong>CHIP-8</strong> — the original instruction set and execution model.</li><li><strong>SUPER-CHIP 1.0 (SCHIP10)</strong> — adds a higher-resolution mode, extra instructions, and scrolling/display control.</li><li><strong>XO-CHIP</strong> — goes further with more memory, extended audio and graphics, and stronger backward-compatibility expectations.</li></ul>
+<p>And those are just the headline names. There's also CHIP-48, SUPER-CHIP 1.1, the legacy COSMAC VIP behavior, MEGA-CHIP8, and more — each differing in instruction semantics, timing, memory behavior, or display handling. If you want to go down the rabbit hole, there's a <a href="https://chip-8.github.io/extensions/" target="_blank" rel="noopener noreferrer">great catalog of extensions</a>.</p>
+<h2>The quirks that actually bite</h2>
+<p>The differences between variants are usually called <em>quirks</em>, and they're where most emulator bugs hide. These are the ones I had to handle deliberately:</p>
+<ul><li><strong>Shift instructions (8xy6, 8xyE)</strong> — on most systems these read <code>vY</code> and store the shifted result in <code>vX</code>. The HP48 interpreters used <code>vX</code> as both input and output, creating the shift quirk.</li><li><strong>Flags reset on OR/AND/XOR</strong> — the original COSMAC VIP reset <code>vF</code> after each math-coprocessor opcode. Later interpreters didn't copy that, so it's optional behavior.</li><li><strong>Sprite wrapping vs. clipping</strong> — most systems clip sprites at the screen edge. Octo (which spawned XO-CHIP) wraps them to the other side instead — the wrap quirk.</li><li><strong>Index register on load/store</strong> — storing or loading registers normally bumps <code>i</code> by <code>X + 1</code>. The CHIP-48 interpreter only added <code>X</code>, and SUPER-CHIP 1.1 didn't touch <code>i</code> at all — two more quirks to flag.</li><li><strong>Jump with offset</strong> — <code>jump to &lt;address&gt; + v0</code> was misimplemented on every HP48 interpreter as <code>&lt;address&gt; + vX</code>, giving the jump quirk.</li><li><strong>Vertical-blank wait on draw</strong> — the COSMAC VIP waited for vblank before each draw to avoid tearing, which also capped execution speed. Some games rely on that limit to be playable, so it has to be modeled rather than ignored.</li></ul>
+<p>Knowing these existed <em>before</em> writing the interpreter saved me a lot of "why does this one game look wrong" debugging later. With this picture in place, the next step was deciding how to actually structure the emulator.</p>
+      <p class="article-source">Also published as a wiki page — <a href="https://github.com/mxmgorin/ch8go/wiki/CHIP%E2%80%908-System" target="_blank" rel="noopener noreferrer">view the original</a>.</p>
+        <nav class="article-series" aria-label="ch8go series">
+          <p class="article-series-title">ch8go series</p>
+          <ol>
+          <li aria-current="true"><strong>What CHIP-8 actually is (before you emulate it)</strong> <span class="series-here">— you are here</span></li>
+          <li><a href="/blog/chip8-architecture/">How I Structured My CHIP-8 Emulator (and Why)</a></li>
+          <li><a href="/blog/chip8-testing/">How I Test a CHIP-8 Emulator (When There's No &quot;Correct&quot;)</a></li>
+          </ol>
+        </nav>
+        <p class="open-tui"><a href="/?v=blog&amp;post=chip8-system">▶ open in the terminal UI</a></p>
+      </article>
+    </main>
+  </body>
+</html>

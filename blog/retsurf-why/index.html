@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>Building a Rust web browser for retro handhelds — mxmgorin.dev</title>
+    <meta name="description" content="Retro handhelds have Wi-Fi, a GPU, and a gigabyte of RAM — but no usable web browser. Why that gap exists, and how I'm closing it with retsurf, built on Servo, SDL2, and egui." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/retsurf-why/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-why/">
+    <link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-why/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-why/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="Building a Rust web browser for retro handhelds" />
+    <meta property="og:description" content="Retro handhelds have Wi-Fi, a GPU, and a gigabyte of RAM — but no usable web browser. Why that gap exists, and how I'm closing it with retsurf, built on Servo, SDL2, and egui." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/retsurf-why/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:published_time" content="2026-06-17T00:00:00.000Z" />
+    <meta property="article:tag" content="Rust">
+    <meta property="article:tag" content="Web">
+    <meta property="article:tag" content="Servo">
+    <meta property="og:image" content="https://mxmgorin.dev/og/retsurf-why.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Building a Rust web browser for retro handhelds" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/retsurf-why.png" />
+    <meta name="twitter:title" content="Building a Rust web browser for retro handhelds" />
+    <meta name="twitter:description" content="Retro handhelds have Wi-Fi, a GPU, and a gigabyte of RAM — but no usable web browser. Why that gap exists, and how I'm closing it with retsurf, built on Servo, SDL2, and egui." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Building a Rust web browser for retro handhelds",
+  "description": "Retro handhelds have Wi-Fi, a GPU, and a gigabyte of RAM — but no usable web browser. Why that gap exists, and how I'm closing it with retsurf, built on Servo, SDL2, and egui.",
+  "datePublished": "2026-06-17",
+  "dateModified": "2026-06-17",
+  "inLanguage": "en",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/retsurf-why/"
+  },
+  "url": "https://mxmgorin.dev/blog/retsurf-why/",
+  "wordCount": 952,
+  "isAccessibleForFree": true,
+  "keywords": "Rust, Web, Servo",
+  "image": "https://mxmgorin.dev/og/retsurf-why.png",
+  "articleSection": "retsurf"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Building a Rust web browser for retro handhelds",
+      "item": "https://mxmgorin.dev/blog/retsurf-why/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/">← back to blog</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>Building a Rust web browser for retro handhelds</h1>
+        <p class="article-meta">2026-06-17  —  Rust · Web · Servo  —  5 min read</p>
+        <p>There's a moment that every retro-handheld owner hits eventually. You're deep in some obscure SNES RPG on a $60 plastic slab running a Linux, you get stuck on a boss, and you reach for the thing you'd reach for on any other computer made in the last twenty-five years: a web browser. To pull up a wiki. A FAQ. A map.</p>
+<p>And there isn't a working one.</p>
+<p>Sure, a couple of stripped-down browsers will technically launch — but none of them can render the modern, JavaScript-heavy web. The device has Wi-Fi, a quad-core ARM chip, a GPU, and a gigabyte of RAM — more than enough to have browsed the web comfortably in 2010 — and yet a browser that actually works, the single most universal piece of software on Earth, is missing. That gap is the whole reason <strong><a href="https://github.com/mxmgorin/retsurf" target="_blank" rel="noopener noreferrer">retsurf</a></strong> exists.</p>
+<p>I came to this with vision. I'd spent a while as a <a href="https://portmaster.games/profile.html?porter=Troidem" target="_blank" rel="noopener noreferrer">PortMaster</a> contributor, porting games to these ARM-Linux handhelds — and somewhere in the middle of that I stopped seeing them as toys and started seeing them as small Linux computers that were just missing software. Once that clicked, the missing browser became the thing I most wanted to build.</p>
+<h2>The gap</h2>
+<p>Handheld Linux distros — <a href="https://knulli.org" target="_blank" rel="noopener noreferrer">Knulli</a>, <a href="https://muos.dev" target="_blank" rel="noopener noreferrer">muOS</a>, <a href="https://rocknix.org" target="_blank" rel="noopener noreferrer">ROCKNIX</a> — are extraordinary pieces of work. They turn cheap hardware into little game machines. But they are <em>game</em> machines. The design assumption, is "boot straight into a game launcher, render through the GPU, drive everything with a D-pad and some buttons." There's no desktop. Usually no window manager. Often not an X11 or Wayland server running — the UI talks to the display directly through KMS/DRM.</p>
+<p>So when you go looking for a browser, you find that all three obvious options are:</p>
+<ol><li><strong>The lightweight browsers don't render the modern web.</strong> Something like NetSurf will <em>launch</em>, but the web it was built for is gone. Today's sites are JavaScript applications. A search results page, a wiki, a forum — all of it assumes a real engine. Drop JS and you don't get a lighter browser, you get a mostly-broken one.</li><li><strong>The desktop browsers assume a desktop.</strong> Firefox and Chromium expect a compositor to hand them a window, and a mouse and keyboard to drive it. Take away X11/Wayland and you've taken away the thing they render <em>into</em>. Take away the pointer and the entire interaction model collapses.</li><li><strong>There's no input model for a browser on a gamepad.</strong> Even if you solved rendering, how do you click a link with a thumbstick? Type a URL with no keyboard? Scroll a page with buttons? "Browser" and "gamepad" have never really met.</li></ol>
+<p>Each of these is a hard problem. Stacked together they're the reason the gap has stayed open. retsurf is an attempt to close all three at once.</p>
+<h2>You don't write a browser engine</h2>
+<p>Let me kill the most flattering misconception up front: I did not write a browser engine. Nobody should. A browser engine is one of the largest, most security-critical, most standards-burdened bodies of software humans build, and there are about three of them on the planet.</p>
+<p>What changed in the last few years is that one became something you can <em>embed</em>. <a href="https://github.com/servo/servo" target="_blank" rel="noopener noreferrer">Servo</a> — the Rust engine that started at Mozilla and is now an independent project — exposes its rendering pipeline as a library. You hand it a GL context and a URL; it hands you back pixels. That's the unlock. retsurf is, at its core, the glue around three crates:</p>
+<ul><li><strong><a href="https://servo.org" target="_blank" rel="noopener noreferrer">Servo</a></strong> for the actual web rendering (it uses WebRender, a GPU-first renderer, underneath).</li><li><strong><a href="https://www.libsdl.org/" target="_blank" rel="noopener noreferrer">SDL2</a></strong> for the window, the GL context, and input — because SDL2 already knows how to talk to bare KMS/DRM and to gamepads, which is exactly what these devices expose.</li><li><strong><a href="https://github.com/emilk/egui" target="_blank" rel="noopener noreferrer">egui</a></strong> for retsurf's own UI — the toolbar, the menus, the on-screen keyboard — composited on top of the page.</li></ul>
+<p>The whole bet is that the hard part — the engine — is solved, and the <em>interesting</em> part is everything in the seam between a modern engine and a device that was designed to run Game Boy ROMs.</p>
+<p>That seam turned out to be deep — and it's where the real work was.</p>
+<h2>What made it hard</h2>
+<p>None of these were exotic on their own; they just all landed at once. WebRender needs OpenGL ES 3.0, and the usual <code>gl4es</code> shim tops out at GL 2.x — so Servo has to talk to the device's native GLES driver directly. Running SDL2's GL context alongside Servo's own was a trap, so everything renders into a single shared context with zero CPU copies. The Mali driver reports EGL 1.4 where a dependency assumed 1.5 and <em>panicked</em> instead of degrading — code that ran fine on my desktop and hard-crashed the instant it touched hardware. And the whole thing is driven by a gamepad — virtual cursor, link hints, on-screen keyboard — while staying small and fast on a few hundred megabytes of free RAM. What makes it fun is that it all hits at once, on hardware you can't <code>gdb</code> comfortably, where "it works on my machine" is a lie you tell yourself right up until the device boots.</p>
+<h2>What it is now</h2>
+<p>retsurf runs on handhelds like the TrimUI Smart Pro, the Powkiddy RGB30, and the Anbernic RG35XX SP. It renders the real, JavaScript-heavy web through Servo. It has gamepad navigation with a cursor and link hints, an on-screen keyboard with multiple layouts, real page zoom that reflows the layout (not a magnifier), a reader mode, background downloads, and network-level ad blocking. It has a native start page with a speed-dial grid. And the same code builds an Android APK.</p>
+<p>It's experimental. It has rough edges. But it answers the boss-fight question: you can now pull up the wiki on the thing in your hands.</p>
+        <nav class="article-series" aria-label="retsurf series">
+          <p class="article-series-title">retsurf series</p>
+          <ol>
+          <li aria-current="true"><strong>Building a Rust web browser for retro handhelds</strong> <span class="series-here">— you are here</span></li>
+          <li><a href="/blog/retsurf-servo-sdl2/">Embedding Servo in SDL2 — one GPU, too many bugs</a></li>
+          <li><a href="/blog/retsurf-controls/">A browser you drive with a gamepad</a></li>
+          <li><a href="/blog/retsurf-performance/">Every Megabyte Counts: A Browser on a 1 GB Handheld</a></li>
+          </ol>
+        </nav>
+        <p class="open-tui"><a href="/?v=blog&amp;post=retsurf-why">▶ open in the terminal UI</a></p>
+      </article>
+    </main>
+  </body>
+</html>

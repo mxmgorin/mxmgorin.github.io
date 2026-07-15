@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>How I Test a CHIP-8 Emulator (When There's No &quot;Correct&quot;) — mxmgorin.dev</title>
+    <meta name="description" content="CHIP-8 has no single correct output, so here's how I test ch8go anyway — variant-aware ROM automation and byte-exact golden-file comparison." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/chip8-testing/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-testing/">
+    <link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-testing/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-testing/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="How I Test a CHIP-8 Emulator (When There's No &quot;Correct&quot;)" />
+    <meta property="og:description" content="CHIP-8 has no single correct output, so here's how I test ch8go anyway — variant-aware ROM automation and byte-exact golden-file comparison." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/chip8-testing/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:published_time" content="2026-01-14T00:00:00.000Z" />
+    <meta property="article:tag" content="Go">
+    <meta property="article:tag" content="Emulation">
+    <meta property="article:tag" content="CHIP-8">
+    <meta property="og:image" content="https://mxmgorin.dev/og/chip8-testing.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="How I Test a CHIP-8 Emulator (When There's No &quot;Correct&quot;)" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/chip8-testing.png" />
+    <meta name="twitter:title" content="How I Test a CHIP-8 Emulator (When There's No &quot;Correct&quot;)" />
+    <meta name="twitter:description" content="CHIP-8 has no single correct output, so here's how I test ch8go anyway — variant-aware ROM automation and byte-exact golden-file comparison." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How I Test a CHIP-8 Emulator (When There's No \"Correct\")",
+  "description": "CHIP-8 has no single correct output, so here's how I test ch8go anyway — variant-aware ROM automation and byte-exact golden-file comparison.",
+  "datePublished": "2026-01-14",
+  "dateModified": "2026-01-14",
+  "inLanguage": "en",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/chip8-testing/"
+  },
+  "url": "https://mxmgorin.dev/blog/chip8-testing/",
+  "wordCount": 458,
+  "isAccessibleForFree": true,
+  "keywords": "Go, Emulation, CHIP-8",
+  "image": "https://mxmgorin.dev/og/chip8-testing.png",
+  "articleSection": "ch8go"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "How I Test a CHIP-8 Emulator (When There's No \"Correct\")",
+      "item": "https://mxmgorin.dev/blog/chip8-testing/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/">← back to blog</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>How I Test a CHIP-8 Emulator (When There's No &quot;Correct&quot;)</h1>
+        <p class="article-meta">2026-01-14  —  Go · Emulation · CHIP-8  —  2 min read</p>
+        <p>Testing an emulator sounds straightforward — run a program, check the output — until you hit the central problem with CHIP-8: there often isn't a single correct output. The platform exists in many variants (CHIP-8, SCHIP, XO-CHIP, and others), each with its own historical quirks, and even "plain" CHIP-8 has instructions with several legitimate interpretations.</p>
+<p>So I couldn't test ch8go against "one true behavior." Instead, the testing system has two goals:</p>
+<ul><li>catch regressions within a given variant or configuration, and</li><li>make the differences <em>between</em> variants explicit, reproducible, and intentional.</li></ul>
+<p>That second goal is the one that makes emulator changes feel safe despite all the ambiguity.</p>
+<h2>Driving real test ROMs automatically</h2>
+<p>Most of the testing is built on well-known CHIP-8 test ROMs. The catch is that many of them are interactive — they expose different code paths through built-in menus, depending on which variant or quirk you want to exercise.</p>
+<p>To handle that, the harness configures the emulator for a specific variant and then injects scripted input events to navigate those menus at runtime. One ROM can validate several cases that way, and because the harness drives the selections deterministically, every run exercises the same path without any manual clicking.</p>
+<h2>Why golden files</h2>
+<p>For checking the actual output, I went with golden-file comparison. So much CHIP-8 behavior is <em>visual</em> that comparing rendered frames turned out to be the most honest way to catch subtle cross-variant differences. It lets the suite:</p>
+<ul><li>catch regressions early,</li><li>confirm that variant-specific quirks behave as intended, and</li><li>guarantee that a change doesn't silently alter established behavior.</li></ul>
+<p>The test ROMs themselves come from the <strong>Timendus</strong> and <strong>Octo</strong> suites plus a few custom ones, and live under <code>testdata/roms/</code>. The golden references are PNG framebuffer snapshots under <code>testdata/golden/</code>.</p>
+<h3>Generating goldens (deliberately manual)</h3>
+<p>Golden files are produced by running the tests with an explicit output flag, which writes the framebuffer out to <code>testdata/golden/</code>. I keep this step manual on purpose — goldens are only ever regenerated when:</p>
+<ul><li>behavior changed intentionally,</li><li>a bug was fixed, or</li><li>the output format changed.</li></ul>
+<p>If regeneration were automatic, a regression would just quietly overwrite the reference it was supposed to fail against.</p>
+<h3>Comparing during a run</h3>
+<p>During a normal test run the flow is simple: render a frame, compare it byte-for-byte against the golden file, and fail on any mismatch. That byte-exact check is what keeps visual regressions from slipping through.</p>
+<h2>Catching it in CI</h2>
+<p>Finally, all of this runs in CI so regressions surface on every change rather than whenever I happen to notice them. The pipeline sets up the Go toolchain, runs the unit and integration tests, and validates the golden files.</p>
+<p>It's a fairly small setup, but combined with the variant-aware harness it turns "I think this still works" into something I can actually trust.</p>
+      <p class="article-source">Also published as a wiki page — <a href="https://github.com/mxmgorin/ch8go/wiki/Testing" target="_blank" rel="noopener noreferrer">view the original</a>.</p>
+        <nav class="article-series" aria-label="ch8go series">
+          <p class="article-series-title">ch8go series</p>
+          <ol>
+          <li><a href="/blog/chip8-system/">What CHIP-8 actually is (before you emulate it)</a></li>
+          <li><a href="/blog/chip8-architecture/">How I Structured My CHIP-8 Emulator (and Why)</a></li>
+          <li aria-current="true"><strong>How I Test a CHIP-8 Emulator (When There's No &quot;Correct&quot;)</strong> <span class="series-here">— you are here</span></li>
+          </ol>
+        </nav>
+        <p class="open-tui"><a href="/?v=blog&amp;post=chip8-testing">▶ open in the terminal UI</a></p>
+      </article>
+    </main>
+  </body>
+</html>

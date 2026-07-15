@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>How I Structured My CHIP-8 Emulator (and Why) — mxmgorin.dev</title>
+    <meta name="description" content="After a Game Boy emulator taught me how platform code leaks into the core, I built ch8go around one rule: the core shouldn't know its frontend. A tour of its Guest / Host / App structure." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/chip8-architecture/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-architecture/">
+    <link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-architecture/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-architecture/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="How I Structured My CHIP-8 Emulator (and Why)" />
+    <meta property="og:description" content="After a Game Boy emulator taught me how platform code leaks into the core, I built ch8go around one rule: the core shouldn't know its frontend. A tour of its Guest / Host / App structure." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/chip8-architecture/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:published_time" content="2026-01-12T00:00:00.000Z" />
+    <meta property="article:tag" content="Go">
+    <meta property="article:tag" content="Emulation">
+    <meta property="article:tag" content="CHIP-8">
+    <meta property="og:image" content="https://mxmgorin.dev/og/chip8-architecture.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="How I Structured My CHIP-8 Emulator (and Why)" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/chip8-architecture.png" />
+    <meta name="twitter:title" content="How I Structured My CHIP-8 Emulator (and Why)" />
+    <meta name="twitter:description" content="After a Game Boy emulator taught me how platform code leaks into the core, I built ch8go around one rule: the core shouldn't know its frontend. A tour of its Guest / Host / App structure." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How I Structured My CHIP-8 Emulator (and Why)",
+  "description": "After a Game Boy emulator taught me how platform code leaks into the core, I built ch8go around one rule: the core shouldn't know its frontend. A tour of its Guest / Host / App structure.",
+  "datePublished": "2026-01-12",
+  "dateModified": "2026-01-12",
+  "inLanguage": "en",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/chip8-architecture/"
+  },
+  "url": "https://mxmgorin.dev/blog/chip8-architecture/",
+  "wordCount": 695,
+  "isAccessibleForFree": true,
+  "keywords": "Go, Emulation, CHIP-8",
+  "image": "https://mxmgorin.dev/og/chip8-architecture.png",
+  "articleSection": "ch8go"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "How I Structured My CHIP-8 Emulator (and Why)",
+      "item": "https://mxmgorin.dev/blog/chip8-architecture/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/">← back to blog</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>How I Structured My CHIP-8 Emulator (and Why)</h1>
+        <p class="article-meta">2026-01-12  —  Go · Emulation · CHIP-8  —  3 min read</p>
+        <p>ch8go wasn't my first emulator. Before it I built <a href="https://github.com/mxmgorin/oxgbc" target="_blank" rel="noopener noreferrer">oxGBC</a>, a Game Boy emulator in Rust, and getting one core to run cleanly on both desktop and Android taught me how easily platform concerns leak into emulation code once you stop watching for them.</p>
+<p>ch8go was also a chance to switch things up: I spend most of my time in Rust, and I wanted a real, self-contained project to get properly hands-on with Go. A CHIP-8 interpreter turned out to be the perfect size for it — small enough to finish, rich enough to actually learn the language.</p>
+<p>So I gave myself one rule up front: the emulator core should never know whether it's running in a browser, a terminal, or a desktop window — or which framework happens to be driving it. That constraint ended up shaping the entire project, so this post is a tour of how the code is organized and why each boundary exists.</p>
+<h2>The Guest / Host / App split</h2>
+<p>Early on I settled on a three-layer model, borrowed loosely from how I think about emulation in general:</p>
+<ul><li><strong>Guest</strong> — the system being recreated (the CHIP-8 machine itself).</li><li><strong>Host</strong> — the real environment that actually runs the emulator.</li><li><strong>App</strong> — a thin layer that wires a guest and a host together.</li></ul>
+<p>Keeping these three ideas separate in my head made it much easier to decide where any given piece of code belonged.</p>
+<h2>The core that knows nothing — <code>pkg/chip8</code> (Guest)</h2>
+<p>The heart of ch8go is <code>pkg/chip8</code>, and I worked hard to keep it boring. It's a pure, self-contained CHIP-8 virtual machine, responsible for exactly one thing: correct, deterministic emulation.</p>
+<p>It has never heard of SDL, doesn't know what a file is, and can't render a pixel to a screen. By refusing any dependency on rendering, audio backends, OS APIs, or configuration, the core stays portable and easy to reason about. Concretely, it owns:</p>
+<ul><li>instruction decoding and execution</li><li>memory and registers</li><li>the delay and sound timers</li><li>the display representation</li><li>sound output generation</li><li>input state</li></ul>
+<p>That sounds restrictive, but it's the reason the same core runs unchanged behind every frontend. It's also easy to test — and that matters a lot for CHIP-8: there's no single standard, just a whole <a href="/blog/chip8-system/" data-post="chip8-system">family of variants and quirks</a> where "correct" behavior depends on exactly which variant you're emulating. An isolated core lets me exercise each of them on its own and confirm the behavior hasn't drifted, without touching any platform code.</p>
+<h2>The glue layer — <code>pkg/host</code></h2>
+<p><code>pkg/host</code> is where the reusable, platform-facing code lives. It depends on <code>pkg/chip8</code> and <code>pkg/db</code>, and acts as the bridge between the pure core and concrete frontends. It handles the things every frontend needs but the core shouldn't care about:</p>
+<ul><li>VM configuration and lifecycle</li><li>execution control: timing, stepping, pause/resume</li><li>video and display helpers</li><li>ROM loading and filesystem access</li></ul>
+<p>Centralizing this here is what keeps the actual applications thin. Without it, every frontend would re-implement the same timing and ROM-loading logic slightly differently — and slightly differently is exactly how bugs creep in.</p>
+<h2>Data, not code — <code>pkg/db</code></h2>
+<p>A surprising amount of "correct" CHIP-8 behavior is really just per-ROM configuration, so I pulled that out into <code>pkg/db</code>. It stores metadata — quirks, tick rate, color palette, variant, and platform definitions — and lets the rest of the system look it up by ROM hash or identifier.</p>
+<p>It deliberately contains no emulation or application logic. Driving configuration from declarative data instead of hardcoded branches means I can support a new ROM or variant by adding data, not by editing the emulator.</p>
+<h2>The frontends — <code>cmd/*</code></h2>
+<p>Each subdirectory under <code>cmd/</code> is a standalone executable that wires the core, the host layer, and the metadata database into a real application. Their job is purely the platform-specific part:</p>
+<ul><li>CLI flag parsing and argument handling</li><li>loading ROM and platform metadata</li><li>sound, video, and input</li><li>orchestrating the execution loop</li></ul>
+<p>Today that's four frontends — a headless/terminal <strong>CLI</strong>, a native <strong>SDL2</strong> desktop app, a portable Go-based <strong>Ebiten</strong> build, and a <strong>WASM</strong> target for the browser — and every one of them reuses the exact same <code>pkg/host</code>, <code>pkg/chip8</code>, and <code>pkg/db</code>. Adding a fifth would mean writing only the glue, not another emulator — which is exactly the payoff oxGBC taught me to design for from the start.</p>
+      <p class="article-source">Also published as a wiki page — <a href="https://github.com/mxmgorin/ch8go/wiki/Project-Structure" target="_blank" rel="noopener noreferrer">view the original</a>.</p>
+        <nav class="article-series" aria-label="ch8go series">
+          <p class="article-series-title">ch8go series</p>
+          <ol>
+          <li><a href="/blog/chip8-system/">What CHIP-8 actually is (before you emulate it)</a></li>
+          <li aria-current="true"><strong>How I Structured My CHIP-8 Emulator (and Why)</strong> <span class="series-here">— you are here</span></li>
+          <li><a href="/blog/chip8-testing/">How I Test a CHIP-8 Emulator (When There's No &quot;Correct&quot;)</a></li>
+          </ol>
+        </nav>
+        <p class="open-tui"><a href="/?v=blog&amp;post=chip8-architecture">▶ open in the terminal UI</a></p>
+      </article>
+    </main>
+  </body>
+</html>

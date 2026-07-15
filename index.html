@@ -8,28 +8,60 @@
         <title>mxmgorin.dev | Web TUI</title>
         <meta
             name="description"
-            content="Maxim Gorin's terminal-style personal site and blog — emulators, virtual machines, and a web browser for retro handhelds, in Rust and Go."
+            content="Maxim Gorin's terminal-style personal site and blog — systems programming, emulators, compilers and other low-level projects, mostly out of curiosity."
         />
         <meta name="author" content="Maxim Gorin" />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <link rel="canonical" href="https://mxmgorin.dev/" />
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            title="mxmgorin.dev blog"
+            href="/feed.xml"
+        />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="mxmgorin.dev" />
         <meta property="og:title" content="mxmgorin.dev | Web TUI" />
         <meta
             property="og:description"
-            content="Maxim Gorin's terminal-style personal site and blog — emulators, virtual machines, and a web browser for retro handhelds, in Rust and Go."
+            content="Maxim Gorin's terminal-style personal site and blog — systems programming, emulators, compilers and other low-level projects, mostly out of curiosity."
         />
-        <meta property="og:url" content="https://mxmgorin.github.io/" />
-        <meta property="og:image" content="https://mxmgorin.github.io/og/home.png" />
+        <meta property="og:url" content="https://mxmgorin.dev/" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:image" content="https://mxmgorin.dev/og/home.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="mxmgorin.dev" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://mxmgorin.github.io/og/home.png" />
+        <meta name="twitter:image" content="https://mxmgorin.dev/og/home.png" />
         <meta name="twitter:title" content="mxmgorin.dev | Web TUI" />
         <meta
             name="twitter:description"
-            content="Emulators, virtual machines, and a web browser for retro handhelds — in Rust and Go."
+            content="Systems programming, mostly out of curiosity — and for fun."
         />
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              "@id": "https://mxmgorin.dev/#website",
+              "url": "https://mxmgorin.dev/",
+              "name": "mxmgorin.dev",
+              "description": "Maxim Gorin's terminal-style personal site and blog — systems programming, emulators, compilers and other low-level projects, mostly out of curiosity.",
+              "inLanguage": "en",
+              "publisher": { "@id": "https://mxmgorin.dev/#person" }
+            },
+            {
+              "@type": "Person",
+              "@id": "https://mxmgorin.dev/#person",
+              "name": "Maxim Gorin",
+              "url": "https://mxmgorin.dev/",
+              "sameAs": ["https://github.com/mxmgorin"]
+            }
+          ]
+        }
+        </script>
         <link rel="stylesheet" href="css/base.css" />
         <link rel="stylesheet" href="css/tui.css" />
         <link rel="stylesheet" href="css/retro.css" />
@@ -48,6 +80,23 @@
     </head>
 
     <body>
+        <noscript>
+            <!-- SEO:noscript:start -->
+      <h1>mxmgorin.dev</h1>
+      <p>A terminal-style personal site by Maxim Gorin. This page needs JavaScript for the interactive UI; the blog posts are readable directly:</p>
+      <ul>
+        <li><a href="/blog/csbf-toolchain/">A Language With No Syntax: A Brainfuck Compiler in C#</a> — Brainfuck has no syntax worth parsing, which makes it the perfect language to build a compiler for. csbf is a full C# toolchain: an optimizing IR, a reversible VM with time-travel debugging, a Go transpiler, an IL JIT, and a Blazor playground that runs most of it in the browser.</li>
+        <li><a href="/blog/retsurf-performance/">Every Megabyte Counts: A Browser on a 1 GB Handheld</a> — A modern browser on a handheld with no dedicated VRAM and weak in-order cores. What actually moved the needle — deleting allocations, tuning Servo's prefs, and shipping three per-core binaries to dodge a SIGILL — and, just as important, what I chose not to do.</li>
+        <li><a href="/blog/retsurf-controls/">A browser you drive with a gamepad</a> — A web browser assumes a mouse and a keyboard — a retro handheld has neither. How retsurf drives a full browser from a gamepad: intents not buttons, a virtual cursor, link hints with a gamepad alphabet, an on-screen keyboard, and in-app rebinding.</li>
+        <li><a href="/blog/retsurf-servo-sdl2/">Embedding Servo in SDL2 — one GPU, too many bugs</a> — Servo renders the web, SDL2 owns the window on bare hardware, egui draws the UI — and getting all three to share one GPU with no compositor and an old driver was a string of crashes. The unabridged tour, in the order they happened.</li>
+        <li><a href="/blog/retsurf-why/">Building a Rust web browser for retro handhelds</a> — Retro handhelds have Wi-Fi, a GPU, and a gigabyte of RAM — but no usable web browser. Why that gap exists, and how I'm closing it with retsurf, built on Servo, SDL2, and egui.</li>
+        <li><a href="/blog/chip8-testing/">How I Test a CHIP-8 Emulator (When There's No &quot;Correct&quot;)</a> — CHIP-8 has no single correct output, so here's how I test ch8go anyway — variant-aware ROM automation and byte-exact golden-file comparison.</li>
+        <li><a href="/blog/chip8-architecture/">How I Structured My CHIP-8 Emulator (and Why)</a> — After a Game Boy emulator taught me how platform code leaks into the core, I built ch8go around one rule: the core shouldn't know its frontend. A tour of its Guest / Host / App structure.</li>
+        <li><a href="/blog/chip8-system/">What CHIP-8 actually is (before you emulate it)</a> — The mental model I built before writing ch8go — what CHIP-8 really is, the variants that complicate it, and the quirks that bite every emulator author.</li>
+      </ul>
+      <p><a href="/blog/">All posts →</a></p>
+      <!-- SEO:noscript:end -->
+        </noscript>
         <main class="tui">
             <header class="tui-header">
                 <span class="title"><span class="lang"></span></span>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>Как я тестирую эмулятор CHIP-8 (когда нет «правильного») — mxmgorin.dev</title>
+    <meta name="description" content="Детерминированное тестирование виртуальной машины CHIP-8 с помощью ROM-файлов и сравнения вывода программы с эталонными результатами (golden-файлами) в виде PNG-изображений." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/chip8-testing/ru/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-testing/">
+    <link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-testing/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-testing/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="Как я тестирую эмулятор CHIP-8 (когда нет «правильного»)" />
+    <meta property="og:description" content="Детерминированное тестирование виртуальной машины CHIP-8 с помощью ROM-файлов и сравнения вывода программы с эталонными результатами (golden-файлами) в виде PNG-изображений." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/chip8-testing/ru/" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="article:published_time" content="2026-01-14T00:00:00.000Z" />
+    <meta property="article:tag" content="Go">
+    <meta property="article:tag" content="Emulation">
+    <meta property="article:tag" content="CHIP-8">
+    <meta property="og:image" content="https://mxmgorin.dev/og/chip8-testing.ru.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Как я тестирую эмулятор CHIP-8 (когда нет «правильного»)" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/chip8-testing.ru.png" />
+    <meta name="twitter:title" content="Как я тестирую эмулятор CHIP-8 (когда нет «правильного»)" />
+    <meta name="twitter:description" content="Детерминированное тестирование виртуальной машины CHIP-8 с помощью ROM-файлов и сравнения вывода программы с эталонными результатами (golden-файлами) в виде PNG-изображений." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Как я тестирую эмулятор CHIP-8 (когда нет «правильного»)",
+  "description": "Детерминированное тестирование виртуальной машины CHIP-8 с помощью ROM-файлов и сравнения вывода программы с эталонными результатами (golden-файлами) в виде PNG-изображений.",
+  "datePublished": "2026-01-14",
+  "dateModified": "2026-01-14",
+  "inLanguage": "ru",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/chip8-testing/ru/"
+  },
+  "url": "https://mxmgorin.dev/blog/chip8-testing/ru/",
+  "wordCount": 415,
+  "isAccessibleForFree": true,
+  "keywords": "Go, Emulation, CHIP-8",
+  "image": "https://mxmgorin.dev/og/chip8-testing.ru.png",
+  "articleSection": "ch8go"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Как я тестирую эмулятор CHIP-8 (когда нет «правильного»)",
+      "item": "https://mxmgorin.dev/blog/chip8-testing/ru/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/ru/">← назад к блогу</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>Как я тестирую эмулятор CHIP-8 (когда нет «правильного»)</h1>
+        <p class="article-meta">2026-01-14  —  Go · Emulation · CHIP-8  —  2 мин чтения</p>
+        <p>Тестировать эмулятор звучит просто — запустил, проверил результат — пока не узнаешь о главной особенности CHIP-8: часто никакого единственно правильного результат попросту нет. Платформа существуюет во множестве вариантов (CHIP-8, SCHIP, XO-CHIP и другие), у каждого свои исторические особенности, и даже у «обычного» CHIP-8 есть инструкции с несколькими правильными трактовками.</p>
+<p>Так что я не мог тестировать ch8go против «единственно верного поведения». Поэтому у системы тестирования две цели:</p>
+<ul><li>находить регрессии в рамках конкретного варианта или конфигурации и</li><li>делать различия <em>между</em> вариантами явными, воспроизводимыми и намеренными.</li></ul>
+<p>Именно вторая цель и позволяет быть увернным, что менять эмулятор безопасно — несмотря на всю неоднозначность.</p>
+<h2>Автоматический запуск настоящих тестовых ROM-ов</h2>
+<p>Большая часть тестов построена на хорошо известных тестовых ROM-ах для CHIP-8. Но сложность в том, что многие из них интерактивны — они выполняют разные ветки кода исходя из выбора из встроенные меню, в зависимости от того, какой вариант ты хочешь проверить.</p>
+<p>Чтобы решить эту проблему, харнесс настраивает эмулятор под конкретный вариант, а затем подаёт скриптованные события ввода, чтобы пройти по этим меню во время выполнения. Один ROM так может проверить сразу несколько случаев, а поскольку харнесс выбирает пункты детерминированно, каждый запуск проходит один и тот же путь без единого ручного клика.</p>
+<h2>Почему golden-файлы</h2>
+<p>Для проверки самого вывода я выбрал сравнение с golden-файлами (эталонными результатми). Результат тестовых ROM-ов CHIP-8 настолько <em>визуальный</em>, что сравнение отрисованных кадров оказалось самым простым способом находить тонкие различия между вариантами. Это позволяет набору тестов:</p>
+<ul><li>рано находить регрессии,</li><li>подтверждать, что специфичные для варианта особенности ведут себя как задумано, и</li><li>гарантировать, что изменение не ломает правильное поведение.</li></ul>
+<p>Сами тестовые ROM-ы взяты из наборов <strong>Timendus</strong> и <strong>Octo</strong> плюс несколько собственных, и лежат в <code>testdata/roms/</code>. Эталонные golden-файлы — это PNG-снимки фреймбуфера в <code>testdata/golden/</code>.</p>
+<h3>Генерация goldenов (намеренно вручную)</h3>
+<p>Golden-файлы создаются запуском тестов с явным флагом, который пишет фреймбуфер в <code>testdata/golden/</code>. Этот шаг сделан ручным намеренно — goldenы пересоздаются только когда:</p>
+<ul><li>поведение изменилось намеренно,</li><li>исправлен баг или</li><li>изменился формат вывода.</li></ul>
+<p>Если бы пересоздание было автоматическим, регрессия просто молча перезаписала бы тот эталон, против которого должна была упасть.</p>
+<h3>Сравнение во время запуска</h3>
+<p>Во время обычного запуска всё просто: отрисовать кадр, сравнить его байт в байт с golden-файлом и упасть при любом расхождении. Эта побайтовая проверка и не даёт визуальным регрессиям проскочить незамеченной.</p>
+<h2>Использование CI</h2>
+<p>Наконец, всё это запускается в CI, так что регрессии выявляются на каждое изменение, а не когда я случайно их замечу. Пайплайн поднимает тулчейн Go, запускает юнит- и интеграционные тесты и проверяет golden-файлы.</p>
+<p>Весь сетап не сложный и вместе с харнессом, который знает о вариантах, превращает «вроде ещё работает» в то, чему можно доверять и продолжать развивать эмулятор.</p>
+      <p class="article-source">Также опубликовано как вики-страница — <a href="https://github.com/mxmgorin/ch8go/wiki/Testing" target="_blank" rel="noopener noreferrer">открыть оригинал</a>.</p>
+        <nav class="article-series" aria-label="Серия ch8go">
+          <p class="article-series-title">Серия ch8go</p>
+          <ol>
+          <li><a href="/blog/chip8-system/">Что такое CHIP-8 на самом деле (прежде чем писать эмулятор)</a></li>
+          <li><a href="/blog/chip8-architecture/ru/">Архитектура моего эмулятора CHIP-8 и почему именно так</a></li>
+          <li aria-current="true"><strong>Как я тестирую эмулятор CHIP-8 (когда нет «правильного»)</strong> <span class="series-here">— вы здесь</span></li>
+          </ol>
+        </nav>
+        <p class="open-tui"><a href="/?v=blog&amp;post=chip8-testing&amp;l=ru">▶ открыть в терминале</a></p>
+      </article>
+    </main>
+  </body>
+</html>

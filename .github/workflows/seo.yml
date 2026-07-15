@@ -1,0 +1,52 @@
+name: Generate SEO files
+
+# Regenerates the static post pages, sitemap, robots.txt, feed and the
+# index.html <noscript> fallback from posts/ + js/content/blog.js, and commits
+# the result so the branch-deployed GitHub Pages site stays in sync.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "posts/**"
+      - "js/content/blog.js"
+      - "js/markdown.js"
+      - "tools/**"
+      - "index.html"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # rsvg-convert (librsvg) rasterizes the OG card SVGs to PNG; the DejaVu
+      # mono font matches the cards' font-family for reproducible rendering.
+      - name: Install rasterizer
+        run: sudo apt-get update && sudo apt-get install -y librsvg2-bin fonts-dejavu-core
+
+      - name: Generate SEO files
+        run: node tools/build-seo.mjs
+
+      - name: Commit generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add blog og sitemap.xml robots.txt feed.xml index.html
+          if git diff --staged --quiet; then
+            echo "No SEO changes to commit."
+          else
+            git commit -m "chore(seo): regenerate static pages, sitemap, feed [skip ci]"
+            git push
+          fi

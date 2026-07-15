@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>Веб-браузер на Rust для ретро-консолей — mxmgorin.dev</title>
+    <meta name="description" content="У ретро-консолей есть Wi-Fi, GPU и гигабайт памяти — но нет нормального браузера. Почему так вышло и как я закрываю этот пробел с помощью retsurf на базе Servo, SDL2 и egui." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/retsurf-why/ru/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-why/">
+    <link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-why/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-why/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="Веб-браузер на Rust для ретро-консолей" />
+    <meta property="og:description" content="У ретро-консолей есть Wi-Fi, GPU и гигабайт памяти — но нет нормального браузера. Почему так вышло и как я закрываю этот пробел с помощью retsurf на базе Servo, SDL2 и egui." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/retsurf-why/ru/" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="article:published_time" content="2026-06-17T00:00:00.000Z" />
+    <meta property="article:tag" content="Rust">
+    <meta property="article:tag" content="Web">
+    <meta property="article:tag" content="Servo">
+    <meta property="og:image" content="https://mxmgorin.dev/og/retsurf-why.ru.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Веб-браузер на Rust для ретро-консолей" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/retsurf-why.ru.png" />
+    <meta name="twitter:title" content="Веб-браузер на Rust для ретро-консолей" />
+    <meta name="twitter:description" content="У ретро-консолей есть Wi-Fi, GPU и гигабайт памяти — но нет нормального браузера. Почему так вышло и как я закрываю этот пробел с помощью retsurf на базе Servo, SDL2 и egui." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Веб-браузер на Rust для ретро-консолей",
+  "description": "У ретро-консолей есть Wi-Fi, GPU и гигабайт памяти — но нет нормального браузера. Почему так вышло и как я закрываю этот пробел с помощью retsurf на базе Servo, SDL2 и egui.",
+  "datePublished": "2026-06-17",
+  "dateModified": "2026-06-17",
+  "inLanguage": "ru",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/retsurf-why/ru/"
+  },
+  "url": "https://mxmgorin.dev/blog/retsurf-why/ru/",
+  "wordCount": 809,
+  "isAccessibleForFree": true,
+  "keywords": "Rust, Web, Servo",
+  "image": "https://mxmgorin.dev/og/retsurf-why.ru.png",
+  "articleSection": "retsurf"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Веб-браузер на Rust для ретро-консолей",
+      "item": "https://mxmgorin.dev/blog/retsurf-why/ru/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/ru/">← назад к блогу</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>Веб-браузер на Rust для ретро-консолей</h1>
+        <p class="article-meta">2026-06-17  —  Rust · Web · Servo  —  4 мин чтения</p>
+        <p>Рано или поздно с этим сталкивается каждый владелец ретро-консоли. Сидишь в какой-нибудь малоизвестной SNES-JRPG на портативной консоли за 60 долларов, работающей под Linux, застреваешь на боссе и тянешься за тем, за чем потянулся бы на любом компьютере — за веб-браузером. Чтобы открыть вики. FAQ. Карту.</p>
+<p>А рабочего браузера-то и нет.</p>
+<p>Да, пара урезанных браузеров формально запустится — но ни один из них не умеет отрисовывать современный, напичканный JavaScript веб. У устройства есть Wi-Fi, четырёхъядерный ARM-чип, GPU и гигабайт оперативной памяти — более чем достаточно, чтобы комфортно сёрфить по интернету образца 2010 года, — и при этом браузера, который реально работает, самой универсальной программы на Земле, просто нет. Именно ради этого пробела и существует <strong><a href="https://github.com/mxmgorin/retsurf" target="_blank" rel="noopener noreferrer">retsurf</a></strong>.</p>
+<p>На это у меня был свой взгляд. Какое-то время я участвовал в <a href="https://portmaster.games/profile.html?porter=Troidem" target="_blank" rel="noopener noreferrer">PortMaster</a> и портировал игры на эти ARM-Linux-консоли — и в какой-то момент перестал видеть в них игрушки, а увидел маленькие Linux-компьютеры, которым не хватает софта. Как только это сложилось в голове, недостающий браузер стал тем, что мне хотелось сделать больше всего.</p>
+<h2>Пробел</h2>
+<p>Дистрибутивы Linux для консолей — <a href="https://knulli.org" target="_blank" rel="noopener noreferrer">Knulli</a>, <a href="https://muos.dev" target="_blank" rel="noopener noreferrer">muOS</a>, <a href="https://rocknix.org" target="_blank" rel="noopener noreferrer">ROCKNIX</a> — это отличные проекты. Они превращают дешёвые китайские устройства в маленькие игровые консоли. Но они именно <em>игровые</em>. Заложенная в них идея: «загрузиться прямо в лаунчер игр, рисовать через GPU, управлять всем крестовиной и парой кнопок». Никакого рабочего стола. Обычно никакого оконного менеджера. Часто нет запущенного сервера X11 или Wayland — интерфейс общается с дисплеем напрямую через KMS/DRM.</p>
+<p>Поэтому, когда ты идёшь искать браузер, выясняется, что все три очевидных варианта отпадают:</p>
+<ol><li><strong>Лёгкие браузеры не отрисовывают современный веб.</strong> Что-нибудь вроде NetSurf <em>запустится</em>, но того веба, под который его делали, больше нет. Сегодняшние сайты — это JavaScript-приложения. Убери JS — и получишь не браузер полегче, а по большей части сломанный.</li><li><strong>Десктопные браузеры рассчитывают на десктоп.</strong> Firefox и Chromium ждут, что композитор выдаст им окно, а мышь и клавиатура — управление. Убери X11/Wayland — и ты убрал то, <em>во что</em> они рисуют. Убери мышь и клавиатуру — и вся модель взаимодействия рушится.</li><li><strong>Для браузера на геймпаде нет модели ввода.</strong> Даже если решить вопрос с отрисовкой — как кликнуть по ссылке стиком? Как набрать URL без клавиатуры? Как листать страницу кнопками? «Браузер» и «геймпад» по-настоящему никогда и не встречались.</li></ol>
+<p>Каждая из этих задач сложна сама по себе. А вместе они и есть причина того, почему пробел так и не закрылся. retsurf — попытка закрыть все три разом.</p>
+<h2>Браузерный движок</h2>
+<p>Сразу убью самое лестное заблуждение: я не писал браузерный движок. И никому не стоит. Браузерный движок — это одна из крупнейших, самых критичных с точки зрения безопасности и самых перегруженных стандартами программных систем, которые создаёт человечество, и таких на планете всего несколько штук.</p>
+<p>За последние несколько лет изменилось то, что один из них стал чем-то, что можно <em>встраивать</em>. <a href="https://github.com/servo/servo" target="_blank" rel="noopener noreferrer">Servo</a> — движок на Rust, который начинался в Mozilla, а теперь стал независимым проектом, — предоставляет свой конвейер отрисовки как библиотеку. Ты отдаёшь ему GL-контекст и URL, а он возвращает тебе пиксели. Вот в чём прорыв. По своей сути retsurf — это обвязка вокруг трёх крейтов:</p>
+<ul><li><strong><a href="https://servo.org" target="_blank" rel="noopener noreferrer">Servo</a></strong> — собственно отрисовка веба (под капотом он использует WebRender, GPU-ориентированный рендерер).</li><li><strong><a href="https://www.libsdl.org/" target="_blank" rel="noopener noreferrer">SDL2</a></strong> — окно, GL-контекст и ввод, потому что SDL2 уже умеет общаться с «голым» KMS/DRM и с геймпадами, а это ровно то, что отдают эти устройства.</li><li><strong><a href="https://github.com/emilk/egui" target="_blank" rel="noopener noreferrer">egui</a></strong> — собственный интерфейс: панель инструментов, меню, экранная клавиатура, — накладываемый поверх страницы.</li></ul>
+<p>Вся ставка в том, что сложная часть — движок — уже решена, а <em>интересная</em> часть — это всё, что находится в стыке между современным движком и устройством, которое предназначено для запуска ROM-ов Game Boy.</p>
+<h2>Что было сложным</h2>
+<p>Ни одна из этих проблем не была экзотической сама по себе; они просто свалились все сразу. WebRender требует OpenGL ES 3.0, а привычная прослойка <code>gl4es</code> упирается в GL 2.x — так что Servo приходится общаться с нативным GLES-драйвером устройства напрямую. Запускать GL-контекст SDL2 рядом с собственным контекстом Servo было ловушкой, поэтому всё рисуется в один общий контекст без копирований на стороне CPU. Драйвер Mali сообщает о EGL 1.4 там, где зависимость рассчитывала на 1.5, и <em>паниковал</em> вместо того, чтобы деградировать корректно, — код, который работал на десктопе, крашился, когда запускался на целевом железе. И всё это управляется геймпадом — виртуальный курсор, подсказки на ссылках, экранная клавиатура — оставаясь при этом маленьким и быстрым на паре сотен мегабайт свободной памяти. Что забавно — всё это наваливается разом, на железе, к которому толком не подцепишь <code>gdb</code>, где «у меня на машине работает» — ложь, которую ты повторяешь себе ровно до того момента, как устройство загрузится.</p>
+<h2>Что есть сейчас</h2>
+<p>retsurf работает на консолях вроде TrimUI Smart Pro, Powkiddy RGB30 и Anbernic RG35XX SP. Он отрисовывает настоящий, напичканный JavaScript веб через Servo. У него есть навигация геймпадом с курсором и подсказками на ссылках, экранная клавиатура с несколькими раскладками, настоящий зум страницы с переформатированием вёрстки (а не лупа), режим чтения, фоновые загрузки и блокировка рекламы на уровне сети. У него есть нативная стартовая страница с сеткой быстрого доступа. И тот же код собирается в Android-APK.</p>
+<p>Это экспериментальный проект. У него есть шероховатости. Но он отвечает на вопрос про босса: теперь ты можешь открыть вики прямо на том, что держишь в руках.</p>
+        <nav class="article-series" aria-label="Серия retsurf">
+          <p class="article-series-title">Серия retsurf</p>
+          <ol>
+          <li aria-current="true"><strong>Веб-браузер на Rust для ретро-консолей</strong> <span class="series-here">— вы здесь</span></li>
+          <li><a href="/blog/retsurf-servo-sdl2/ru/">Servo в SDL2 — один GPU и слишком много багов</a></li>
+          <li><a href="/blog/retsurf-controls/ru/">Браузер, которым управляешь с геймпада</a></li>
+          <li><a href="/blog/retsurf-performance/ru/">Каждый мегабайт на счету: браузер для консолeй с 1 ГБ ОЗУ</a></li>
+          </ol>
+        </nav>
+        <p class="open-tui"><a href="/?v=blog&amp;post=retsurf-why&amp;l=ru">▶ открыть в терминале</a></p>
+      </article>
+    </main>
+  </body>
+</html>

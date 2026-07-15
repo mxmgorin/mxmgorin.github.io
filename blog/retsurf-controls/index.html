@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>A browser you drive with a gamepad — mxmgorin.dev</title>
+    <meta name="description" content="A web browser assumes a mouse and a keyboard — a retro handheld has neither. How retsurf drives a full browser from a gamepad: intents not buttons, a virtual cursor, link hints with a gamepad alphabet, an on-screen keyboard, and in-app rebinding." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/retsurf-controls/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-controls/">
+    <link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-controls/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-controls/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="A browser you drive with a gamepad" />
+    <meta property="og:description" content="A web browser assumes a mouse and a keyboard — a retro handheld has neither. How retsurf drives a full browser from a gamepad: intents not buttons, a virtual cursor, link hints with a gamepad alphabet, an on-screen keyboard, and in-app rebinding." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/retsurf-controls/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:published_time" content="2026-06-21T00:00:00.000Z" />
+    <meta property="article:tag" content="Rust">
+    <meta property="article:tag" content="egui">
+    <meta property="article:tag" content="Gamepad">
+    <meta property="article:tag" content="UX">
+    <meta property="og:image" content="https://mxmgorin.dev/og/retsurf-controls.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A browser you drive with a gamepad" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/retsurf-controls.png" />
+    <meta name="twitter:title" content="A browser you drive with a gamepad" />
+    <meta name="twitter:description" content="A web browser assumes a mouse and a keyboard — a retro handheld has neither. How retsurf drives a full browser from a gamepad: intents not buttons, a virtual cursor, link hints with a gamepad alphabet, an on-screen keyboard, and in-app rebinding." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "A browser you drive with a gamepad",
+  "description": "A web browser assumes a mouse and a keyboard — a retro handheld has neither. How retsurf drives a full browser from a gamepad: intents not buttons, a virtual cursor, link hints with a gamepad alphabet, an on-screen keyboard, and in-app rebinding.",
+  "datePublished": "2026-06-21",
+  "dateModified": "2026-06-21",
+  "inLanguage": "en",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/retsurf-controls/"
+  },
+  "url": "https://mxmgorin.dev/blog/retsurf-controls/",
+  "wordCount": 3003,
+  "isAccessibleForFree": true,
+  "keywords": "Rust, egui, Gamepad, UX",
+  "image": "https://mxmgorin.dev/og/retsurf-controls.png",
+  "articleSection": "retsurf"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "A browser you drive with a gamepad",
+      "item": "https://mxmgorin.dev/blog/retsurf-controls/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/">← back to blog</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>A browser you drive with a gamepad</h1>
+        <p class="article-meta">2026-06-21  —  Rust · egui · Gamepad · UX  —  15 min read</p>
+        <p>Every other post in this series has been about getting pixels onto the screen — wiring Servo into SDL2, fighting two GL contexts and old driver. By the end of <a href="/blog/retsurf-servo-sdl2/" data-post="retsurf-servo-sdl2">the SDL2 wiring post</a> the device boots and renders the real web. And then you sit there holding it, wondering how to control it.</p>
+<p>Because a web browser assumes two input devices that this thing does not have: a mouse and a keyboard. Links are clicked with a mouse. URLs are typed on a keyboard. Hover, focus, text selection, scrolling — all of it is built on a cursor you aim and a hundred keys you press. A retro handheld has a D-pad, a few of face buttons, and <em>maybe</em> one or two analog sticks. That's it. Some of them don't even have the sticks.</p>
+<p>So the question this post answers is: how do you control a browser — click a link, type a search, switch a tab, scroll a page — with the controls of a Game Boy? The answer is the same move, made over and over, until the whole UI is rebuilt from the buttons up.</p>
+<h2>The one idea: intents, not buttons</h2>
+<p>The mistake I avoided early was hardcoding "A clicks, B goes back." Bind your UI to physical buttons and you've written a UI for exactly one device and one user.</p>
+<p>So retsurf's input layer never talks about buttons. It talks about <strong>intents</strong> — an <code>Action</code> enum — and a configurable table maps physical gestures onto them (<code>src/event/bindings.rs</code>):</p>
+<pre class="code"><code>pub enum Action {
+    Confirm,
+    Osk,
+    // ...
+    Scroll,
+}</code></pre>
+<p>The gamepad layer's entire job is to turn SDL events into one of these, and then hand it to a router that decides what it <em>means</em> in the current context (<code>src/event/gamepad.rs</code>):</p>
+<blockquote>Translates controller input into <code>AppCommand</code>s — and nothing more. It maps physical controls to intents via the configurable <code>Bindings</code> table; <em>what</em> each intent does is decided by the router.</blockquote>
+<p>That indirection is what makes everything composable. "Click" is an intent; where it lands (a page link, a toolbar button, a menu row) is the router's call.</p>
+<h3>A gesture is more than a press</h3>
+<p>Ten or eleven buttons isn't a lot of vocabulary for a whole browser. So each button is worth more than one binding, by paying attention to <em>how</em> it's pressed. A gesture is a tap, a hold, or a chord, and the defaults use all three (<code>src/event/bindings.rs</code>):</p>
+<pre class="code"><code>("a", Action::Confirm),
+("b", Action::Cancel),
+// ..
+("hold:start", Action::Reload),</code></pre>
+<p>Resolving those gestures is a state machine, and the timing matters. A button whose <em>only</em> binding is a tap can fire immediately on the press — there's nothing to wait for. But a button that also carries a <code>hold:</code> or takes part in a chord is ambiguous the moment it goes down, so it has to be deferred (<code>src/event/gamepad.rs</code>):</p>
+<blockquote>A button whose only binding is a tap fires immediately on the press. A button that also carries a <code>hold:</code> binding or takes part in a chord is ambiguous on press, so it's <em>deferred</em>: tap fires on release (if it comes before <code>hold_ms</code>), the hold action fires once the threshold passes, and a chord fires the moment its second button goes down.</blockquote>
+<p>So <code>hold_ms</code> is the fork: release before it and you tapped; cross it and you held. The cost is that a deferred button's tap now lands on <em>release</em> instead of press — a few milliseconds of latency which is invisible in practice and buys you a second action per button. On a device this starved for inputs, that trade is the whole game.</p>
+<h2>Three ways to click a link</h2>
+<p>Clicking is the problem the web cares about most and the handheld solves worst. retsurf has three answers.</p>
+<h3>1. Virtual cursor</h3>
+<p>The most obvious solution for "no mouse" is "fake a mouse." The left stick moves a dot around the screen; A clicks wherever the dot is. The cursor position is just a clamped point, nudged each frame by the stick's deflection, and the D-pad is folded into the same vector so it works as a coarse fallback (<code>src/event/gamepad.rs</code>):</p>
+<pre class="code"><code>fn aim(&amp;self) -&gt; (f32, f32) {
+    (
+        (self.left.0 + self.dpad.0).clamp(-1.0, 1.0),
+        (self.left.1 + self.dpad.1).clamp(-1.0, 1.0),
+    )
+}</code></pre>
+<p>The clicking part is where it meets Servo. There's no OS pointer to move — so a press <em>synthesizes</em> the mouse events the engine expects, but only when the cursor is actually over the page rather than the toolbar (<code>src/app/router.rs</code>):</p>
+<pre class="code"><code>fn primary_action(&amp;mut self, pressed: bool) {
+    if self.ui.cursor_over_browser() {
+        let (x, y) = self.ui.cursor_browser_rel();
+        self.browser
+            .handle_input(servo::InputEvent::MouseMove(into_mouse_move_event(x, y)));
+        let event = into_mouse_button_event(sdl2::mouse::MouseButton::Left, x, y, pressed);
+        self.browser
+            .handle_input(servo::InputEvent::MouseButton(event));
+    } else {
+        self.ui.click_ui(pressed, &amp;self.window);
+    }
+}</code></pre>
+<p>A <code>MouseMove</code> to set hover state, then a <code>MouseButton</code> down/up — exactly the sequence a real mouse would produce, manufactured from a stick and a button. It works, and it's honest, and it's <em>slow</em>: pixel-aiming a thumbstick at a search result is the worst part of the whole UX. Worse, it's dead weight on a stickless device. The virtual cursor is the floor, not the ceiling.</p>
+<h3>2. Scroll mode</h3>
+<p>That <code>Action::Scroll</code> exists for the stickless devices. With no right stick, the page would be unreachable below. So tapping Start <em>toggles</em> a mode where the left stick and D-pad scroll the page instead of moving the cursor. It's the one action the gamepad layer handles itself rather than routing, because it changes the meaning of every subsequent frame. One physical input, two modes, toggled by a button: a recurring shape on hardware this constrained.</p>
+<h3>3. Link hints</h3>
+<p>The real answer is borrowed from <a href="https://vimium.github.io/" target="_blank" rel="noopener noreferrer">Vimium</a>: don't aim at links, <em>label</em> them. Enter hint mode and every clickable thing on the page gets a little badge; you select the badge and it clicks. No aiming.</p>
+<p>First you have to find the clickables. retsurf injects JavaScript into the active page through Servo and reads back a flat list of rectangles (<code>src/browser/mod.rs</code>):</p>
+<pre class="code"><code>const els = document.querySelectorAll(
+    'a[href], button, input:not([type="hidden"]), select, textarea, summary, ' +
+    '[onclick], [role="button"], [role="link"], [role="tab"], [contenteditable="true"]'
+);</code></pre>
+<p>Each visible element comes back as its viewport rect plus a URL, capped at 150 so a page with thousands of links can't flood the IPC channel. So far this is Vimium. Here's where the handheld adapts it.</p>
+<p>Vimium labels its hints with <em>letters</em> — you type <code>fj</code> to click. retsurf has no keyboard. So the alphabet isn't letters; it's the buttons themselves. Eight of them, since A and B are spoken for (confirm and cancel):</p>
+<pre class="code"><code>pub enum Sym {
+    X, Y, L1, R1, Up, Down, Left, Right,
+}</code></pre>
+<p>Eight symbols means hint codes are just base-8 numbers, with each "digit" drawn as a button to press. Codes stay as short as the page allows — one button for up to 8 links, two for up to 64, three for up to 512 — and the <em>nearest</em> hints get the shortest codes, ordered by distance from the top of the viewport (<code>src/overlay/hints.rs</code>):</p>
+<pre class="code"><code>fn assign_codes(hints: &amp;[Hint], anchor: (f32, f32)) -&gt; Vec&lt;Vec&lt;Sym&gt;&gt; {
+    let n = hints.len();
+    let len = if n &lt;= 8 { 1 } else if n &lt;= 64 { 2 } else { 3 };
+    let mut order: Vec&lt;usize&gt; = (0..n).collect();
+    order.sort_by(|&amp;a, &amp;b| {
+        dist2(hints[a].center(), anchor).total_cmp(&amp;dist2(hints[b].center(), anchor))
+    });
+    let mut codes = vec![Vec::new(); n];
+    for (rank, &amp;idx) in order.iter().enumerate() {
+        codes[idx] = nth_code(rank, len);
+    }
+    codes
+}</code></pre>
+<p>Then you press buttons, and the typed buffer narrows the field. The matching is nicer than it sounds because the codes are all the same length and unique, so a full buffer that still matches <em>something</em> matches exactly one thing — no disambiguating Enter key needed (<code>src/overlay/hints.rs</code>):</p>
+<pre class="code"><code>pub fn push_sym(&amp;mut self, s: Sym) -&gt; HintInput {
+    self.typed.push(s);
+    if !(0..self.codes.len()).any(|i| self.has_prefix(i, &amp;self.typed)) {
+        self.typed.clear();
+        return HintInput::NoMatch;
+    }
+    let len = self.codes.first().map_or(0, Vec::len);
+    if self.typed.len() &gt;= len {
+        let idx = (0..self.codes.len())
+            .find(|&amp;i| self.codes[i] == self.typed)
+            .expect("a full-length prefix match is an exact match");
+        self.typed.clear();
+        return HintInput::Activate(idx);
+    }
+    HintInput::Pending
+}</code></pre>
+<p>On screen, as you press buttons, every badge whose code no longer matches your input fades to 16% opacity. It reads like the page is helping you aim, which is the whole point.</p>
+<p>And because it's two-stage — a D-pad hop to <em>move the selection</em>, then a press to <em>commit</em> — hint mode also has to scroll. If you nudge the selection past the bottom edge with nowhere further to go, the page should scroll to reveal more hints rather than stick. That's most of <code>hints_nav</code>, and it hides the single most annoying bug in the feature (<code>src/app/router.rs</code>):</p>
+<pre class="code"><code>let (sx, _) = self.ui.hints_selected_center()
+    .unwrap_or_else(|| self.ui.cursor_browser_rel());
+let sy = height / 2.0;
+let chunk = dy as f32 * height * HINT_EDGE_SCROLL_FRACTION;
+self.browser.scroll(0.0, chunk, sx, sy);</code></pre>
+<p>The bug: Servo decides <em>which</em> element scrolls by hit-testing the point you scroll from. The hint sitting at the very top edge is usually inside a sticky header — DuckDuckGo's search bar, a site nav — and a sticky header doesn't scroll the document. So scrolling "from" that hint moved nothing, and the page looked frozen. The fix is to keep the hint's horizontal column (so a hint living in a nested scroller still scrolls <em>that</em>) but hit-test at mid-viewport height, which lands on the main content. After the scroll settles, the hints are re-collected and the selection re-anchors to the freshly revealed edge. A genuinely handheld-specific bug — it only exists because the cursor isn't a real pointer and the scroll has to be aimed.</p>
+<h2>Typing without a keyboard</h2>
+<p>Clicking solved, the other missing device is the keyboard. You can't browse without typing a URL or a search at least once, so retsurf ships its own on-screen keyboard — an egui grid you walk with the D-pad. The state is exactly what you'd guess: a row, a column, and a stack of layouts (<code>src/overlay/osk.rs</code>):</p>
+<pre class="code"><code>pub struct Osk {
+    visible: bool,
+    caps: bool,
+    caret: usize,
+    row: usize,
+    col: usize,
+    layouts: Vec&lt;Layout&gt;,
+    lang: usize,
+}</code></pre>
+<p>D-pad navigation is just clamped grid movement, re-clamping the column on each row change because rows aren't the same width:</p>
+<pre class="code"><code>fn move_sel(&amp;mut self, dx: i32, dy: i32) {
+    let rows = self.layout().keys.len() as i32;
+    self.row = (self.row as i32 + dy).clamp(0, rows - 1) as usize;
+    let cols = self.layout().keys[self.row].len() as i32;
+    self.col = (self.col as i32 + dx).clamp(0, cols - 1) as usize;
+}</code></pre>
+<p>But D-pad-walking to every key is tedious, so the buttons you press most often get dedicated shortcuts that skip the grid entirely: X is Backspace, Y is Space, L2 is a momentary Shift, R2 is Enter. There's more than one layout, too — QWERTY and a Cyrillic ЙЦУКЕН — and a Lang key cycles them, because "type a URL" and "type a search in Russian" are different jobs.</p>
+<p>The piece that makes the OSK reusable is that it doesn't know where the text goes. It writes to a target the caller supplies (<code>src/overlay/osk.rs</code>):</p>
+<pre class="code"><code>pub enum OskTarget&lt;'a&gt; {
+    AddressBar,
+    Prompt(&amp;'a mut String),
+    // ..
+    Page,
+}</code></pre>
+<p>Most targets are just a string buffer the OSK edits in place. The interesting one is <code>Page</code>: typing into a focused <code>&lt;input&gt;</code> on a website, where there's no buffer to edit — so each character is turned back into a synthesized key-down/key-up pair and handed to Servo, the keyboard mirror image of how the cursor synthesizes mouse events. The same trick, the other input device.</p>
+<h2>Menus you walk with a D-pad</h2>
+<p>Tabs, bookmarks, history, downloads — the chrome of the browser — are full-screen overlays rather than dropdowns, because a dropdown is a thing you point at. Navigation is the same selection model as everything else: the D-pad moves within the active section, the shoulders switch sections, and the selected row scrolls itself into view so the off-screen selection never gets lost (<code>src/overlay/menu.rs</code>):</p>
+<pre class="code"><code>pub fn move_sel(&amp;mut self, dy: i32) {
+    match self.section {
+        Section::Bookmarks =&gt; self.bookmarks.move_sel(dy),
+        Section::History   =&gt; self.history.move_sel(dy),
+        Section::Downloads =&gt; self.downloads.move_sel(dy),
+        Section::Tabs =&gt; {
+            let last = self.tab_count as i32;
+            self.tab_selected = (self.tab_selected as i32 + dy).clamp(0, last) as usize;
+        }
+    }
+}</code></pre>
+<p>There's nothing clever here, and that's the point: once "selection plus confirm" is your universal idiom, every list-shaped surface in the app is the same handful of lines. The cursor, the hints, the keyboard, the menus — they're all selection-and-commit wearing different clothes.</p>
+<h2>The move that ties it together: rebind it yourself</h2>
+<p>The constraint I put off the longest. No two of these handhelds have the same buttons. Some have two sticks, some have one, some have none. The defaults above are a guess, but a guess can't be right for every device and user — so the bindings have to be editable.</p>
+<p>Except: you edit config files with a keyboard, and the entire premise of this post is that there <em>is</em> no keyboard. A <code>bindings.toml</code> you can only edit by pulling the SD card and mounting it on a real computer is not a feature a handheld user will ever touch. So rebinding has to happen <em>in the app</em>, driven by the gamepad, which means the cleanest possible UX: to bind an action, you press the button you want.</p>
+<p>That capture flow is a small mode flip. When you activate "add a binding," the settings overlay records which action is listening (<code>src/overlay/settings.rs</code>):</p>
+<pre class="code"><code>pub struct Settings {
+    // ...
+    capturing: Option&lt;Action&gt;,   // Some(action) while waiting for a gesture
+}</code></pre>
+<p>While that's <code>Some</code>, the event handler intercepts input <em>before</em> it reaches the normal dispatch — otherwise pressing A to bind it would just fire A's existing "confirm" action. For the keyboard side (capture works for keyboard shortcuts too, on devices that have one), it grabs the keystroke, ignores modifiers, and turns the rest into a gesture string (<code>src/event/handler.rs</code>):</p>
+<pre class="code"><code>if ui.settings_capturing() {
+    match event {
+        Event::KeyDown { keycode: Some(kc), keymod, repeat: false, .. } =&gt; {
+            if kc == Keycode::Escape {
+                commands.push(/* cancel capture */);
+            } else if is_modifier_key(kc) {
+                return;                          // wait for the real key
+            } else if let Some(gesture) = bindings::format_key(kc, keymod) {
+                commands.push(/* CaptureBinding { gesture, keyboard: true } */);
+            }
+            return;
+        }
+        // ...swallow key-up and text-input so nothing leaks through
+    }
+}</code></pre>
+<p>The gamepad side runs the <em>same</em> tap/hold/chord resolution the live UI uses, so you can capture "hold Select" or "L1+R1" exactly the way you'd later perform it, and it formats the result with the same vocabulary the defaults are written in (<code>src/event/bindings.rs</code>):</p>
+<pre class="code"><code>pub(crate) fn button_name(button: Button) -&gt; Option&lt;&amp;'static str&gt; {
+    Some(match button {
+        Button::A =&gt; "a",    Button::B =&gt; "b",
+        Button::X =&gt; "x",    Button::Y =&gt; "y",
+        Button::LeftShoulder =&gt; "l1",  Button::RightShoulder =&gt; "r1",
+        Button::Start =&gt; "start",      Button::Back =&gt; "select",
+        // ...
+        _ =&gt; return None,
+    })
+}</code></pre>
+<p>There's one last detail: capture mode needs an escape hatch — what if you open it by accident and there's no Esc key to cancel with? On a device with nothing but a gamepad, the answer is a timeout:</p>
+<pre class="code"><code>/// Auto-cancel binding capture if nothing is pressed for this long — the handheld
+/// escape hatch (there's no Esc), so an accidental "add" doesn't trap input.
+const CAPTURE_TIMEOUT: Duration = Duration::from_secs(6);</code></pre>
+<p>If you don't press anything for six seconds, capture quietly gives up and hands input back. The lack of a keyboard isn't a problem you solve once at the URL bar; it's a constraint that follows you into every corner of the UI, including the menu where you configure the buttons.</p>
+<h2>The payoff: the same trick on a keyboard</h2>
+<p>Everything so far assumed there's no keyboard, which is true of a bare handheld. But retsurf also builds an Android APK — the subject of a later post — and on a phone the keyboard is suddenly back on the table: a Bluetooth one, or the hardware QWERTY of a phone built around one. This is where the "intents, not buttons" detour collects its reward. A keyboard isn't a second control scheme to design and maintain; it's a second binding table over the exact same <code>Action</code>s.</p>
+<p>That's literally the shape of <code>bindings.toml</code> — two maps, one vocabulary (<code>src/event/bindings.rs</code>):</p>
+<pre class="code"><code>pub struct Store {
+    pub gamepad: BTreeMap&lt;String, String&gt;,
+    pub keyboard: BTreeMap&lt;String, String&gt;,
+}</code></pre>
+<p>And <code>src/event/keyboard.rs</code> describes itself as the mirror of the gamepad layer:</p>
+<blockquote>Translates raw keyboard input into <code>AppCommand</code>s — the keyboard counterpart of <code>gamepad</code>. It owns the <code>[keyboard]</code> table of <code>bindings.toml</code> and applies the firing rules: <code>nav_*</code> steps need an open overlay (and auto-repeat while held), plain shortcuts (no Ctrl/Alt) are muted while anything editable has focus, and the menu / hint overlays get their fixed keys first. Whatever isn't consumed is forwarded to the page as a Servo keyboard event.</blockquote>
+<p>The default map is what a browser user's fingers already expect, with a Vimium streak (<code>src/event/bindings.rs</code>):</p>
+<pre class="code"><code>("ctrl+r", Action::Reload),
+("f", Action::Hints),
+// ..
+("enter", Action::Confirm),
+("backspace", Action::Cancel),</code></pre>
+<p><code>f</code> is bound straight to <code>Action::Hints</code> — the very intent the Y button fires. Press <code>f</code> and link-hint mode lights up; from there you hop the selection with <code>hjkl</code> or the arrows and press Enter, where a gamepad would type the button-combo from a few sections back. Two ways to pick a hint, one underlying <code>activate_hint</code>.</p>
+<p>The tricky part of a keyboard-driven browser is a collision the gamepad never has: a plain <code>f</code> should <em>open hints</em> while you're reading, but type the letter <em>f</em> when you're in a search box. A bare letter can't be both a shortcut and a character unless something decides which, per keystroke. That decision is four lines (<code>src/event/keyboard.rs</code>):</p>
+<pre class="code"><code>fn lookup(&amp;self, key: &amp;KeyEvent, overlay: bool, typing: bool) -&gt; Option&lt;Action&gt; {
+    let (action, plain) = self.bindings.lookup(key.kc, key.keymod)?;
+    let fire = if action.is_nav() {
+        overlay
+    } else {
+        !key.repeat &amp;&amp; (!plain || !typing)
+    };
+    fire.then_some(action)
+}</code></pre>
+<p>A binding with no modifier (<code>plain</code>) fires only when nothing editable has focus (<code>!typing</code>); the moment a text field or the address bar takes focus, <code>f</code> and <code>hjkl</code> stop being shortcuts and flow through as characters. A <code>nav_*</code> step only fires while an overlay is open, so the arrows drive a menu but scroll the page when no menu is up. Ctrl-combos fire unconditionally — <code>Ctrl+R</code> reloads whether you're typing or not. Three rules, and the keyboard stops fighting the text box.</p>
+<p>Android has one more device-specific control into the same scheme. The phone's gesture or hardware Back arrives as a key event, and it maps to the focus-aware <code>Cancel</code> intent — close the open overlay, or navigate back on the page (<code>src/event/keyboard.rs</code>):</p>
+<pre class="code"><code>if key.kc == Keycode::AcBack {
+    if key.pressed &amp;&amp; !key.repeat {
+        commands.push(AppCommand::Input(InputCommand::Cancel));
+    }
+    return;
+}</code></pre>
+<p>So swipe-Back on Android, tap-B on a gamepad, and Backspace on a keyboard are three unrelated physical events that all resolve to one intent — <code>Cancel</code> — and the router does the same focus-aware thing for each. Anything no table claims falls through to the page as a real Servo keyboard event, so typing into a web form just works. And the keyboard map rebinds through the very same capture flow from the last section — its <code>[keyboard]</code> half — so a QWERTY-phone user reshapes their shortcuts without touching a config file either.</p>
+<p>The architecture is paying off. I planned to drive a browser with a gamepad and ended up with an input layer that drives it from a gamepad, a touchscreen, and a full keyboard — because none of them were ever wired to the UI directly. They were wired to intents.</p>
+        <nav class="article-series" aria-label="retsurf series">
+          <p class="article-series-title">retsurf series</p>
+          <ol>
+          <li><a href="/blog/retsurf-why/">Building a Rust web browser for retro handhelds</a></li>
+          <li><a href="/blog/retsurf-servo-sdl2/">Embedding Servo in SDL2 — one GPU, too many bugs</a></li>
+          <li aria-current="true"><strong>A browser you drive with a gamepad</strong> <span class="series-here">— you are here</span></li>
+          <li><a href="/blog/retsurf-performance/">Every Megabyte Counts: A Browser on a 1 GB Handheld</a></li>
+          </ol>
+        </nav>
+        <p class="open-tui"><a href="/?v=blog&amp;post=retsurf-controls">▶ open in the terminal UI</a></p>
+      </article>
+    </main>
+  </body>
+</html>

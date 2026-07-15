@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mxmgorin.dev</title>
+    <link>https://mxmgorin.dev/</link>
+    <description>Projects and notes on emulation, low-level systems, Rust and Go.</description>
+    <language>en</language>
+    <lastBuildDate>Mon, 06 Jul 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://mxmgorin.dev/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>A Language With No Syntax: A Brainfuck Compiler in C#</title>
+      <link>https://mxmgorin.dev/blog/csbf-toolchain/</link>
+      <guid isPermaLink="true">https://mxmgorin.dev/blog/csbf-toolchain/</guid>
+      <pubDate>Mon, 06 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Brainfuck has no syntax worth parsing, which makes it the perfect language to build a compiler for. csbf is a full C# toolchain: an optimizing IR, a reversible VM with time-travel debugging, a Go transpiler, an IL JIT, and a Blazor playground that runs most of it in the browser.</description>
+      <category>C#</category>
+      <category>Compilers</category>
+      <category>Brainfuck</category>
+      <category>WASM</category>
+    </item>
+    <item>
+      <title>Every Megabyte Counts: A Browser on a 1 GB Handheld</title>
+      <link>https://mxmgorin.dev/blog/retsurf-performance/</link>
+      <guid isPermaLink="true">https://mxmgorin.dev/blog/retsurf-performance/</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>A modern browser on a handheld with no dedicated VRAM and weak in-order cores. What actually moved the needle — deleting allocations, tuning Servo's prefs, and shipping three per-core binaries to dodge a SIGILL — and, just as important, what I chose not to do.</description>
+      <category>Rust</category>
+      <category>Performance</category>
+      <category>Servo</category>
+      <category>Memory</category>
+    </item>
+    <item>
+      <title>A browser you drive with a gamepad</title>
+      <link>https://mxmgorin.dev/blog/retsurf-controls/</link>
+      <guid isPermaLink="true">https://mxmgorin.dev/blog/retsurf-controls/</guid>
+      <pubDate>Sun, 21 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A web browser assumes a mouse and a keyboard — a retro handheld has neither. How retsurf drives a full browser from a gamepad: intents not buttons, a virtual cursor, link hints with a gamepad alphabet, an on-screen keyboard, and in-app rebinding.</description>
+      <category>Rust</category>
+      <category>egui</category>
+      <category>Gamepad</category>
+      <category>UX</category>
+    </item>
+    <item>
+      <title>Embedding Servo in SDL2 — one GPU, too many bugs</title>
+      <link>https://mxmgorin.dev/blog/retsurf-servo-sdl2/</link>
+      <guid isPermaLink="true">https://mxmgorin.dev/blog/retsurf-servo-sdl2/</guid>
+      <pubDate>Fri, 19 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Servo renders the web, SDL2 owns the window on bare hardware, egui draws the UI — and getting all three to share one GPU with no compositor and an old driver was a string of crashes. The unabridged tour, in the order they happened.</description>
+      <category>Rust</category>
+      <category>Servo</category>
+      <category>SDL2</category>
+      <category>OpenGL</category>
+    </item>
+    <item>
+      <title>Building a Rust web browser for retro handhelds</title>
+      <link>https://mxmgorin.dev/blog/retsurf-why/</link>
+      <guid isPermaLink="true">https://mxmgorin.dev/blog/retsurf-why/</guid>
+      <pubDate>Wed, 17 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Retro handhelds have Wi-Fi, a GPU, and a gigabyte of RAM — but no usable web browser. Why that gap exists, and how I'm closing it with retsurf, built on Servo, SDL2, and egui.</description>
+      <category>Rust</category>
+      <category>Web</category>
+      <category>Servo</category>
+    </item>
+    <item>
+      <title>How I Test a CHIP-8 Emulator (When There's No "Correct")</title>
+      <link>https://mxmgorin.dev/blog/chip8-testing/</link>
+      <guid isPermaLink="true">https://mxmgorin.dev/blog/chip8-testing/</guid>
+      <pubDate>Wed, 14 Jan 2026 00:00:00 GMT</pubDate>
+      <description>CHIP-8 has no single correct output, so here's how I test ch8go anyway — variant-aware ROM automation and byte-exact golden-file comparison.</description>
+      <category>Go</category>
+      <category>Emulation</category>
+      <category>CHIP-8</category>
+    </item>
+    <item>
+      <title>How I Structured My CHIP-8 Emulator (and Why)</title>
+      <link>https://mxmgorin.dev/blog/chip8-architecture/</link>
+      <guid isPermaLink="true">https://mxmgorin.dev/blog/chip8-architecture/</guid>
+      <pubDate>Mon, 12 Jan 2026 00:00:00 GMT</pubDate>
+      <description>After a Game Boy emulator taught me how platform code leaks into the core, I built ch8go around one rule: the core shouldn't know its frontend. A tour of its Guest / Host / App structure.</description>
+      <category>Go</category>
+      <category>Emulation</category>
+      <category>CHIP-8</category>
+    </item>
+    <item>
+      <title>What CHIP-8 actually is (before you emulate it)</title>
+      <link>https://mxmgorin.dev/blog/chip8-system/</link>
+      <guid isPermaLink="true">https://mxmgorin.dev/blog/chip8-system/</guid>
+      <pubDate>Fri, 09 Jan 2026 00:00:00 GMT</pubDate>
+      <description>The mental model I built before writing ch8go — what CHIP-8 really is, the variants that complicate it, and the quirks that bite every emulator author.</description>
+      <category>CHIP-8</category>
+      <category>docs</category>
+    </item>
+  </channel>
+</rss>

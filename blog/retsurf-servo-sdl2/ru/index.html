@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>Servo в SDL2 — один GPU и слишком много багов — mxmgorin.dev</title>
+    <meta name="description" content="Servo рисует веб, SDL2 владеет окном на голом железе, egui — интерфейс. Заставить все три делить один GPU без композитора и со старым драйвером — это вереница крашей. Полный разбор, в том порядке, в котором они случались." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/ru/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/">
+    <link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="Servo в SDL2 — один GPU и слишком много багов" />
+    <meta property="og:description" content="Servo рисует веб, SDL2 владеет окном на голом железе, egui — интерфейс. Заставить все три делить один GPU без композитора и со старым драйвером — это вереница крашей. Полный разбор, в том порядке, в котором они случались." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/retsurf-servo-sdl2/ru/" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="article:published_time" content="2026-06-19T00:00:00.000Z" />
+    <meta property="article:tag" content="Rust">
+    <meta property="article:tag" content="Servo">
+    <meta property="article:tag" content="SDL2">
+    <meta property="article:tag" content="OpenGL">
+    <meta property="og:image" content="https://mxmgorin.dev/og/retsurf-servo-sdl2.ru.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Servo в SDL2 — один GPU и слишком много багов" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/retsurf-servo-sdl2.ru.png" />
+    <meta name="twitter:title" content="Servo в SDL2 — один GPU и слишком много багов" />
+    <meta name="twitter:description" content="Servo рисует веб, SDL2 владеет окном на голом железе, egui — интерфейс. Заставить все три делить один GPU без композитора и со старым драйвером — это вереница крашей. Полный разбор, в том порядке, в котором они случались." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Servo в SDL2 — один GPU и слишком много багов",
+  "description": "Servo рисует веб, SDL2 владеет окном на голом железе, egui — интерфейс. Заставить все три делить один GPU без композитора и со старым драйвером — это вереница крашей. Полный разбор, в том порядке, в котором они случались.",
+  "datePublished": "2026-06-19",
+  "dateModified": "2026-06-19",
+  "inLanguage": "ru",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/retsurf-servo-sdl2/ru/"
+  },
+  "url": "https://mxmgorin.dev/blog/retsurf-servo-sdl2/ru/",
+  "wordCount": 2000,
+  "isAccessibleForFree": true,
+  "keywords": "Rust, Servo, SDL2, OpenGL",
+  "image": "https://mxmgorin.dev/og/retsurf-servo-sdl2.ru.png",
+  "articleSection": "retsurf"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Servo в SDL2 — один GPU и слишком много багов",
+      "item": "https://mxmgorin.dev/blog/retsurf-servo-sdl2/ru/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/ru/">← назад к блогу</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>Servo в SDL2 — один GPU и слишком много багов</h1>
+        <p class="article-meta">2026-06-19  —  Rust · Servo · SDL2 · OpenGL  —  10 мин чтения</p>
+        <p><a href="https://github.com/mxmgorin/retsurf" target="_blank" rel="noopener noreferrer">retsurf</a> — объединяет 3 больших компонента: <strong>Servo</strong> отрисовывает веб, <strong>SDL2</strong> владеет окном и вводом на «голом» железе, а <strong>egui</strong> рисует поверх собственный интерфейс браузера. В каждом из них нет ничего сложного. Сложность в том, чтобы заставить все три делить <em>один GPU</em> на устройстве без композитора и со старым графическим драйвером.</p>
+<p>Это полный разбор: как соединяются Servo и SDL2 и все причины, по которым это ломалось по пути к единственному общему GL-контексту. По порядку — потому что порядок и есть сюжет: каждая проблема — это то, что толкало архитектуру к следующей итерации.</p>
+<h2>Первая попытка — surfman из хендла окна SDL2</h2>
+<p>Самое очевидное, что приходит на ум первым — использовать то, что Servo релизовывает сам. Servo не просит у тебя пиксели — он просит <code>RenderingContext</code>, и его библиотека поверхностей <a href="https://github.com/servo/surfman" target="_blank" rel="noopener noreferrer">surfman</a> с радостью построит <em>свой</em> собственный GL-контекст из «сырого» хендла окна — она хочет сама управлять соединением с GPU. А крейт <code>sdl2</code> умеет отдать этот хендл через <code>raw-window-handle</code>, так что связываешь одно с другим — и Servo сам владеет соединением с GPU от начала и до конца.</p>
+<p>На моём Linux-десктопе это сразу заработало — <code>sdl2</code> возвращает X11- (или Wayland-) хендл, surfman строит из него контекст, и страницы отрисовывались. Выглядело как решённая задача.</p>
+<p>Потом я запустил тот же бинарник на консоли — и он умер сразу на старте. Эти устройства (Knulli, muOS, ROCKNIX) работают на голом KMS/DRM без X11- или Wayland-композитора, а Rust-крейт <code>sdl2</code>, по состоянию на 0.38, отдаёт raw-window-handle для Wayland, X11, Win32 — но <strong>не для DRM/GBM</strong>. Так что surfman было попросту не из чего строить контекст: вызов, который на десктопе возвращал хендл, на устройстве возвращал пустоту. Дефолтный путь здесь не деградирует мягко — его просто нет.</p>
+<p>Это и задаёт всю архитектуру:</p>
+<blockquote><strong>SDL2 обязан владеть единственным GL-контекстом</strong> — он уже умеет создавать его на голом KMS/DRM через EGL/GBM, ровно так же, как любой другой SDL2-порт под консоли, — а **Servo рисует <em>в него</em>.**</blockquote>
+<h2>Вторая попытка — программная отрисовка</h2>
+<p>Поэтому SDL2 создаёт контекст сам. Вот он берёт владение на себя, в <code>src/platform/window.rs</code>: он запрашивает <strong>GLES</strong>-контекст (Mali-блобы на этих SoC говорят только на GLES; WebRender требует ≥ 3.0):</p>
+<pre class="code"><code>let gl_attr = video_subsystem.gl_attr();
+if config.use_gles {
+    // Mali blobs on RK3326/RK3566 expose GLES 3.2; WebRender needs &gt;= 3.0.
+    gl_attr.set_context_profile(GLProfile::GLES);
+    gl_attr.set_context_version(3, 0);
+}
+gl_attr.set_double_buffer(true);
+
+let window = video_subsystem.window("retsurf", w, h).opengl().resizable().build()?;
+let gl_context = window.gl_create_context()?;
+window.gl_make_current(&amp;gl_context)?;</code></pre>
+<p>Затем загрузчик процедур SDL кормит <em>оба</em> GL-стека — <code>glow</code> для egui и <code>gleam</code> для Servo/WebRender — из одного и того же контекста:</p>
+<pre class="code"><code>let glow_ctx = Arc::new(unsafe {
+    glow::Context::from_loader_function(|name| {
+        video_subsystem.gl_get_proc_address(name) as *const _
+    })
+});
+let gl: Rc&lt;dyn Gl&gt; = unsafe {
+    gleam::gl::GlesFns::load_with(|name| {
+        video_subsystem.gl_get_proc_address(name) as *const _
+    })
+};</code></pre>
+<p>Две GL-привязки, один контекст. Запомни эту мысль — она источник половины проблем ниже.</p>
+<p>Когда окно и контекст готовы, я хотел доказать работоспособность остального конвейера от начала и до конца, прежде чем снова бороться с GPU. Поэтому использовал <code>SoftwareRenderingContext</code> из Servo (офскрин-растеризатор на llvmpipe). Каждый кадр: Servo растеризует страницу на CPU, retsurf вызывает <code>read_to_image()</code>, чтобы вытащить пиксели, загружает их как текстуру egui, и egui компонует эту текстуру с панелью инструментов.</p>
+<p>Это работало. Страницы появлялись. Но это неправильно по двум причинам: требуется наличие llvmpipe на устройстве (CPU-растеризатор — ровно то, чего ты <em>не</em> хочешь на слабом ARM-чипе), и на каждом кадре делается полный readback кадра плюс повторная загрузка. Это был шаг, а не пункт назначения.</p>
+<p>И, что критично: в одном потоке жили <strong>два GL-контекста</strong> — SDL-овский и тот, который surfman поднимал для программного рендерера. Вот откуда начались проблемы.</p>
+<h2>Проблема №1 — конфликт eglBindAPI (паника при старте)</h2>
+<p>SDL создал <strong>GLES</strong>-контекст. Программный контекст surfman был на <strong>десктопном GL</strong>. EGL отслеживает «текущий клиентский API» для каждого потока, и когда один стек привязывает ES, а другой — десктопный GL, всё падало на старте.</p>
+<p>Лечилось это переменной окружения, которая выставлялась до любой инициализации GL: она велит surfman быть на GLES, чтобы оба стека сошлись (<code>src/lib.rs</code>):</p>
+<pre class="code"><code>if app_config.display.use_gles {
+    // SDL creates a GLES context (sets the thread's EGL API to ES). Servo's
+    // surfman context must use the same API or context creation fails, so
+    // force surfman to GLES too. Must be set before any surfman/SDL GL init.
+    std::env::set_var("SURFMAN_FORCE_GLES", "1");
+}</code></pre>
+<p>То, что один стек расходится с другим во мнении, <em>какой GL</em> сейчас в игре, оказалось повторяющейся темой — см. проблему №4.</p>
+<h2>Проблема №2 — кэш make-current и неопределённый framebuffer</h2>
+<p>Это один из самых противных багов: <em>тысячи</em> ошибок и чёрное окно без всякой видимой причины.</p>
+<p>SDL кэширует, какой GL-контекст он <em>считает</em> текущим, чтобы пропускать лишний <code>eglMakeCurrent</code>. Вот только surfman, занимаясь своей отрисовкой, вызывал <code>eglMakeCurrent</code> напрямую и менял текущий контекст потока <strong>за спиной SDL</strong>. Кэш SDL становился невалидным. Поэтому, когда egui собирался рисовать и просил SDL сделать контекст окна текущим, SDL смотрел в свой кэш, решал «уже текущий» и <em>пропускал настоящий <code>eglMakeCurrent</code></em>.</p>
+<p>Дальше egui рисовал в то, что было реально привязано, — в контекст surfman, а не в окно, — и GPU сообщал <code>GL_FRAMEBUFFER_UNDEFINED</code>, а следом — поток <code>GL_INVALID_FRAMEBUFFER_OPERATION</code>. И так каждый кадр.</p>
+<p>Лечилось тем, чтобы инвалидировать кэш SDL перед повторной привязкой — так SDL вынужден выдать настоящий <code>eglMakeCurrent</code>:</p>
+<pre class="code"><code>SDL_GL_MakeCurrent(window, NULL)   // clear SDL's "current context" cache
+window.gl_make_current(&amp;gl_context) // this actually calls eglMakeCurrent</code></pre>
+<p>Урок здесь: <strong>когда две библиотеки меняют одно и то же скрытое глобальное состояние, любой кэш, который одна из них держит — мина.</strong> SDL кэшировал текущий EGL-контекст; surfman переписывал его, не сказав SDL.</p>
+<h2>Проблема №3 — паника при завершении</h2>
+<p>Когда отрисовка заработала, падал выход. <code>SoftwareRenderingContext</code> из Servo не уничтожает свой surfman-контекст при drop, а у surfman есть проверка, которая <em>паникует</em>, если контекст удалили без явного уничтожения: <code>Contexts must be destroyed explicitly</code>. Так что чистый выход разворачивался в панику.</p>
+<p>Лечение, которое до сих пор в коде (<code>src/app/mod.rs</code>), — вообще не запускать этот деструктор: корректно завершаем Servo там, где это важно (cookies, localStorage), а остальное отдаём ОС:</p>
+<pre class="code"><code>self.browser.shutdown();   // flushes cookies / localStorage to disk
+
+// Servo's rendering context doesn't destroy its surfman context on drop, which
+// trips surfman's "destroy explicitly" guard and panics during unwinding. Exit
+// before running destructors; the OS reclaims everything.
+std::process::exit(0);</code></pre>
+<p>Неизящно, но правильно: процесс всё равно завершается, ядро освобождает ресурсы GPU, а пропуск деструктора ничего не стоит.</p>
+<h2>Проблема №4 — SDL и surfman на разных дисплейных серверах</h2>
+<p>Этот касается только на Wayland-<em>десктопе</em>, но он поучителен, потому что болезнь та же, что у проблемы №1: два стека расходятся во мнении об окружении.</p>
+<p>surfman выбирает свой дисплейный бэкенд по переменным окружения — если выставлен <code>WAYLAND_DISPLAY</code>, он идёт в Wayland. SDL делает <em>свой</em> независимый выбор, и на многих Wayland-десктопах SDL по-прежнему по умолчанию берёт <strong>x11</strong> (через XWayland). Так surfman оказывается на Wayland, SDL — на x11, их GL-контексты не могут сосуществовать, создание контекста у surfman падает → паника при старте.</p>
+<p>Лечение заставляет SDL согласиться с surfman, когда оба на Wayland-десктопе, и не лезет никуда в остальных случаях (<code>src/lib.rs</code>):</p>
+<pre class="code"><code>// surfman picks Wayland when WAYLAND_DISPLAY is set; SDL often defaults to x11.
+// Align them. On the handheld (no WAYLAND_DISPLAY) this is skipped → SDL uses
+// kmsdrm as intended. An explicit SDL_VIDEODRIVER always wins.
+if std::env::var_os("SDL_VIDEODRIVER").is_none()
+    &amp;&amp; std::env::var_os("WAYLAND_DISPLAY").is_some()
+{
+    std::env::set_var("SDL_VIDEODRIVER", "wayland");
+}</code></pre>
+<h2>Переосмысление — перестать иметь два контекста</h2>
+<p>У трёх из этих четырёх проблем (№1, №2, №3) одна общая первопричина: <strong>в потоке было два GL-контекста, дравшихся за глобальное состояние EGL.</strong> Изначально я планировал заставить surfman использовать контекст SDL, чтобы они стали одним. Но более чистым решением оказалось противоположное — убрать surfman из пути отрисовки целиком.</p>
+<p>Ключевое осознание: <code>servo::RenderingContext</code> — это <em>трейт</em>. Я не обязан использовать реализацию surfman; я могу написать свою поверх единственного контекста SDL. А WebRender рисует в <strong>тот фреймбуфер, который привязан</strong> после того, как он вызвал <code>prepare_for_rendering()</code>. Так что я просто привязываю там свой собственный объект (FBO), даю Servo рисовать в него, а egui отдаю цветовую текстуру этого FBO, чтобы скомпоновать.</p>
+<p>Это <code>SdlRenderingContext</code> в <code>src/platform/render.rs</code>. Вся реализация трейта подозрительно маленькая:</p>
+<pre class="code"><code>impl RenderingContext for SdlRenderingContext {
+    fn prepare_for_rendering(&amp;self) {
+        // WebRender renders into whatever FBO is bound here — so bind ours.
+        self.gl.bind_framebuffer(gl::FRAMEBUFFER, self.fbo.get());
+    }
+
+    fn present(&amp;self) {
+        // No swap: egui composites the color texture into the window framebuffer.
+    }
+
+    fn make_current(&amp;self) -&gt; Result&lt;(), surfman::Error&gt; {
+        // Single shared SDL2 GL context; already current on this thread.
+        Ok(())
+    }
+
+    fn connection(&amp;self) -&gt; Option&lt;surfman::Connection&gt; {
+        self.connection.clone()
+    }
+    // ...gleam/glow accessors, resize, read_to_image
+}</code></pre>
+<p>Посмотри, что эти функции <em>не</em> делают. <code>make_current</code> — пустышка, возвращающая <code>Ok(())</code>: контекст один и он уже текущий, так что не на что переключаться и не из-за чего драться. <code>present</code> пуст — реальным свопом буфера владеет egui. С единственным контекстом проблем №1, №2 и №3 просто не может случиться. (Теперь они на всякий случай: <code>SURFMAN_FORCE_GLES</code> из №1 и выравнивание драйверов из №4 всё ещё применяются только потому, что <code>connection()</code> <em>по-прежнему</em> зовёт в surfman — а это завязка для финальной проблемы.)</p>
+<h2>Как Servo и egui на самом деле соединяются, кадр за кадром</h2>
+<p>С новым способом — главный цикл становится:</p>
+<pre class="code"><code>// Render Servo into its FBO; egui composites that FBO's texture.
+self.browser.paint();   // Servo/WebRender → our FBO (bound in prepare_for_rendering)
+self.ui.update(...);    // egui builds the toolbar/overlays
+// ...
+self.draw();            // egui binds framebuffer 0, draws the FBO color texture, swaps</code></pre>
+<p>Один контекст, один FBO, одна передача текстуры, один своп. Это и есть весь мост между Servo и SDL2 — и именно он наконец работает на голом железе консоли.</p>
+<h2>Проблема №5 — работало на десктопе, но паниковало на реальном устройстве</h2>
+<p>Всё, что выше, было проверено на десктопе при GLES 3.2: ноль GL-ошибок, страницы правильной стороной вверх. Я собрал под aarch64, скопировал на Mali-консоль — и оно спаниковало на старте:</p>
+<pre class="code"><code>surfman .../egl_bindings.rs: egl function was not loaded</code></pre>
+<p>Виновник — тот самый вызов <code>connection()</code>. surfman 0.12 строит своё соединение через <code>eglGetPlatformDisplay</code> — символ из <strong>EGL 1.5</strong>, — загружаемый через <code>dlsym</code> на каждом Linux-бэкенде. Mesa на моём десктопе — EGL 1.5; Mali-блоб устройства — <strong>EGL 1.4</strong> и этого символа попросту не имеет. Дальше surfman <em>паникует</em> вместо того, чтобы вернуть ошибку, а регистрация пейнтера в Servo делает <code>.expect()</code> на соединении — два слоя, оба выбравшие «упасть» вместо «справиться».</p>
+<p>Соединение используется только для внешних изображений WebGL/WebGPU, без которых консоль прекрасно живёт, поэтому лечение — позволить ему отсутствовать. <code>connection()</code> в retsurf прощупывает surfman за <code>catch_unwind</code> (панику нельзя поймать через <code>match</code>) и возвращает <code>None</code> при сбое; небольшой вендоренный патч Servo заставляет регистрацию трактовать отсутствующее соединение как «WebGL выключен», а не паниковать. В реальной релизной сборке весь путь WebGL спрятан за Cargo-фичей <code>webgl</code>, которая вырезается из компиляции. Именно этот баг научил меня большему всего, и его урок — вся причина, почему он стоил выходных: <em>драйверы твоего десктопа — не целевая платформа, а библиотека, которая паникует на отсутствующей необязательной возможности, лишает тебя плавной деградации.</em></p>
+<h2>Почётные упоминания (мелкие проблемы)</h2>
+<p>Не каждая проблема приводила к полному падению. Несколько таких, что съели по полдня каждая:</p>
+<ul><li><strong>Нельзя отладить то, чего не видишь.</strong> Лаунчер консоли выбрасывает stderr, так что от паники не остаётся ничего, кроме кода выхода 101. retsurf ставит panic-хук, который дублирует сообщение <em>и бэктрейс</em> в файл, а ещё умеет писать логи в файл (<code>RETSURF_PANIC_FILE</code> / <code>RETSURF_LOG_FILE</code>). Первый баг на устройстве я смог диагностировать только <em>благодаря</em> этому — иначе проблема №5 была бы невидимым мгновенным выходом.</li><li><strong>Оверлеи egui невидимы на первом кадре.</strong> Свежесозданная egui-<code>Area</code> раскладывается невидимо на первом проходе (она измеряет саму себя), так что оверлей, открытый в ответ на ввод, не появился бы до <em>следующей</em> перерисовки — а цикл блокируется на вводе, так что её часто и не было. Лечится вызовом <code>request_repaint()</code> после создания оверлея, который форсирует второй кадр, реально его рисующий.</li><li><strong>Чёрная полоса на самом первом кадре</strong>, потому что размер вьюпорта устанавливается только после одного ресайза. Косметика, и всё ещё открытый пункт в списке уборки, а не решённый.</li></ul>
+<h2>Чему меня это научило</h2>
+<p>Четыре урока, примерно по убыванию боли:</p>
+<ol><li><strong>Крупные архитектурные решения за тебя принимает платформа.</strong> «SDL2 владеет контекстом, Servo рисует в FBO» — я так не выбирал; так вышло из-за того, что у крейта sdl2 нет window-handle для DRM/GBM. Ограничение и оказалось архитектурой.</li><li><strong>Две библиотеки на одном скрытом глобальном состоянии — фабрика проблем.</strong> Три проблемы из пяти — это борьба SDL и surfman за текущий EGL-контекст потока или за дисплейный бэкенд. Помогло не примирение, а <em>удаление одной из них</em> с горячего пути. А что самый простой вариант — один контекст и рендеринг в FBO — и есть лучший, стало ясно только после того, как схема с двумя контекстами как следует меня помучила.</li><li><strong>Десктоп усыпляет бдительность.</strong> Mesa — свежая и всё прощает; драйвер на устройстве — замороженная минимальная заглушка EGL 1.4. Любая проблема, которая реально мешала релизу (как №5), на десктопе была не видна, а на устройстве вылезала мгновенно. Настоящим тестом оказалось только железо.</li><li><strong>Паниковать там, где ошибку можно обработать, — дорогой вид багов.</strong> Отсутствие символа EGL 1.5 на GPU 2021 года — не редкость, но surfman вместо <code>Err</code> паниковал, и тремя слоями выше это превращалось в неустранимый сбой. Будь библиотекой, которая возвращает <code>Option</code>.</li></ol>
+<p>Развязка вышла будничной — и по ней понимаешь, что всё готово: устройство грузится, и настоящая, напичканная JavaScript страница рисуется на Mali-GPU через один общий GLES-контекст — без readback-ов, без GL-ошибок, без паник. Просто браузер на штуке, которую делали под ROM-ы Game Boy.</p>
+        <nav class="article-series" aria-label="Серия retsurf">
+          <p class="article-series-title">Серия retsurf</p>
+          <ol>
+          <li><a href="/blog/retsurf-why/ru/">Веб-браузер на Rust для ретро-консолей</a></li>
+          <li aria-current="true"><strong>Servo в SDL2 — один GPU и слишком много багов</strong> <span class="series-here">— вы здесь</span></li>
+          <li><a href="/blog/retsurf-controls/ru/">Браузер, которым управляешь с геймпада</a></li>
+          <li><a href="/blog/retsurf-performance/ru/">Каждый мегабайт на счету: браузер для консолeй с 1 ГБ ОЗУ</a></li>
+          </ol>
+        </nav>
+        <p class="open-tui"><a href="/?v=blog&amp;post=retsurf-servo-sdl2&amp;l=ru">▶ открыть в терминале</a></p>
+      </article>
+    </main>
+  </body>
+</html>

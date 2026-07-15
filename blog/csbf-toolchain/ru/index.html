@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>Язык без синтаксиса: компилятор Brainfuck на C# — mxmgorin.dev</title>
+    <meta name="description" content="У Brainfuck нет синтаксиса, который стоит парсить, — и именно поэтому это идеальный язык, чтобы написать для него компилятор. csbf — полный тулчейн на C#: оптимизирующий IR, обратимая виртуальная машина с отладкой «назад во времени», транспайлер в Go, IL-JIT и плейграунд на Blazor, который запускает бо́льшую часть этого прямо в браузере." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/csbf-toolchain/ru/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/csbf-toolchain/">
+    <link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/csbf-toolchain/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/csbf-toolchain/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="Язык без синтаксиса: компилятор Brainfuck на C#" />
+    <meta property="og:description" content="У Brainfuck нет синтаксиса, который стоит парсить, — и именно поэтому это идеальный язык, чтобы написать для него компилятор. csbf — полный тулчейн на C#: оптимизирующий IR, обратимая виртуальная машина с отладкой «назад во времени», транспайлер в Go, IL-JIT и плейграунд на Blazor, который запускает бо́льшую часть этого прямо в браузере." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/csbf-toolchain/ru/" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="article:published_time" content="2026-07-06T00:00:00.000Z" />
+    <meta property="article:tag" content="C#">
+    <meta property="article:tag" content="Compilers">
+    <meta property="article:tag" content="Brainfuck">
+    <meta property="article:tag" content="WASM">
+    <meta property="og:image" content="https://mxmgorin.dev/og/csbf-toolchain.ru.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Язык без синтаксиса: компилятор Brainfuck на C#" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/csbf-toolchain.ru.png" />
+    <meta name="twitter:title" content="Язык без синтаксиса: компилятор Brainfuck на C#" />
+    <meta name="twitter:description" content="У Brainfuck нет синтаксиса, который стоит парсить, — и именно поэтому это идеальный язык, чтобы написать для него компилятор. csbf — полный тулчейн на C#: оптимизирующий IR, обратимая виртуальная машина с отладкой «назад во времени», транспайлер в Go, IL-JIT и плейграунд на Blazor, который запускает бо́льшую часть этого прямо в браузере." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Язык без синтаксиса: компилятор Brainfuck на C#",
+  "description": "У Brainfuck нет синтаксиса, который стоит парсить, — и именно поэтому это идеальный язык, чтобы написать для него компилятор. csbf — полный тулчейн на C#: оптимизирующий IR, обратимая виртуальная машина с отладкой «назад во времени», транспайлер в Go, IL-JIT и плейграунд на Blazor, который запускает бо́льшую часть этого прямо в браузере.",
+  "datePublished": "2026-07-06",
+  "dateModified": "2026-07-06",
+  "inLanguage": "ru",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/csbf-toolchain/ru/"
+  },
+  "url": "https://mxmgorin.dev/blog/csbf-toolchain/ru/",
+  "wordCount": 1506,
+  "isAccessibleForFree": true,
+  "keywords": "C#, Compilers, Brainfuck, WASM",
+  "image": "https://mxmgorin.dev/og/csbf-toolchain.ru.png",
+  "articleSection": "csbf"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Язык без синтаксиса: компилятор Brainfuck на C#",
+      "item": "https://mxmgorin.dev/blog/csbf-toolchain/ru/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/ru/">← назад к блогу</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>Язык без синтаксиса: компилятор Brainfuck на C#</h1>
+        <p class="article-meta">2026-07-06  —  C# · Compilers · Brainfuck · WASM  —  8 мин чтения</p>
+        <p>После эмулятора Game Boy на Rust (<a href="https://github.com/mxmgorin/oxgbc" target="_blank" rel="noopener noreferrer">oxGBC</a>) и интерпретатора CHIP-8 на Go (<a href="https://github.com/mxmgorin/ch8go" target="_blank" rel="noopener noreferrer">ch8go</a>) мне стало интересно попробовать другую сторону процесса. Оба этих проекта исполняют уже существующий байткод и следующим логичным шагом было написать программу, которая этот байткод сама создаёт. При этом хотелось выбрать максимально простой язык, чтобы основное внимание уделить именно компилятору, а не парсеру и синтаксису.</p>
+<p>Brainfuck подходит для этого почти идеально. В языке всего восемь инструкций — <code>+ - &lt; &gt; . , [ ]</code>, байтовая лента и указатель. Никаких переменных, типов, функций или сложной грамматики. Благодаря этому почти вся сложность смещается туда, где действительно начинается работа компилятора: промежуточное представление (IR), оптимизации, виртуальная машина, отладчик и генерация кода.</p>
+<p>Для реализации я выбрал C# и .NET. У меня уже был опыт разработки на этой платформе, но в последние годы я в основном писал на Rust. Этот проект стал хорошей возможностью вернуться к C#, немного разнообразить стек и не терять практику с языком.</p>
+<p>Именно вокруг этих компонентов и построен <a href="https://github.com/mxmgorin/csbf" target="_blank" rel="noopener noreferrer">csbf</a> — мой компилятор Brainfuck на C#/.NET. Поскольку весь проект компилируется в WebAssembly, он полностью работает прямо в браузере: <a href="https://mxmgorin.github.io/csbf/" target="_blank" rel="noopener noreferrer">попробовать</a>.</p>
+<h2>Как устроен проект</h2>
+<p>csbf разбит на несколько небольших сборок, и почти все они держатся на одной общей вещи — промежуточном представлении (IR). Парсер переводит исходник в плоский список инструкций <code>Op[]</code>, и дальше с текстом уже никто не работает — только с этим списком:</p>
+<pre class="code"><code>исходник → парсер → IR (Op[]) → оптимизатор → { интерпретатор · транспайлер в Go · JIT }</code></pre>
+<p>Ядро <code>Csbf.Core</code> — это парсер, оптимизатор, само IR и интерпретатор (виртуальная машина). Всё остальное подключается к IR как сменные части: кодогенераторы (<code>Csbf.Codegen</code>) реализуют общий интерфейс <code>ICodegen</code>, поэтому новый бэкенд — C или текстовый WebAssembly — это просто ещё одна реализация; отладчик (<code>Csbf.Debugger</code>) и JIT (<code>Csbf.Jit</code>) вынесены в отдельные сборки; а поверх всего лежат два фронтенда — CLI (<code>Csbf.Cli</code>) и плейграунд на Blazor/WASM (<code>Csbf.Web</code>). Показательно, что <code>Csbf.Web</code> подключает всё, кроме <code>Csbf.Jit</code>: в браузере JIT работать негде, поэтому его там просто нет. По сути IR — это контракт: опиши инструкцию один раз, и её сразу понимают оптимизатор, интерпретатор и все кодогенераторы.</p>
+<h2>Когда синтаксис не главное</h2>
+<p>Для компилятора современных языков — что основная сложность заключается в парсере, но Brainfuck интересен именно тем, что практически убирает этот этап из уравнения.</p>
+<p>Весь синтаксис языка состоит из восьми символов. Поэтому парсер представляет собой обычный проход по исходному коду: каждый символ преобразуется в типизированную инструкцию, а пары <code>[</code> и <code>]</code> сразу разрешаются в адреса переходов. После этого остальная часть компилятора уже не работает с текстом и не ищет соответствующую закрывающую скобку — она оперирует единым представлением программы.</p>
+<p>Именно с этого момента становятся интересны остальные этапы: промежуточное представление (IR), оптимизации, виртуальная машина, отладчик и генерация кода.</p>
+<p>В <code>src/Csbf.Core/Op.cs</code> это выглядит так:</p>
+<pre class="code"><code>public readonly record struct Op(OpKind Kind, int Arg);
+
+public enum OpKind
+{
+    AddPtr,   // &gt; &lt;   move the data pointer by Arg
+    AddByte,  // + -   add Arg to the current cell
+    Out, In,  // . ,   I/O
+    Jz, Jnz,  // [ ]   conditional jumps (targets resolved at parse time)
+    SetByte,  //       set the current cell (a lowered clear loop)
+    ScanPtr,  //       scan by a stride until a zero cell
+}</code></pre>
+<p>Виртуальная машина, оптимизатор и любой кодогенератор получают этот плоский список операций. Добавь сюда операцию — и она появится везде.</p>
+<h2>Когда каждый шаг обратим</h2>
+<p>Виртуальная машина получилась совсем небольшой: указатель инструкций, указатель данных и лента из 30 000 байт с контролем границ. Она умеет выполнять программу по шагам, показывать состояние регистров и памяти и останавливаться на точках останова. Всё это вполне привычно.</p>
+<p>Интереснее другое. Благодаря минимализму Brainfuck каждая инструкция изменяет лишь небольшую часть состояния машины: <code>Ip</code>, <code>Dp</code> и, в худшем случае, одну ячейку памяти. Это означает, что любой выполненный шаг можно обратить без повторного исполнения программы или хранения полных снимков состояния. Достаточно сохранить небольшую дельту изменений. Именно так выглядит запись одного шага в <code>src/Csbf.Core/Vm.cs</code>:</p>
+<pre class="code"><code>// The VM mutates only Ip, Dp, and at most one cell per op, so every step is
+// exactly reversible.
+private readonly record struct StepDelta(int Ip, int Dp, int CellIndex, byte CellValue);</code></pre>
+<p><code>StepBack()</code> снимает последнюю дельту и восстанавливает изменённые поля. Выполнив <code>N</code> шагов вперёд, а затем <code>N</code> шагов назад, машина оказывается в точности в том же состоянии — с теми же регистрами и содержимым памяти. При этом достаточно хранить лишь кольцевой буфер из этих небольших структур. В CLI это команда <code>back [n]</code>, а в браузере — кнопка ⏮. Обратная отладка здесь получается практически бесплатной — как прямое следствие минимализма набора инструкций.</p>
+<h2>Учим оптимизатор распознавать идиомы</h2>
+<p>Наивный интерпретатор Brainfuck большую часть времени проводит в циклах, которые выполняют довольно простые действия. Два шаблона встречаются настолько часто, что их имеет смысл считать отдельными инструкциями:</p>
+<ul><li><code>[-]</code> и <code>[+]</code> уменьшают (или увеличивают) значение текущей ячейки, пока оно не станет нулём. По сути это операция <strong>обнуления ячейки</strong>.</li><li><code>[&gt;]</code> и <code>[&lt;]</code> двигают указатель, пока не встретится нулевая ячейка. Это аналог линейного поиска (<code>memchr</code>) по памяти.</li></ul>
+<p>Оптимизатор <code>csbf</code> распознаёт оба шаблона и заменяет целый цикл одной специализированной инструкцией. Соответствующий код из <code>src/Csbf.Core/Optimizer.cs</code>:</p>
+<pre class="code"><code>// [-] / [+]: only a ±1 step is a guaranteed clear — e.g. [--] loops
+// forever on odd start values, so we deliberately don't lower it.
+case OpKind.AddByte when lowerClear &amp;&amp; (body.Arg == 1 || body.Arg == -1):
+    lowered = new Op(OpKind.SetByte, 0);
+    return true;
+
+// [&gt;] / [&lt;] (and collapsed strides like [&gt;&gt;]): scan by a fixed stride.
+case OpKind.AddPtr when lowerScan &amp;&amp; body.Arg != 0:
+    lowered = new Op(OpKind.ScanPtr, body.Arg);
+    return true;</code></pre>
+<p>Особенно интересен <code>[--]</code> - на первый взгляд этот цикл выглядит как ещё один способ обнулить ячейку. Но это так только для чётных начальных значений. Если значение нечётное, цикл перепрыгивает через ноль, после переполнения становится на <code>255</code> и уже никогда не завершается. Именно поэтому оптимизатор сворачивает только циклы с шагом <code>±1</code>.</p>
+<p>Само распознавание занимает буквально несколько строк. Настоящая сложность — убедиться, что преобразование сохраняет семантику программы для всех возможных случаев.</p>
+<p>Каждый проход можно включать и выключать независимо. Это удобно не только для измерения производительности, но и для понимания происходящего. Если отключить оптимизацию <code>clear</code>, цикл <code>[-]</code> снова появится в дизассемблере как три отдельные инструкции. Если включить обратно — он снова превратится в один <code>SET 0</code>.</p>
+<h3>Как это влияет на производительность</h3>
+<p>Хорошая проверка оптимизатора — классический Brainfuck-мандельброт, выполняющий несколько миллиардов инструкций. Если запустить его сначала без оптимизаций, а затем со всеми проходами, получается:</p>
+<ul><li><strong>none:</strong> 299,72 с</li><li><strong>all:</strong> 60,30 с — <strong>ускорение в 4,97×</strong></li></ul>
+<p>Количество инструкций после оптимизации уменьшается с 11 451 до 3 619, потому что операции <code>SET</code> и <code>SCAN</code> заменяют целые циклы одной инструкцией. Большая часть выигрыша достигается именно за счёт того, что виртуальной машине приходится выполнять значительно меньше операций. Встроенная команда <code>bench</code> позволяет построить такую таблицу для любой программы.</p>
+<h2>Тот же IR компилируется в Go</h2>
+<p>После оптимизации промежуточное представление превращается в плоский список инструкций. Благодаря этому кодогенератор становится почти механическим отображением «одна операция — один <code>case</code>». <code>src/Csbf.Codegen/GoCodegen.cs</code> генерирует обычную Go-программу, и поскольку оптимизатор уже выполнил свою работу, результат больше похож на то что написал человек, а не транслировала виртуальная машина:</p>
+<pre class="code"><code>// +[-] compiles to:
+func main() {
+    mem := make([]byte, 30000)
+    dp := 0
+    mem[dp] += 1
+    mem[dp] = 0        // the [-] clear, lowered — not a for-loop
+}</code></pre>
+<p>Если отключить оптимизации, тот же самый исходный код снова превратится в обычный цикл <code>for mem[dp] != 0 { ... }</code>. Бэкенд при этом остаётся неизменным — меняется только IR.</p>
+<h2>Тот же IR — сразу в машинный код</h2>
+<p>Go-бэкенд компилирует IR в другой язык. Последний бэкенд компилирует его сразу в исполнение.</p>
+<p>JIT-компилятор генерирует CLR IL внутри <code>DynamicMethod</code> (<code>System.Reflection.Emit</code>) и передаёт его встроенному JIT среды выполнения, который превращает IL в машинный код. Никакого LLVM, внешнего компилятора или дополнительного тулчейна не требуется. Лента передаётся как первый аргумент метода, указатель данных хранится в локальной переменной, а каждая операция транслируется в небольшой набор IL-инструкций, повторяющих логику интерпретатора.</p>
+<p>Особенно удобно реализуются циклы. Во время парсинга пары <code>[</code> и <code>]</code> уже разрешаются в индексы инструкций, поэтому JIT не ищет парные скобки и не использует стек переходов. Для каждой операции создаётся IL-метка, а переходы сразу указывают на нужную цель:</p>
+<pre class="code"><code>// One IL label per op index. Jump targets are already op indices (resolved at
+// parse time), so a branch points straight at its target — no bracket matching,
+// no runtime jump stack.
+var labels = new Label[ops.Count + 1];
+...
+case OpKind.Jz:
+    il.Emit(OpCodes.Ldelem_U1);
+    il.Emit(OpCodes.Brfalse, labels[op.Arg]);</code></pre>
+<p>Проверки границ памяти тоже практически ничего не стоят. Лента представляет собой обычный <code>byte[]</code>, поэтому выход указателя за пределы массива автоматически обнаруживается CLR, после чего исключение преобразуется в тот же <code>BrainfuckRuntimeException</code>, который использует интерпретатор.</p>
+<p>Именно здесь достигается максимальная производительность. Если полностью оптимизированный интерпретатор выполняет классический Brainfuck-мандельброт почти за полторы минуты, то JIT-версия завершает его примерно за <strong>7,5 секунды</strong> — почти в <strong>11,6 раза быстрее</strong>. Причём это ускорение получается поверх уже достигнутых ~5× за счёт оптимизаций, потому что JIT работает с тем же оптимизированным IR.</p>
+<p>Но есть лишь одно ограничение. Эта часть проекта не работает в браузере. В среде WebAssembly отсутствует JIT на этапе исполнения, поэтому сгенерированный IL просто некому компилировать. По этой причине <code>Jit.IsSupported</code> использует <code>RuntimeFeature.IsDynamicCodeSupported</code>, а при отсутствии динамического кода автоматически выбирается интерпретатор. Полноценный JIT остаётся возможностью десктопной среды.</p>
+<h2>Запускаем всё это в браузере</h2>
+<p>Самое приятное, что для всего этого не нужен сервер. <code>Csbf.Core</code>, <code>Csbf.Debugger</code> и <code>Csbf.Codegen</code> компилируются в WebAssembly, а фронтенд на Blazor использует их через <code>IVmIo</code>. Это тот же самый код, что работает в CLI, только теперь он исполняется прямо в браузере.</p>
+<p>Во время выполнения можно следить за внутренним состоянием виртуальной машины: ленту с текущим положением указателя, регистры, дизассемблер оптимизированного IR, точки останова, пошаговое выполнение, обратную отладку, переключение проходов оптимизатора, встроенный бенчмарк и генерацию Go-кода.</p>
+<p>Brainfuck задумывался как язык-шутка, но его минимализм делает его отличной площадкой для изучения компиляторов. Когда парсер сводится практически к одному проходу по исходному коду, на первый план выходят промежуточное представление (IR), оптимизации, виртуальная машина, кодогенерация и JIT. Оказалось, что восьми инструкций вполне достаточно, чтобы построить вокруг них полноценный компилятор.</p>
+        <p class="open-tui"><a href="/?v=blog&amp;post=csbf-toolchain&amp;l=ru">▶ открыть в терминале</a></p>
+      </article>
+    </main>
+  </body>
+</html>

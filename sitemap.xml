@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://mxmgorin.dev/</loc>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/ru/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/csbf-toolchain/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/csbf-toolchain/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/csbf-toolchain/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/csbf-toolchain/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/csbf-toolchain/ru/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/csbf-toolchain/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/csbf-toolchain/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/csbf-toolchain/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/retsurf-performance/</loc>
+    <lastmod>2026-07-01</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-performance/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-performance/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-performance/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/retsurf-performance/ru/</loc>
+    <lastmod>2026-07-01</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-performance/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-performance/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-performance/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/retsurf-controls/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-controls/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-controls/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-controls/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/retsurf-controls/ru/</loc>
+    <lastmod>2026-06-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-controls/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-controls/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-controls/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/retsurf-servo-sdl2/</loc>
+    <lastmod>2026-06-19</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/retsurf-servo-sdl2/ru/</loc>
+    <lastmod>2026-06-19</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-servo-sdl2/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/retsurf-why/</loc>
+    <lastmod>2026-06-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-why/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-why/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-why/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/retsurf-why/ru/</loc>
+    <lastmod>2026-06-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/retsurf-why/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/retsurf-why/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/retsurf-why/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/chip8-testing/</loc>
+    <lastmod>2026-01-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-testing/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-testing/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-testing/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/chip8-testing/ru/</loc>
+    <lastmod>2026-01-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-testing/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-testing/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-testing/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/chip8-architecture/</loc>
+    <lastmod>2026-01-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-architecture/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-architecture/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-architecture/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/chip8-architecture/ru/</loc>
+    <lastmod>2026-01-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-architecture/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-architecture/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-architecture/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/chip8-system/</loc>
+    <lastmod>2026-01-09</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-system/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-system/"/>
+  </url>
+</urlset>
