@@ -1,8 +1,8 @@
 export const contactView = [
   {
     label: "Email",
-    url: "mailto:mxmgorin@gmail.com",
-    text: "mxmgorin@gmail.com",
+    url: "mailto:me@mxmgorin.dev",
+    text: "me@mxmgorin.dev",
   },
   {
     label: "GitHub",
