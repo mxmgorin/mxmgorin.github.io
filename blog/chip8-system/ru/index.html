@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0f0c" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <title>Что такое CHIP-8 на самом деле (прежде чем писать эмулятор) — mxmgorin.dev</title>
+    <meta name="description" content="Обзор виртуальной машины CHIP-8, её исторических вариантов и основных компонентов: памяти, процессора, регистров, таймеров и дисплея." />
+    <meta name="author" content="Maxim Gorin" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://mxmgorin.dev/blog/chip8-system/ru/" />
+    <link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-system/">
+    <link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-system/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-system/">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="mxmgorin.dev" />
+    <meta property="og:title" content="Что такое CHIP-8 на самом деле (прежде чем писать эмулятор)" />
+    <meta property="og:description" content="Обзор виртуальной машины CHIP-8, её исторических вариантов и основных компонентов: памяти, процессора, регистров, таймеров и дисплея." />
+    <meta property="og:url" content="https://mxmgorin.dev/blog/chip8-system/ru/" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="article:published_time" content="2026-01-09T00:00:00.000Z" />
+    <meta name="copyright" content="© 2026 Maxim Gorin · Все права защищены." />
+    <meta property="article:tag" content="CHIP-8">
+    <meta property="article:tag" content="docs">
+    <meta property="og:image" content="https://mxmgorin.dev/og/chip8-system.ru.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Что такое CHIP-8 на самом деле (прежде чем писать эмулятор)" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://mxmgorin.dev/og/chip8-system.ru.png" />
+    <meta name="twitter:title" content="Что такое CHIP-8 на самом деле (прежде чем писать эмулятор)" />
+    <meta name="twitter:description" content="Обзор виртуальной машины CHIP-8, её исторических вариантов и основных компонентов: памяти, процессора, регистров, таймеров и дисплея." />
+    <link rel="alternate" type="application/rss+xml" title="mxmgorin.dev blog" href="/feed.xml" />
+    <link rel="alternate" type="application/feed+json" title="mxmgorin.dev blog" href="/feed.json" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/article.css" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Что такое CHIP-8 на самом деле (прежде чем писать эмулятор)",
+  "description": "Обзор виртуальной машины CHIP-8, её исторических вариантов и основных компонентов: памяти, процессора, регистров, таймеров и дисплея.",
+  "datePublished": "2026-01-09",
+  "dateModified": "2026-01-09",
+  "inLanguage": "ru",
+  "author": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mxmgorin.dev/blog/chip8-system/ru/"
+  },
+  "url": "https://mxmgorin.dev/blog/chip8-system/ru/",
+  "wordCount": 624,
+  "isAccessibleForFree": true,
+  "copyrightHolder": {
+    "@type": "Person",
+    "name": "Maxim Gorin",
+    "url": "https://github.com/mxmgorin"
+  },
+  "copyrightYear": 2026,
+  "keywords": "CHIP-8, docs",
+  "image": "https://mxmgorin.dev/og/chip8-system.ru.png",
+  "articleSection": "ch8go"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "mxmgorin.dev",
+      "item": "https://mxmgorin.dev/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mxmgorin.dev/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Что такое CHIP-8 на самом деле (прежде чем писать эмулятор)",
+      "item": "https://mxmgorin.dev/blog/chip8-system/ru/"
+    }
+  ]
+}
+    </script>
+  </head>
+  <body>
+    <main class="article-page">
+      <nav class="article-nav">
+        <a href="/blog/ru/">← назад к блогу</a> · <a href="/">mxmgorin.dev</a>
+      </nav>
+      <article class="article">
+        <h1>Что такое CHIP-8 на самом деле (прежде чем писать эмулятор)</h1>
+        <p class="article-meta">2026-01-09  —  CHIP-8 · docs  —  3 мин чтения</p>
+        <p>Прежде чем я написал хоть один опкод для ch8go, я потратил время на то, чтобы просто познакомиться с CHIP-8 как с системой. Этот пост — та ментальная модель, которую я в итоге собрал: что такое CHIP-8 на самом деле, какие варианты делают его запутаннее, чем кажется, и какие quirks хоть раз да подставят каждого автора эмулятора.</p>
+<h2>Что такое CHIP-8 на самом деле</h2>
+<p>CHIP-8 часто называют «языком», и поначалу меня это сбивало с толку. Правильнее думать о нём как о крошечной <strong>виртуальной платформе</strong>: это интерпретируемая виртуальная машина из 1970-х, придуманная, чтобы запускать небольшие программы на очень скромном железе.</p>
+<p>Вся система умещается в голове. Есть процессор, пара килобайт памяти, два таймера, монохромный дисплей, шестнадцатеричная клавиатура и один-единственный писк. Именно этот минимализм и делает CHIP-8 таким удачным первым эмулятором.</p>
+<h2>Компоненты, которые пришлось смоделировать</h2>
+<p>Всё в CHIP-8 сводится к одному из нескольких компонентов:</p>
+<ul><li><strong>Процессор (CPU)</strong> — 16 8-битных регистров общего назначения (V0–VF), один 16-битный индексный регистр (I), счётчик команд и стек, а также фиксированная ширина инструкции.</li><li><strong>Память</strong> — 4 КБ адресного пространства в классическом CHIP-8; программы загружаются с адреса 0x200, а данные шрифта лежат в зарезервированной области.</li><li><strong>Таймеры</strong> — таймер задержки и таймер звука, оба ведут отсчёт вниз с частотой 60 Гц.</li><li><strong>Дисплей</strong> — монохромный битмап, рисуемый по XOR-модели. Разрешение зависит от варианта: 64×32 у CHIP-8, 128×64 у SUPER-CHIP.</li><li><strong>Ввод</strong> — шестнадцатеричная клавиатура на 16 клавиш, которую программы опрашивают напрямую.</li><li><strong>Звук</strong> — один-единственный тон, звучащий, пока таймер звука не равен нулю. А как именно он звучит — оставлено на усмотрение хоста.</li></ul>
+<p>По отдельности ни один из них не сложен. Интересно другое — насколько сильно расходятся мнения о том, как они должны себя вести.</p>
+<h2>Почему единого «CHIP-8» не существует</h2>
+<p>Вот что удивило меня больше всего: у CHIP-8 нет единой авторитетной спецификации. За десятилетия разные интерпретаторы и расширения разошлись, оставив после себя семейство родственных, но несовместимых вариантов. «Правильное» поведение целиком зависит от того, какой вариант ты эмулируешь, а некоторые инструкции без этого контекста действительно неоднозначны.</p>
+<p>Те, что интересовали меня больше всего:</p>
+<ul><li><strong>CHIP-8</strong> — исходный набор инструкций и модель выполнения.</li><li><strong>SUPER-CHIP 1.0 (SCHIP10)</strong> — добавляет режим повышенного разрешения, дополнительные инструкции и управление скроллингом/дисплеем.</li><li><strong>XO-CHIP</strong> — идёт дальше: больше памяти, расширенные звук и графика и более строгие требования к обратной совместимости.</li></ul>
+<p>И это только самые известные названия. Есть ещё CHIP-48, SUPER-CHIP 1.1, легаси-поведение COSMAC VIP, MEGA-CHIP8 и другие — и каждый отличается семантикой инструкций, таймингом, поведением памяти или обработкой дисплея. Если хочется нырнуть в эту кроличью нору, есть <a href="https://chip-8.github.io/extensions/" target="_blank" rel="noopener noreferrer">отличный каталог расширений</a>.</p>
+<h2>Quirks, на которых реально спотыкаешься</h2>
+<p>Различия между вариантами обычно называют <em>quirks</em>, и именно в них прячется большинство багов эмулятора. Вот те, которые пришлось обрабатывать осознанно:</p>
+<ul><li><strong>Инструкции сдвига (8xy6, 8xyE)</strong> — на большинстве систем они читают <code>vY</code> и записывают сдвинутый результат в <code>vX</code>. Интерпретаторы HP48 использовали <code>vX</code> и как вход, и как выход — так и появился shift quirk.</li><li><strong>Сброс флага на OR/AND/XOR</strong> — исходный COSMAC VIP сбрасывал <code>vF</code> после каждого опкода математического сопроцессора. Более поздние интерпретаторы это не повторяли, так что поведение опциональное.</li><li><strong>Перенос спрайта против обрезки</strong> — большинство систем обрезают спрайты по краю экрана. Octo (из которого вырос XO-CHIP) вместо этого переносит их на другую сторону — это wrap quirk.</li><li><strong>Индексный регистр при load/store</strong> — сохранение или загрузка регистров обычно увеличивает <code>i</code> на <code>X + 1</code>. Интерпретатор CHIP-48 прибавлял только <code>X</code>, а SUPER-CHIP 1.1 вообще не трогал <code>i</code> — ещё два quirks, которые надо учитывать.</li><li><strong>Переход со смещением</strong> — <code>jump to &lt;address&gt; + v0</code> на каждом интерпретаторе HP48 был реализован неправильно как <code>&lt;address&gt; + vX</code> — отсюда jump quirk.</li><li><strong>Ожидание вертикального гашения при отрисовке</strong> — COSMAC VIP ждал vblank перед каждой отрисовкой, чтобы избежать разрывов картинки, и это заодно ограничивало скорость выполнения. Некоторые игры полагаются на это ограничение, иначе в них невозможно играть, — так что его нужно моделировать, а не игнорировать.</li></ul>
+<p>Знание о том, что всё это существует, <em>до</em> написания интерпретатора избавило меня от кучи отладки в духе «почему именно эта игра выглядит неправильно». Когда эта картина сложилась, следующим шагом было решить, как собственно структурировать эмулятор.</p>
+      <p class="article-source">Также опубликовано как вики-страница — <a href="https://github.com/mxmgorin/ch8go/wiki/CHIP%E2%80%908-System" target="_blank" rel="noopener noreferrer">открыть оригинал</a>.</p>
+        <nav class="article-series" aria-label="Серия ch8go">
+          <p class="article-series-title">Серия ch8go</p>
+          <ol>
+          <li aria-current="true"><strong>Что такое CHIP-8 на самом деле (прежде чем писать эмулятор)</strong> <span class="series-here">— вы здесь</span></li>
+          <li><a href="/blog/chip8-architecture/ru/">Архитектура моего эмулятора CHIP-8 и почему именно так</a></li>
+          <li><a href="/blog/chip8-testing/ru/">Как я тестирую эмулятор CHIP-8 (когда нет «правильного»)</a></li>
+          </ol>
+        </nav>
+        <p class="open-tui"><a href="/?v=blog&amp;post=chip8-system&amp;l=ru">▶ открыть в терминале</a></p>
+      </article>
+      <footer class="page-footer">© 2026 Maxim Gorin · Все права защищены.</footer>
+    </main>
+  </body>
+</html>

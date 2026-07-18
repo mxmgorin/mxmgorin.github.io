@@ -120,6 +120,14 @@
     <loc>https://mxmgorin.dev/blog/chip8-system/</loc>
     <lastmod>2026-01-09</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-system/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-system/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-system/"/>
+  </url>
+  <url>
+    <loc>https://mxmgorin.dev/blog/chip8-system/ru/</loc>
+    <lastmod>2026-01-09</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxmgorin.dev/blog/chip8-system/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxmgorin.dev/blog/chip8-system/ru/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mxmgorin.dev/blog/chip8-system/"/>
   </url>
 </urlset>
