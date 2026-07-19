@@ -13,10 +13,11 @@ export const projects = [
       ru: "Мой первый эмулятор и проект, к которому я постоянно возвращаюсь. Начинался как попытка разобраться в устройстве Game Boy, а вырос в полноценный эмулятор Game Boy и Game Boy Color на Rust: потактовая точность, GUI с сейв-стейтами, перемоткой и шейдерами — и до 10× скорости на слабом ARM-железе.",
     },
     links: [
+      { label: "demo", url: "https://mxmgorin.github.io/oxgbc/" },
       { label: "download", url: "https://github.com/mxmgorin/oxgbc/releases/latest" },
       { label: "source", url: "https://github.com/mxmgorin/oxgbc" },
     ],
-    tags: ["Rust", "Emulation", "SDL2", "OpenGL", "Android", "Desktop"],
+    tags: ["Rust", "Emulation", "SDL2", "OpenGL", "Android", "Desktop", "WASM"],
   },
   {
     name: "retsurf",
