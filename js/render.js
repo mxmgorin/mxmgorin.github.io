@@ -212,19 +212,30 @@ export function newBlogList() {
 
   const wrap = document.createElement("div");
 
-  // Tag filter and the RSS link share one row so the feed link costs no extra
+  // Tag filter and the html/rss links share one row so they cost no extra
   // vertical space.
   const top = document.createElement("div");
   top.className = "blog-top";
   top.append(newTagFilterBar(uniqueTags(blogView), active, filterBlog));
 
+  const links = document.createElement("span");
+  links.className = "blog-links";
+
+  // The static (crawlable, no-JS) mirror of this list, generated under /blog/.
+  const staticLink = document.createElement("a");
+  staticLink.href = state.lang === Languages.RU ? "/blog/ru/" : "/blog/";
+  staticLink.textContent = t("blogStatic");
+  staticLink.target = "_blank";
+  staticLink.rel = "noopener noreferrer";
+
   const rss = document.createElement("a");
   rss.href = "/feed.xml";
   rss.textContent = t("blogRss");
-  rss.className = "blog-rss";
   rss.target = "_blank";
   rss.rel = "noopener noreferrer";
-  top.append(rss);
+
+  links.append(staticLink, rss);
+  top.append(links);
 
   wrap.append(top);
 
@@ -298,7 +309,7 @@ function newBlogPost(slug) {
   meta.append(document.createTextNode(bits.join("  —  ")));
   const readingEl = document.createElement("span");
   meta.append(readingEl);
-  meta.append(document.createTextNode("   "), copyLinkButton(post));
+  meta.append(document.createTextNode("   "), readerLink(post));
   container.append(meta);
 
   const body = document.createElement("div");
@@ -391,43 +402,15 @@ function postShareUrl(post) {
   return `${location.origin}/blog/${post.slug}/${langSeg}`;
 }
 
-async function copyText(text) {
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    }
-  } catch (_) {
-    // fall through to the legacy path (e.g. insecure context)
-  }
-  try {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.append(ta);
-    ta.select();
-    const ok = document.execCommand("copy");
-    ta.remove();
-    return ok;
-  } catch (_) {
-    return false;
-  }
-}
-
-function copyLinkButton(post) {
+// Opens the static (crawlable, no-JS) page for this post — same URL the copy
+// button copies, but as a plain navigable link.
+function readerLink(post) {
   const a = document.createElement("a");
   a.href = postShareUrl(post);
-  a.className = "back-link copy-link";
-  a.textContent = t("copyLink");
-  a.onclick = async (e) => {
-    e.preventDefault();
-    const ok = await copyText(postShareUrl(post));
-    a.textContent = ok ? t("copyLinkDone") : t("copyLinkFail");
-    setTimeout(() => {
-      a.textContent = t("copyLink");
-    }, 1800);
-  };
+  a.className = "back-link";
+  a.textContent = t("blogStatic");
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
   return a;
 }
 

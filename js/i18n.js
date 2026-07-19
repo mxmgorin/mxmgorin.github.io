@@ -34,9 +34,6 @@ const STRINGS = {
     minRead: (m) => `${m} min read`,
     viewOriginal: "view the original",
     alsoPublishedPrefix: "Also published as a wiki page — ",
-    copyLink: "🔗 link",
-    copyLinkDone: "✓ copied!",
-    copyLinkFail: "press Ctrl+C to copy",
     seriesLabel: (s) => `${s} series`,
     seriesCurrent: "you are here",
 
@@ -118,6 +115,7 @@ const STRINGS = {
     feedRss: "RSS",
     feedJson: "JSON",
     blogRss: "rss ↗",
+    blogStatic: "reader ↗",
     neofetchInfo: (user) => [
       `${user}@mxmgorin.dev`,
       "───────────────────",
@@ -165,9 +163,6 @@ const STRINGS = {
     minRead: (m) => `${m} мин чтения`,
     viewOriginal: "открыть оригинал",
     alsoPublishedPrefix: "Также опубликовано как вики-страница — ",
-    copyLink: "🔗 ссылка",
-    copyLinkDone: "✓ скопировано!",
-    copyLinkFail: "нажмите Ctrl+C для копирования",
     seriesLabel: (s) => `Серия ${s}`,
     seriesCurrent: "вы здесь",
 
@@ -248,6 +243,7 @@ const STRINGS = {
     feedRss: "RSS",
     feedJson: "JSON",
     blogRss: "rss ↗",
+    blogStatic: "reader ↗",
     neofetchInfo: (user) => [
       `${user}@mxmgorin.dev`,
       "───────────────────",

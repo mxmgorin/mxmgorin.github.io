@@ -70,8 +70,8 @@ a:focus-visible,
     font-style: italic;
 }
 
-/* Blog list top row: tag filter on the left, "rss ↗" on the right — one line,
-   so the feed link adds no extra vertical space. */
+/* Blog list top row: tag filter on the left, "reader ↗ / rss ↗" on the right —
+   one line, so the links add no extra vertical space. */
 .blog-top {
     display: flex;
     align-items: center;
@@ -84,13 +84,18 @@ a:focus-visible,
     margin-bottom: 0;
 }
 
-.blog-rss {
-    font-size: 0.8rem;
-    color: var(--muted);
+.blog-links {
+    display: flex;
+    gap: 0.9rem;
     white-space: nowrap;
 }
 
-.blog-rss:hover {
+.blog-links a {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.blog-links a:hover {
     color: var(--accent);
 }
 
