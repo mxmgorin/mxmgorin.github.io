@@ -1,7 +1,6 @@
 export const aboutView = {
-  en: `Hi, I'm Maxim! 👋
-
-This is my corner of the internet — a place for projects, experiments, and the occasional note about things I find interesting.
+  en: `
+Welcome to my website. Here I share my projects, experiments, and occasionally write about things I find interesting.
 
 Professionally, I build trading and financial systems. I'm particularly interested in performance, reliability, and the architecture of complex software. These days I primarily work with Rust, while much of my earlier career was spent developing in C#. I also enjoy using Go for personal projects and experimentation.
 
@@ -11,12 +10,11 @@ Many of the projects you'll find here started with a simple question: "Can I bui
 
 When I'm not coding, I'm a Linux enthusiast and retro gaming fan. I'm interested in emulation, open-source software, computer history, and unusual hardware. I also seem to have a growing collection of handheld consoles and other interesting gadgets.
 
-Make yourself at home. Explore the site using your mouse, keyboard, or the built-in terminal below. If you're not sure where to start, try "help". 
+Make yourself at home. Explore the site using your mouse, keyboard, or the built-in terminal below. If you're not sure where to start, try "help".
 `,
 
-  ru: `Привет! Меня зовут Максим 👋
-
-Это мой уголок интернета — место для проектов, экспериментов и редких заметок о том, что мне интересно.
+  ru: `
+Добро пожаловать на мой сайт. Здесь я делюсь своими проектами, экспериментами и заметками о том, что мне интересно.
 
 Основная моя работа — разработка торговых и финансовых систем. В работе мне особенно интересны производительность, надёжность и архитектура сложных приложений. Сейчас в основном использую Rust и Go, а до этого много лет работал с C#.
 
