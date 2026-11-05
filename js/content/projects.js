@@ -13,7 +13,7 @@ export const projects = [
       ru: "Мой первый эмулятор и проект, к которому я постоянно возвращаюсь. Начинался как попытка разобраться в устройстве Game Boy, а вырос в полноценный эмулятор Game Boy и Game Boy Color на Rust: потактовая точность, GUI с сейв-стейтами, перемоткой и шейдерами — и до 10× скорости на слабом ARM-железе.",
     },
     links: [
-      { label: "demo", url: "https://mxmgorin.github.io/oxgbc/" },
+      { label: "demo", url: "https://oxgbc.mxmgorin.dev/" },
       { label: "download", url: "https://github.com/mxmgorin/oxgbc/releases/latest" },
       { label: "source", url: "https://github.com/mxmgorin/oxgbc" },
     ],
@@ -38,7 +38,7 @@ export const projects = [
       ru: "Начинал этот проект, чтобы как следует освоить Go. В итоге получил мультифронтендный эмулятор CHIP-8, SCHIP и XO-CHIP и гораздо лучшее понимание того, насколько запутанной может быть история платформы с десятками несовместимых вариаций.",
     },
     links: [
-      { label: "demo", url: "https://mxmgorin.github.io/ch8go/web/" },
+      { label: "demo", url: "https://ch8go.mxmgorin.dev/" },
       { label: "source", url: "https://github.com/mxmgorin/ch8go" },
       { label: "posts", view: "blog", tag: "CHIP-8" },
     ],
