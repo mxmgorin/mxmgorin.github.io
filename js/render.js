@@ -11,11 +11,13 @@ import {
   filterBlog,
 } from "./app.js";
 import { menu, Views } from "./content/views.js";
-import { projects, mainTags } from "./content/projects.js";
+import { projects, contributions, mainTags, githubUser } from "./content/projects.js";
 import { aboutView } from "./content/about.js";
 import { contactView } from "./content/contact.js";
 import { introView } from "./content/intro.js";
 import { blogView } from "./content/blog.js";
+import { nowView } from "./content/now.js";
+import { portrait } from "./content/portrait.js";
 import { renderMarkdown } from "./markdown.js";
 import { isCrtOn, toggleCrt } from "./crt.js";
 import { t } from "./i18n.js";
@@ -60,20 +62,21 @@ function renderView() {
 
   switch (state.view) {
     case Views.HOME: {
-      const pre = document.createElement("pre");
-      contentEl.appendChild(pre);
-      typeLines(pre, neofetchLines(), {
+      const card = newNeofetchCard();
+      contentEl.appendChild(card.el);
+      typeColumns(card.columns, {
         onDone: () => {
+          // No auto-scroll: keeps the card's top in view on short screens.
           contentEl.appendChild(
             newCommandSuggestions(`\n${t("welcomeTry")}`, [
               "about",
+              "now",
               "projects",
               "blog",
               "contact",
               "snake",
             ]),
           );
-          contentEl.scrollTop = contentEl.scrollHeight;
         },
       });
       break;
@@ -83,6 +86,9 @@ function renderView() {
       break;
     case Views.ABOUT:
       contentEl.appendChild(newAbout());
+      break;
+    case Views.NOW:
+      contentEl.appendChild(newNow());
       break;
     case Views.BLOG:
       contentEl.appendChild(newBlog());
@@ -120,13 +126,18 @@ export function newIntro() {
 
 export function newProjects() {
   const active = state.projectTag ?? null;
-  const list = active
-    ? projects.filter((p) => p.tags?.includes(active))
-    : projects;
+  const byTag = (items) => (active ? items.filter((p) => p.tags?.includes(active)) : items);
 
   const wrap = document.createElement("div");
   wrap.append(newTagFilterBar(mainTags, active, filterProjects));
-  wrap.append(newBlocks(list));
+  wrap.append(newBlocks(byTag(projects)));
+
+  const upstream = byTag(contributions);
+  if (upstream.length) {
+    const block = newBlocks(upstream, t("contributionsTitle"));
+    block.classList.add("contributions");
+    wrap.append(block);
+  }
   return wrap;
 }
 
@@ -198,6 +209,30 @@ function newTagFilter(label, isActive, onClick) {
 
 export function newAbout() {
   return newText(aboutView);
+}
+
+export function newNow() {
+  const pre = document.createElement("pre");
+
+  const intro = document.createElement("span");
+  intro.className = "post-meta";
+  intro.textContent = t("nowIntro", nowView.updated);
+  pre.append(intro, "\n");
+
+  nowView.sections.forEach((section) => {
+    const title = document.createElement("span");
+    title.className = "view-title";
+    title.textContent = getTranslated(section.title);
+    pre.append("\n", title, "\n");
+
+    section.items.forEach((item) => {
+      const name = document.createElement("strong");
+      name.append(item.url ? newExternalLink(item.url, item.name) : item.name);
+      pre.append("  ", name, ` — ${getTranslated(item.text)}\n`);
+    });
+  });
+
+  return pre;
 }
 
 export function newBlog() {
@@ -600,6 +635,10 @@ function newBlocks(items, title) {
     name.textContent = p.name;
     pre.append(name);
 
+    const tagline = getTranslated(p.tagline);
+    if (tagline) pre.append(` — ${tagline}`);
+    pre.append("\n ");
+
     const links = p.links ?? (p.url ? [{ label: "link", url: p.url }] : []);
     links.forEach((lnk) => {
       pre.append(document.createTextNode(" "));
@@ -615,13 +654,14 @@ function newBlocks(items, title) {
           openView(lnk.view, { tag: lnk.tag });
         };
       } else {
-        link.href = lnk.url;
+        link.href = lnk.prs ? mergedPrsUrl(lnk.prs) : lnk.url;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
       }
 
       pre.append(link);
     });
+    pre.append(newStars(p), newMergedPrs(p));
 
     const desc = getTranslated(p.desc);
     if (desc) {
@@ -644,6 +684,85 @@ function newBlocks(items, title) {
   });
 
   return pre;
+}
+
+const GITHUB_REPO_URL = /^https:\/\/github\.com\/([^/]+)\/([^/?#]+)/;
+// The GitHub API's largest page size.
+const GITHUB_MAX_PER_PAGE = 100;
+const starsByOwner = new Map();
+
+// Star counts of a GitHub user's repos, keyed by lowercase repo name, fetched
+// once per page load; resolves to an empty map when the API is unavailable.
+function fetchStars(owner) {
+  if (!starsByOwner.has(owner)) {
+    const url = `https://api.github.com/users/${owner}/repos?per_page=${GITHUB_MAX_PER_PAGE}`;
+    starsByOwner.set(
+      owner,
+      fetch(url)
+        .then((res) => (res.ok ? res.json() : []))
+        .then((repos) => new Map(repos.map((r) => [r.name.toLowerCase(), r.stargazers_count])))
+        .catch(() => new Map()),
+    );
+  }
+  return starsByOwner.get(owner);
+}
+
+// A span that fills in with the star count of the project's GitHub source repo;
+// stays empty for non-GitHub sources and unstarred repos.
+function newStars(project) {
+  const span = document.createElement("span");
+  span.className = "stars";
+
+  const source = project.links?.find((l) => l.label === "source")?.url;
+  const match = source?.match(GITHUB_REPO_URL);
+  if (!match) return span;
+
+  const [, owner, repo] = match;
+  fetchStars(owner).then((stars) => {
+    const count = stars.get(repo.toLowerCase());
+    if (!count) return;
+    span.textContent = `  ★ ${count}`;
+    span.title = t("starsTitle", count);
+  });
+  return span;
+}
+
+const MERGED_PRS_QUERY = `is:pr is:merged author:${githubUser}`;
+const mergedPrsByRepo = new Map();
+
+function mergedPrsUrl(repo) {
+  return `https://github.com/${repo}/pulls?q=${encodeURIComponent(MERGED_PRS_QUERY)}`;
+}
+
+// Number of my merged pull requests in an owner/repo, fetched once per page load;
+// resolves to null when the API is unavailable.
+function fetchMergedPrs(repo) {
+  if (!mergedPrsByRepo.has(repo)) {
+    const q = encodeURIComponent(`repo:${repo} ${MERGED_PRS_QUERY}`);
+    mergedPrsByRepo.set(
+      repo,
+      fetch(`https://api.github.com/search/issues?q=${q}&per_page=1`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((body) => body?.total_count ?? null)
+        .catch(() => null),
+    );
+  }
+  return mergedPrsByRepo.get(repo);
+}
+
+// A span that fills in with the merged PR count behind the item's `prs` link;
+// stays empty without one or when the count is unknown.
+function newMergedPrs(item) {
+  const span = document.createElement("span");
+  span.className = "stars";
+
+  const repo = item.links?.find((l) => l.prs)?.prs;
+  if (!repo) return span;
+
+  fetchMergedPrs(repo).then((count) => {
+    if (count) span.textContent = `  · ${t("mergedPrs", count)}`;
+  });
+  return span;
 }
 
 function newText(text) {
@@ -733,21 +852,37 @@ function printWords(
 // Clicks are handled by a delegated listener in cli.js via the data-cmd attr.
 export function newCliBlock(parts) {
   const pre = document.createElement("pre");
+  appendParts(pre, parts);
+  return pre;
+}
 
+// Appends newCliBlock-style parts; { url, label } parts become external links.
+function appendParts(el, parts) {
   for (const part of parts) {
     if (typeof part === "string") {
-      pre.append(document.createTextNode(part));
-      continue;
+      el.append(document.createTextNode(part));
+    } else if (part.url) {
+      el.append(newExternalLink(part.url, part.label));
+    } else {
+      const a = document.createElement("a");
+      a.href = "#";
+      a.className = "cmd-link";
+      a.dataset.cmd = part.cmd;
+      a.textContent = part.label ?? part.cmd;
+      el.append(a);
     }
-    const a = document.createElement("a");
-    a.href = "#";
-    a.className = "cmd-link";
-    a.dataset.cmd = part.cmd;
-    a.textContent = part.label ?? part.cmd;
-    pre.append(a);
   }
+}
 
-  return pre;
+function newExternalLink(url, text) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.textContent = text;
+  if (!url.startsWith("mailto:")) {
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+  }
+  return a;
 }
 
 // A line of clickable command tokens with an optional leading label.
@@ -760,71 +895,94 @@ export function newCommandSuggestions(labelText, cmds) {
   return newCliBlock(parts);
 }
 
-// A low-res ASCII portrait (from a photo), shown beside the neofetch card.
-const NEOFETCH_ART = [
-  "    .=*#%@@@%#*-",
-  "  :*%@@@@@@@@@@@*:.",
-  " -@@@@@@@@@%%%##%@%*:",
-  " +@%#+=-::::..::=*@@@:",
-  " +@*=--:.     .:-=+@@:",
-  " +%*=-:..     .::=+%%",
-  " -%#*=-:......:-=*#%*.",
-  ":#%#%@%%%*-:*%%%%%###+",
-  ".*#===+==+=:=====--**:",
-  " +%+-::.:==.=-.::-=#+:",
-  " :=#+-::-#*=*+::-=#+:",
-  "   =%*+=+***+====*#.",
-  "    *%*+*#*+**++*#=",
-  "    -%%*=+**++=*%*",
-];
+const HOST = "mxmgorin.dev";
 
-// True on phone-width viewports (matches the CSS breakpoint in tui.css).
-function isNarrow() {
-  return typeof window !== "undefined" && typeof window.matchMedia === "function"
-    ? window.matchMedia("(max-width: 700px)").matches
-    : false;
+// The neofetch card: portrait and info as two <pre> columns, each paired with the
+// lines it should hold. The columns start empty.
+function newNeofetchCard(user = "guest") {
+  const el = document.createElement("div");
+  el.className = "neofetch";
+
+  const art = document.createElement("pre");
+  art.className = "neofetch-art";
+  art.setAttribute("aria-hidden", "true");
+
+  const { lines, hang } = neofetchInfo(user);
+  const info = document.createElement("pre");
+  info.className = "neofetch-info";
+  info.style.setProperty("--hang", `${hang}ch`);
+
+  el.append(art, info);
+  return {
+    el,
+    columns: [
+      { pre: art, lines: portrait },
+      { pre: info, lines },
+    ],
+  };
 }
 
-// The neofetch card lines. On wide screens the portrait sits to the left of the
-// info column; on narrow (phone) screens they stack so lines stay short and the
-// ASCII art doesn't wrap and break apart.
-function neofetchLines(user = "guest") {
-  const info = t("neofetchInfo", user);
+// The info column: a user@host header, then aligned "Key: value" rows. Returns
+// the lines (each a list of newCliBlock-style parts) and the value column's offset.
+function neofetchInfo(user) {
+  const header = `${user}@${HOST}`;
+  const email = contactView.find((c) => c.url.startsWith("mailto:"));
+  const rows = t("neofetchRows", {
+    now: { cmd: "now", label: nowView.sections[0].items.map((i) => i.name).join(" · ") },
+    oss: { cmd: "projects", label: contributions.map((c) => c.name).join(" · ") },
+    contact: email ? { url: email.url, label: email.text } : "",
+  });
 
-  if (isNarrow()) {
-    return [...NEOFETCH_ART, "", ...info];
-  }
+  const keys = rows.map(([key]) => `${key}: `);
+  const hang = Math.max(...keys.map((k) => k.length));
 
-  const width = Math.max(...NEOFETCH_ART.map((l) => l.length)) + 2;
-  const rows = Math.max(NEOFETCH_ART.length, info.length);
-
-  const lines = [];
-  for (let i = 0; i < rows; i++) {
-    lines.push((NEOFETCH_ART[i] ?? "").padEnd(width) + (info[i] ?? ""));
-  }
-  return lines;
+  const lines = [
+    [header],
+    ["─".repeat(header.length)],
+    ...rows.map(([, value], i) => [keys[i].padEnd(hang), value]),
+  ];
+  return { lines, hang };
 }
 
 // The finished neofetch card (used by the `neofetch` command, printed at once).
 export function newNeofetch(user = "guest") {
-  const pre = document.createElement("pre");
-  pre.textContent = neofetchLines(user).join("\n");
-  return pre;
+  const card = newNeofetchCard(user);
+  fillColumns(card.columns);
+  return card.el;
 }
 
-// Reveal lines into a <pre> one per tick — a terminal-style "boot" print.
-// Bails if the <pre> is detached (e.g. the user navigated away mid-animation).
-function typeLines(pre, lines, { delay = 80, onDone } = {}) {
-  let i = 0;
+// One block per line, so a wrapped line can be indented as a unit.
+function appendLine(pre, line) {
+  const el = document.createElement("span");
+  el.className = "neofetch-line";
+  appendParts(el, typeof line === "string" ? [line] : line);
+  pre.append(el);
+}
+
+function fillColumns(columns) {
+  columns.forEach(({ pre, lines }) => lines.forEach((line) => appendLine(pre, line)));
+}
+
+// Reveal columns a slice per tick — a terminal-style "boot" print. Every column
+// finishes on the same tick. Bails if the card is detached mid-animation.
+function typeColumns(columns, { delay = 80, onDone } = {}) {
+  const ticks = Math.min(...columns.map((c) => c.lines.length));
+  const shown = columns.map(() => 0);
+  let tick = 0;
 
   function step() {
-    if (pre.isConnected === false) return;
-    if (i >= lines.length) {
+    if (columns[0].pre.isConnected === false) return;
+    if (tick >= ticks) {
       if (onDone) onDone();
       return;
     }
-    pre.textContent += (i ? "\n" : "") + lines[i];
-    i += 1;
+    tick += 1;
+    columns.forEach(({ pre, lines }, c) => {
+      const target = Math.ceil((tick * lines.length) / ticks);
+      for (; shown[c] < target; shown[c] += 1) {
+        appendLine(pre, lines[shown[c]]);
+      }
+    });
     setTimeout(step, delay);
   }
 

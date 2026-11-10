@@ -64,6 +64,60 @@ a:focus-visible,
     text-decoration: underline;
 }
 
+.stars {
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+.tui-content pre.contributions {
+    margin-top: 2rem;
+}
+
+/* neofetch card: portrait beside the info column, stacked on phones */
+.neofetch {
+    display: flex;
+    align-items: flex-start;
+    gap: 3ch;
+}
+
+.neofetch-art {
+    /* The cell aspect (glyph advance / line height) the portrait was sampled at. */
+    --art-cell-aspect: 0.6;
+    flex-shrink: 0;
+    font-size: 0.34em;
+    line-height: calc(1ch / var(--art-cell-aspect));
+    color: var(--accent);
+}
+
+.tui-content pre.neofetch-art {
+    white-space: pre;
+}
+
+.neofetch-info {
+    min-width: 0;
+}
+
+.neofetch-line {
+    display: block;
+}
+
+/* Hanging indent of --hang: wrapped values stay in the value column. */
+.neofetch-info .neofetch-line {
+    padding-left: var(--hang);
+    text-indent: calc(-1 * var(--hang));
+}
+
+@media (max-width: 700px) {
+    .neofetch {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .neofetch-art {
+        font-size: 0.27em;
+    }
+}
+
 .post-meta {
     color: var(--muted);
     font-size: 0.8rem;

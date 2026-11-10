@@ -248,7 +248,14 @@
 
     .tui-menu ul {
         display: flex;
-        justify-content: space-around;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .tui-menu li {
+        padding: 0.5rem 0.4rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
     }
 
     .tui-menu li.active::before {

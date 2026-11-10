@@ -1,6 +1,7 @@
 import {
   render,
   newAbout,
+  newNow,
   newProjects,
   newContact,
   newGame,
@@ -43,7 +44,7 @@ const commands = {
         t("cliHelpIntro"),
         "\n\n",
         t("helpExplore"),
-        { cmd: "about" }, "  ", { cmd: "projects" }, "  ", { cmd: "blog" }, "  ", { cmd: "contact" },
+        { cmd: "about" }, "  ", { cmd: "now" }, "  ", { cmd: "projects" }, "  ", { cmd: "blog" }, "  ", { cmd: "contact" },
         "\n",
         t("helpFun"),
         { cmd: "neofetch" }, "  ", { cmd: "snake" }, "  ", { cmd: "tetris" }, "  ", { cmd: "matrix" },
@@ -59,6 +60,10 @@ const commands = {
 
   about() {
     renderElement(newAbout());
+  },
+
+  now() {
+    renderElement(newNow());
   },
 
   contact() {
@@ -218,7 +223,7 @@ const commands = {
 
   ls() {
     renderElement(
-      newCommandSuggestions("", ["about", "projects", "blog", "contact", "cv"]),
+      newCommandSuggestions("", ["about", "now", "projects", "blog", "contact", "cv"]),
     );
   },
 
@@ -231,6 +236,9 @@ const commands = {
     switch (target) {
       case "about":
         renderElement(newAbout());
+        break;
+      case "now":
+        renderElement(newNow());
         break;
       case "projects":
         renderElement(newProjects());

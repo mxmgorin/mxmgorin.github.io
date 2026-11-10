@@ -1,8 +1,5 @@
 export const aboutView = {
-  en: `
-Welcome to my website. Here I share my projects, experiments, and occasionally write about things I find interesting.
-
-Professionally, I build trading and financial systems. I'm particularly interested in performance, reliability, and the architecture of complex software. These days I primarily work with Rust, while much of my earlier career was spent developing in C#. I also enjoy using Go for personal projects and experimentation.
+  en: `I'm Maxim Gorin, a software engineer building trading and financial systems. I'm particularly interested in performance, reliability, and the architecture of complex software. These days I primarily work with Rust, while much of my earlier career was spent developing in C#. I also enjoy using Go for personal projects and experimentation.
 
 Outside of work, I've long been fascinated by low-level programming and the inner workings of computer systems. I enjoy digging beneath the surface: building emulators, virtual machines, interpreters, and other projects that help me better understand the technology we use every day.
 
@@ -10,13 +7,9 @@ Many of the projects you'll find here started with a simple question: "Can I bui
 
 When I'm not coding, I'm a Linux enthusiast and retro gaming fan. I'm interested in emulation, open-source software, computer history, and unusual hardware. I also seem to have a growing collection of handheld consoles and other interesting gadgets.
 
-Make yourself at home. Explore the site using your mouse, keyboard, or the built-in terminal below. If you're not sure where to start, try "help".
-`,
+This site is where I share those projects and write about what I learn along the way; what I'm working on right now is under <a href="#" class="cmd-link" data-cmd="now">now</a>. Explore it using your mouse, keyboard, or the built-in terminal below. If you're not sure where to start, try <a href="#" class="cmd-link" data-cmd="help">help</a>.`,
 
-  ru: `
-Добро пожаловать на мой сайт. Здесь я делюсь своими проектами, экспериментами и заметками о том, что мне интересно.
-
-Основная моя работа — разработка торговых и финансовых систем. В работе мне особенно интересны производительность, надёжность и архитектура сложных приложений. Сейчас в основном использую Rust и Go, а до этого много лет работал с C#.
+  ru: `Меня зовут Максим Горин, я разрабатываю торговые и финансовые системы. В работе мне особенно интересны производительность, надёжность и архитектура сложных приложений. Сейчас в основном пишу на Rust, а большую часть карьеры до этого работал с C#. Go люблю использовать в личных проектах и экспериментах.
 
 За пределами рабочих задач меня давно увлекает низкоуровневое программирование и внутреннее устройство компьютерных систем. Люблю разбираться, как всё устроено под капотом: писать эмуляторы, виртуальные машины, интерпретаторы и другие проекты, которые помогают лучше понять технологии, которыми мы пользуемся каждый день.
 
@@ -24,6 +17,5 @@ Make yourself at home. Explore the site using your mouse, keyboard, or the built
 
 Я Linux-энтузиаст и любитель ретро-игр. Меня интересуют эмуляция, open-source проекты, компьютерная история и всевозможные необычные устройства. А ещё у меня постоянно растёт коллекция портативных консолей и другого интересного железа.
 
-Чувствуйте себя как дома. Исследуйте сайт с помощью мыши, клавиатуры или встроенного терминала. Если не знаете, с чего начать — попробуйте "help".
-`,
+Здесь я делюсь этими проектами и пишу о том, что узнаю по ходу; чем занимаюсь прямо сейчас — в разделе <a href="#" class="cmd-link" data-cmd="now">сейчас</a>. Исследуйте сайт с помощью мыши, клавиатуры или встроенного терминала. Если не знаете, с чего начать — попробуйте <a href="#" class="cmd-link" data-cmd="help">help</a>.`,
 };

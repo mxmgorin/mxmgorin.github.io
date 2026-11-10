@@ -18,6 +18,7 @@ const BASE_TITLE = "mxmgorin.dev | Web TUI";
 const routes = [
   // { view: Views.INTRO, key: "intro" },
   { view: Views.ABOUT, key: "about" },
+  { view: Views.NOW, key: "now" },
   { view: Views.PROJECTS, key: "projects" },
   { view: Views.BLOG, key: "blog" },
   { view: Views.CONTACT, key: "contact" },
@@ -235,15 +236,4 @@ export function setupApp() {
       openHome();
     });
   }
-
-  // Re-render when the viewport crosses the phone breakpoint so width-dependent
-  // layouts (e.g. the neofetch card) switch between side-by-side and stacked.
-  const narrow = window.matchMedia("(max-width: 700px)");
-  let wasNarrow = narrow.matches;
-  window.addEventListener("resize", () => {
-    if (narrow.matches !== wasNarrow) {
-      wasNarrow = narrow.matches;
-      render();
-    }
-  });
 }
