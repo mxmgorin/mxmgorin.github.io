@@ -547,7 +547,12 @@ export function newContact() {
   const pre = document.createElement("pre");
 
   contactView.forEach(({ label, url, text }) => {
-    pre.append(document.createTextNode(`${label}:\n  `));
+    pre.append(document.createTextNode(`${getTranslated(label)}:\n  `));
+
+    if (!url) {
+      pre.append(document.createTextNode(`${getTranslated(text).join("\n  ")}\n\n`));
+      return;
+    }
 
     const a = document.createElement("a");
     a.href = url;
@@ -985,7 +990,7 @@ function newNeofetchCard(user = "guest") {
 // the lines (each a list of newCliBlock-style parts) and the value column's offset.
 function neofetchInfo(user) {
   const header = `${user}@${HOST}`;
-  const email = contactView.find((c) => c.url.startsWith("mailto:"));
+  const email = contactView.find((c) => c.url?.startsWith("mailto:"));
   const rows = t("neofetchRows", {
     now: { cmd: "now", label: nowView.sections[0].items.map((i) => i.name).join(" · ") },
     oss: { cmd: "projects", label: contributions.map((c) => c.name).join(" · ") },

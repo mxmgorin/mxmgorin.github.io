@@ -1,7 +1,7 @@
 // What I'm focused on at the moment (a "now page", see nownownow.com).
 // The first section is the headline: its item names also appear on the home card.
 export const nowView = {
-  updated: "2026-11-10",
+  updated: "2026-11-19",
   sections: [
     {
       title: { en: "Building", ru: "Делаю" },
@@ -20,6 +20,19 @@ export const nowView = {
           text: {
             en: "Just shipped 1.0: FTL: Faster Than Light with a gamepad or touchscreen on Linux handhelds and the Steam Deck. Polishing input mapping across devices.",
             ru: "Только что вышла 1.0: FTL: Faster Than Light с геймпадом и тачскрином на Linux-консолях и Steam Deck. Довожу раскладку ввода на разных устройствах.",
+          },
+        },
+      ],
+    },
+    {
+      title: { en: "Contributing", ru: "Участвую" },
+      items: [
+        {
+          name: "Servo",
+          url: "https://github.com/servo/servo/pulls?q=is%3Apr+author%3Amxmgorin",
+          text: {
+            en: "WebGL 2 conformance, faster image premultiplication, EGL fixes in surfman.",
+            ru: "Соответствие WebGL 2, ускорение премультипликации изображений, исправления EGL в surfman.",
           },
         },
       ],
