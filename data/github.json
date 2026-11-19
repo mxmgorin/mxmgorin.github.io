@@ -1,0 +1,18 @@
+{
+  "stars": {
+    "mxmgorin/ch8go": 3,
+    "mxmgorin/csbf": 0,
+    "mxmgorin/egui-sdl2": 5,
+    "mxmgorin/ftlhelm": 4,
+    "mxmgorin/luar": 0,
+    "mxmgorin/oxgbc": 15,
+    "mxmgorin/retsend": 41,
+    "mxmgorin/retsurf": 77
+  },
+  "mergedPrs": {
+    "PortsMaster/PortMaster-New": 55,
+    "goweiwen/Allium": 9,
+    "servo/servo": 38,
+    "spruceUI/spruceOS": 8
+  }
+}

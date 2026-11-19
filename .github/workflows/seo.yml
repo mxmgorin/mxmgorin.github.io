@@ -3,6 +3,7 @@ name: Generate SEO files
 # Regenerates the static post pages, sitemap, robots.txt, feed and the
 # index.html <noscript> fallback from posts/ + js/content/blog.js, and commits
 # the result so the branch-deployed GitHub Pages site stays in sync.
+# Also refreshes data/github.json, the projects page's star and merged PR counts.
 on:
   push:
     branches: [main]
@@ -10,9 +11,13 @@ on:
       - "posts/**"
       - "js/content/blog.js"
       - "js/content/contact.js"
+      - "js/content/projects.js"
+      - "js/github.js"
       - "js/markdown.js"
       - "tools/**"
       - "index.html"
+  schedule:
+    - cron: "0 4 * * *"
   workflow_dispatch:
 
 permissions:
@@ -40,14 +45,19 @@ jobs:
       - name: Generate SEO files
         run: node tools/build-seo.mjs
 
+      - name: Fetch GitHub stats
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node tools/build-github.mjs
+
       - name: Commit generated files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add blog og sitemap.xml robots.txt feed.xml feed.json index.html
+          git add blog og sitemap.xml robots.txt feed.xml feed.json index.html data
           if git diff --staged --quiet; then
             echo "No SEO changes to commit."
           else
-            git commit -m "chore(seo): regenerate static pages, sitemap, feed [skip ci]"
+            git commit -m "chore(build): regenerate static pages, feed, GitHub stats [skip ci]"
             git push
           fi

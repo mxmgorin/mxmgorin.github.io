@@ -16,7 +16,6 @@ import {
   contributions,
   minorContributions,
   mainTags,
-  githubUser,
 } from "./content/projects.js";
 import { aboutView } from "./content/about.js";
 import { contactView } from "./content/contact.js";
@@ -26,6 +25,7 @@ import { blogView } from "./content/blog.js";
 import { nowView } from "./content/now.js";
 import { portrait } from "./content/portrait.js";
 import { renderMarkdown } from "./markdown.js";
+import { GITHUB_STATS_PATH, mergedPrsUrl, prsRepo, sourceRepo } from "./github.js";
 import { isCrtOn, toggleCrt } from "./crt.js";
 import { t } from "./i18n.js";
 
@@ -750,25 +750,15 @@ export function newHandhelds() {
   return pre;
 }
 
-const GITHUB_REPO_URL = /^https:\/\/github\.com\/([^/]+)\/([^/?#]+)/;
-// The GitHub API's largest page size.
-const GITHUB_MAX_PER_PAGE = 100;
-const starsByOwner = new Map();
+let githubStats;
 
-// Star counts of a GitHub user's repos, keyed by lowercase repo name, fetched
-// once per page load; resolves to an empty map when the API is unavailable.
-function fetchStars(owner) {
-  if (!starsByOwner.has(owner)) {
-    const url = `https://api.github.com/users/${owner}/repos?per_page=${GITHUB_MAX_PER_PAGE}`;
-    starsByOwner.set(
-      owner,
-      fetch(url)
-        .then((res) => (res.ok ? res.json() : []))
-        .then((repos) => new Map(repos.map((r) => [r.name.toLowerCase(), r.stargazers_count])))
-        .catch(() => new Map()),
-    );
-  }
-  return starsByOwner.get(owner);
+// The build-time star and merged PR counts, fetched once per page load; resolves
+// to empty stats when the file is unavailable.
+function fetchGithubStats() {
+  githubStats ??= fetch(`/${GITHUB_STATS_PATH}`)
+    .then((res) => (res.ok ? res.json() : {}))
+    .catch(() => ({}));
+  return githubStats;
 }
 
 // A span that fills in with the star count of the project's GitHub source repo;
@@ -777,13 +767,11 @@ function newStars(project) {
   const span = document.createElement("span");
   span.className = "stars";
 
-  const source = project.links?.find((l) => l.label === "source")?.url;
-  const match = source?.match(GITHUB_REPO_URL);
-  if (!match) return span;
+  const repo = sourceRepo(project);
+  if (!repo) return span;
 
-  const [, owner, repo] = match;
-  fetchStars(owner).then((stars) => {
-    const count = stars.get(repo.toLowerCase());
+  fetchGithubStats().then(({ stars }) => {
+    const count = stars?.[repo];
     if (!count) return;
     const star = document.createElement("span");
     star.className = "star-glyph";
@@ -794,39 +782,17 @@ function newStars(project) {
   return span;
 }
 
-const MERGED_PRS_QUERY = `is:pr is:merged author:${githubUser}`;
-const mergedPrsByRepo = new Map();
-
-function mergedPrsUrl(repo) {
-  return `https://github.com/${repo}/pulls?q=${encodeURIComponent(MERGED_PRS_QUERY)}`;
-}
-
-// Number of my merged pull requests in an owner/repo, fetched once per page load;
-// resolves to null when the API is unavailable.
-function fetchMergedPrs(repo) {
-  if (!mergedPrsByRepo.has(repo)) {
-    const q = encodeURIComponent(`repo:${repo} ${MERGED_PRS_QUERY}`);
-    mergedPrsByRepo.set(
-      repo,
-      fetch(`https://api.github.com/search/issues?q=${q}&per_page=1`)
-        .then((res) => (res.ok ? res.json() : null))
-        .then((body) => body?.total_count ?? null)
-        .catch(() => null),
-    );
-  }
-  return mergedPrsByRepo.get(repo);
-}
-
 // A span that fills in with the merged PR count behind the item's `prs` link;
 // stays empty without one or when the count is unknown.
 function newMergedPrs(item) {
   const span = document.createElement("span");
   span.className = "stars";
 
-  const repo = item.links?.find((l) => l.prs)?.prs;
+  const repo = prsRepo(item);
   if (!repo) return span;
 
-  fetchMergedPrs(repo).then((count) => {
+  fetchGithubStats().then(({ mergedPrs }) => {
+    const count = mergedPrs?.[repo];
     if (count) span.textContent = `  · ${t("mergedPrs", count)}`;
   });
   return span;

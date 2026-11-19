@@ -1,5 +1,5 @@
 
-.PHONY: web seo
+.PHONY: web seo github
 
 web:
 	@echo "Starting local server on http://localhost:8000"
@@ -9,3 +9,7 @@ web:
 # robots.txt, feed.xml, and the index.html <noscript> fallback.
 seo:
 	node tools/build-seo.mjs
+
+# Refresh data/github.json: star and merged PR counts for the projects page.
+github:
+	node tools/build-github.mjs

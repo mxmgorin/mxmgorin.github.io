@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Web TUI personal site + blog",
   "scripts": {
-    "seo": "node tools/build-seo.mjs"
+    "seo": "node tools/build-seo.mjs",
+    "github": "node tools/build-github.mjs"
   }
 }
