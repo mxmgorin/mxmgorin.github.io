@@ -191,6 +191,14 @@ case OpKind.Jz:
 <p>Самое приятное, что для всего этого не нужен сервер. <code>Csbf.Core</code>, <code>Csbf.Debugger</code> и <code>Csbf.Codegen</code> компилируются в WebAssembly, а фронтенд на Blazor использует их через <code>IVmIo</code>. Это тот же самый код, что работает в CLI, только теперь он исполняется прямо в браузере.</p>
 <p>Во время выполнения можно следить за внутренним состоянием виртуальной машины: ленту с текущим положением указателя, регистры, дизассемблер оптимизированного IR, точки останова, пошаговое выполнение, обратную отладку, переключение проходов оптимизатора, встроенный бенчмарк и генерацию Go-кода.</p>
 <p>Brainfuck задумывался как язык-шутка, но его минимализм делает его отличной площадкой для изучения компиляторов. Когда парсер сводится практически к одному проходу по исходному коду, на первый план выходят промежуточное представление (IR), оптимизации, виртуальная машина, кодогенерация и JIT. Оказалось, что восьми инструкций вполне достаточно, чтобы построить вокруг них полноценный компилятор.</p>
+        <aside class="author-card" aria-label="Об авторе">
+          <img class="author-avatar" src="/img/avatar.png" width="80" height="80" alt="" />
+          <div>
+            <p class="author-name"><a href="/?v=about&amp;l=ru">Максим Горин</a></p>
+            <p class="author-bio">Разрабатываю торговые системы на Rust. В свободное время — эмуляторы, браузер для ретро-консолей и порты игр.</p>
+            <p class="author-links"><a href="mailto:hi@mxmgorin.dev">Email</a> · <a href="https://github.com/mxmgorin" target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="/feed.xml">RSS</a></p>
+          </div>
+        </aside>
         <p class="open-tui"><a href="/?v=blog&amp;post=csbf-toolchain&amp;l=ru">▶ открыть в терминале</a></p>
       </article>
       <footer class="page-footer">© 2026 Maxim Gorin · Все права защищены.</footer>
