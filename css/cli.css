@@ -11,22 +11,52 @@
 .command-line {
     display: flex;
     align-items: center;
-    font-family: monospace;
+    font-family: inherit;
+    font-size: 1rem;
     width: 100%;
-    border: 1px solid var(--border);
-    padding: 0.2rem 0.4rem;
+    border: 1px solid rgba(var(--accent-rgb), 0.35);
+    padding: 0.3rem 0.5rem;
     background: transparent;
     border-radius: 2px;
 }
 
 .command-line:focus-within {
     border-color: var(--accent);
+    box-shadow: 0 0 6px rgba(var(--accent-rgb), 0.4);
     outline: none;
 }
 
 .prompt {
     white-space: nowrap;
     margin-right: 0.5ch;
+    color: var(--accent);
+}
+
+/* Blinking block cursor, shown while the line is unfocused and empty. */
+.idle-cursor {
+    display: none;
+    flex: none;
+    width: 1ch;
+    height: 1.1em;
+    margin-right: 1ch;
+    background: var(--accent);
+    animation: idle-cursor-blink 1s steps(1) infinite;
+}
+
+.command-line:not(:focus-within):has(#command:placeholder-shown) .idle-cursor {
+    display: inline-block;
+}
+
+@keyframes idle-cursor-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .idle-cursor {
+        animation: none;
+    }
 }
 
 #command {
@@ -36,7 +66,7 @@
     padding: 0;
     background: transparent;
     border: none;
-    color: inherit;
+    color: var(--fg);
     font: inherit;
     outline: none;
     caret-color: var(--accent);
@@ -44,5 +74,5 @@
 
 #command::placeholder {
     color: var(--muted);
-    opacity: 0.4;
+    opacity: 0.7;
 }

@@ -18,7 +18,7 @@ const STRINGS = {
     "menu.contact": "contact",
 
     // static chrome (header hints, command input)
-    kbdHints: "nav: ↑↓ | scroll: PgUp/PgDn | select: Enter | Mouse",
+    kbdHints: "nav: ↑↓ | scroll: PgUp/PgDn | select: Enter | command: / | Mouse",
     placeholder: "type 'help'",
 
     // render.js UI
@@ -154,7 +154,7 @@ const STRINGS = {
     "menu.blog": "блог",
     "menu.contact": "контакты",
 
-    kbdHints: "навигация: ↑↓ | прокрутка: PgUp/PgDn | выбор: Enter | мышь",
+    kbdHints: "навигация: ↑↓ | прокрутка: PgUp/PgDn | выбор: Enter | команда: / | мышь",
     placeholder: "введите 'help'",
 
     underDevelopment: "В разработке",
