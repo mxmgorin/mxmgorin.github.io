@@ -785,7 +785,10 @@ function newStars(project) {
   fetchStars(owner).then((stars) => {
     const count = stars.get(repo.toLowerCase());
     if (!count) return;
-    span.textContent = `  ★ ${count}`;
+    const star = document.createElement("span");
+    star.className = "star-glyph";
+    star.textContent = "★";
+    span.append("  ", star, ` ${count}`);
     span.title = t("starsTitle", count);
   });
   return span;

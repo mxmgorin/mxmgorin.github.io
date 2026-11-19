@@ -69,6 +69,12 @@ a:focus-visible,
     font-size: 0.8rem;
 }
 
+/* The star glyph reads as a dot at the count's size. */
+.star-glyph {
+    font-size: 1.4em;
+    line-height: 1;
+}
+
 .tui-content pre.contributions {
     margin-top: 2rem;
 }
