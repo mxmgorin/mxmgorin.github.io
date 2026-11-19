@@ -5,7 +5,7 @@ Outside of work, I've long been fascinated by low-level programming and the inne
 
 Many of the projects you'll find here started with a simple question: "Can I build this myself?" That's how a Game Boy emulator, a CHIP-8 virtual machine, a Lua interpreter, and a browser for retro consoles came to life. I build these projects primarily to learn, but rarely abandon them after the first milestone — most become a playground for further experimentation and new ideas.
 
-When I'm not coding, I'm a Linux enthusiast and retro gaming fan. I'm interested in emulation, open-source software, computer history, and unusual hardware. I also seem to have a growing collection of handheld consoles and other interesting gadgets.
+When I'm not coding, I'm a Linux enthusiast and retro gaming fan. I'm interested in emulation, open-source software, computer history, and unusual hardware. I also seem to have a growing <a href="#" class="cmd-link" data-cmd="ls handhelds">collection of handheld consoles</a> and other interesting gadgets.
 
 This site is where I share those projects and write about what I learn along the way; what I'm working on right now is under <a href="#" class="cmd-link" data-cmd="now">now</a>. Explore it using your mouse, keyboard, or the built-in terminal below. If you're not sure where to start, try <a href="#" class="cmd-link" data-cmd="help">help</a>.`,
 
@@ -15,7 +15,7 @@ This site is where I share those projects and write about what I learn along the
 
 Многие проекты здесь начались с простого вопроса: «А смогу ли я это сделать?» Так появились эмулятор Game Boy, виртуальная машина CHIP-8, интерпретатор Lua и браузер для ретро-консолей. Я создаю их прежде всего для обучения, но не забрасываю после первого результата — почти каждый из них становится площадкой для новых экспериментов и идей.
 
-Я Linux-энтузиаст и любитель ретро-игр. Меня интересуют эмуляция, open-source проекты, компьютерная история и всевозможные необычные устройства. А ещё у меня постоянно растёт коллекция портативных консолей и другого интересного железа.
+Я Linux-энтузиаст и любитель ретро-игр. Меня интересуют эмуляция, open-source проекты, компьютерная история и всевозможные необычные устройства. А ещё у меня постоянно растёт <a href="#" class="cmd-link" data-cmd="ls handhelds">коллекция портативных консолей</a> и другого интересного железа.
 
 Здесь я делюсь этими проектами и пишу о том, что узнаю по ходу; чем занимаюсь прямо сейчас — в разделе <a href="#" class="cmd-link" data-cmd="now">сейчас</a>. Исследуйте сайт с помощью мыши, клавиатуры или встроенного терминала. Если не знаете, с чего начать — попробуйте <a href="#" class="cmd-link" data-cmd="help">help</a>.`,
 };

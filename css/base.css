@@ -371,3 +371,8 @@ a:focus-visible,
 .article > .back-link:last-child {
     margin-top: 1.4rem;
 }
+
+/* Branch lines of `tree`-style listings. */
+.tree-guide {
+    color: var(--muted);
+}

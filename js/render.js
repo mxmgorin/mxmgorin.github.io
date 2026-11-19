@@ -20,6 +20,7 @@ import {
 } from "./content/projects.js";
 import { aboutView } from "./content/about.js";
 import { contactView } from "./content/contact.js";
+import { handhelds } from "./content/handhelds.js";
 import { introView } from "./content/intro.js";
 import { blogView } from "./content/blog.js";
 import { nowView } from "./content/now.js";
@@ -704,6 +705,44 @@ function newAlsoLine(items) {
     line.append(link);
   });
   return line;
+}
+
+const TREE = { branch: "├── ", last: "└── ", pipe: "│   ", blank: "    " };
+
+// The handheld collection as `tree` output: a directory per maker.
+export function newHandhelds() {
+  const pre = document.createElement("pre");
+  const root = document.createElement("span");
+  root.className = "view-title";
+  root.textContent = "~/handhelds";
+  pre.append(root, "\n");
+
+  const guide = (text) => {
+    const span = document.createElement("span");
+    span.className = "tree-guide";
+    span.textContent = text;
+    return span;
+  };
+
+  handhelds.forEach(({ maker, devices }, i) => {
+    const lastMaker = i === handhelds.length - 1;
+    pre.append(guide(lastMaker ? TREE.last : TREE.branch), `${maker}/\n`);
+
+    devices.forEach((device, j) => {
+      const lastDevice = j === devices.length - 1;
+      const name = document.createElement("strong");
+      name.textContent = device;
+      pre.append(
+        guide((lastMaker ? TREE.blank : TREE.pipe) + (lastDevice ? TREE.last : TREE.branch)),
+        name,
+        "\n",
+      );
+    });
+  });
+
+  const deviceCount = handhelds.reduce((n, m) => n + m.devices.length, 0);
+  pre.append(`\n${t("handheldsSummary", handhelds.length, deviceCount)}`);
+  return pre;
 }
 
 const GITHUB_REPO_URL = /^https:\/\/github\.com\/([^/]+)\/([^/?#]+)/;

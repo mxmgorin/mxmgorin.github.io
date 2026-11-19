@@ -13,6 +13,7 @@ import {
   newCliBlock,
   newNeofetch,
   newFeed,
+  newHandhelds,
 } from "./render.js";
 import { setLang, openPost, Languages, state as appState } from "./app.js";
 import { blogView } from "./content/blog.js";
@@ -221,10 +222,23 @@ const commands = {
     renderElement(`/home/${state.user}`);
   },
 
-  ls() {
-    renderElement(
-      newCommandSuggestions("", ["about", "now", "projects", "blog", "contact", "cv"]),
-    );
+  ls(args) {
+    const dir = (args[0] ?? "").replace(/^~\/?/, "").replace(/\/$/, "");
+    switch (dir) {
+      case "":
+        renderElement(
+          newCliBlock([
+            ...["about", "now", "projects", "blog", "contact", "cv"].flatMap((cmd) => [{ cmd }, "  "]),
+            { cmd: "ls handhelds", label: "handhelds/" },
+          ]),
+        );
+        break;
+      case "handhelds":
+        renderElement(newHandhelds());
+        break;
+      default:
+        renderElement(t("lsNoSuch", args[0]));
+    }
   },
 
   cat(args) {
@@ -334,6 +348,7 @@ const ARG_COMPLETERS = {
   start: () => ["snake", "tetris", "invaders", "breakout"],
   lang: () => Object.values(Languages),
   crt: () => ["on", "off", "toggle"],
+  ls: () => ["handhelds"],
 };
 
 // Complete the current input in place: commands when no argument is being
