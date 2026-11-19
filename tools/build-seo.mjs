@@ -21,6 +21,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { blogView } from "../js/content/blog.js";
+import { contactView } from "../js/content/contact.js";
 import { renderMarkdown } from "../js/markdown.js";
 import { postCardSvg, homeCardSvg } from "./og-card.mjs";
 
@@ -31,6 +32,13 @@ const DEFAULT_LANG = "en";
 const AUTHOR = "Maxim Gorin";
 const AUTHOR_URL = "https://github.com/mxmgorin";
 const RIGHTS = { en: "All rights reserved.", ru: "Все права защищены." };
+const AUTHOR_AVATAR = "/img/avatar.png";
+const AUTHOR_BIO = {
+  en: "Software engineer building trading systems in Rust. Off hours: emulators, a web browser for retro handhelds and game ports.",
+  ru: "Разрабатываю торговые системы на Rust. В свободное время — эмуляторы, браузер для ретро-консолей и порты игр.",
+};
+const AUTHOR_LABEL = { en: "About the author", ru: "Об авторе" };
+const AUTHOR_NAME = { en: AUTHOR, ru: "Максим Горин" };
 
 const LOCALES = { en: "en_US", ru: "ru_RU" };
 const MIN_READ = {
@@ -171,6 +179,29 @@ function blogIndexPath(lang) {
 }
 
 /* ----------------------------------------------------- per-post HTML page */
+
+// Author card: portrait, name linking to the TUI about page, one-line bio,
+// contact and feed links.
+function renderAuthorCard(lang) {
+  const aboutHref = lang === DEFAULT_LANG ? "/?v=about" : `/?v=about&l=${lang}`;
+  const links = contactView
+    .filter((c) => c.url)
+    .map((c) => {
+      const external = c.url.startsWith("mailto:") ? "" : ' target="_blank" rel="noopener noreferrer"';
+      return `<a href="${escAttr(c.url)}"${external}>${escAttr(getTranslated(c.label, lang))}</a>`;
+    })
+    .concat(`<a href="/feed.xml">RSS</a>`)
+    .join(" · ");
+  return `
+        <aside class="author-card" aria-label="${escAttr(AUTHOR_LABEL[lang] ?? AUTHOR_LABEL[DEFAULT_LANG])}">
+          <img class="author-avatar" src="${AUTHOR_AVATAR}" width="80" height="80" alt="" />
+          <div>
+            <p class="author-name"><a href="${escAttr(aboutHref)}">${escAttr(AUTHOR_NAME[lang] ?? AUTHOR)}</a></p>
+            <p class="author-bio">${escAttr(AUTHOR_BIO[lang] ?? AUTHOR_BIO[DEFAULT_LANG])}</p>
+            <p class="author-links">${links}</p>
+          </div>
+        </aside>`;
+}
 
 // "Part of the <series> series" nav: every post in the series, in reading order,
 // linking to the right-language page (falling back to the default language when a
@@ -336,7 +367,7 @@ ${JSON.stringify(breadcrumbLd, null, 2)}
       <article class="article">
         <h1>${escAttr(title)}</h1>
         <p class="article-meta">${escAttr(metaBits.join("  —  "))}</p>
-        ${bodyHtml}${sourceHtml}${seriesNav}
+        ${bodyHtml}${sourceHtml}${seriesNav}${renderAuthorCard(lang)}
         <p class="open-tui"><a href="${escAttr(tuiHref)}">${escAttr(OPEN_TUI[lang])}</a></p>
       </article>
       <footer class="page-footer">${escAttr(copyrightLine(lang, post.date.slice(0, 4)))}</footer>

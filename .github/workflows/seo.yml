@@ -9,6 +9,7 @@ on:
     paths:
       - "posts/**"
       - "js/content/blog.js"
+      - "js/content/contact.js"
       - "js/markdown.js"
       - "tools/**"
       - "index.html"

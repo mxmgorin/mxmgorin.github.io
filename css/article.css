@@ -83,3 +83,44 @@ body {
     color: var(--muted);
     font-size: 0.8rem;
 }
+
+/* Author card closing a post. */
+.author-card {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-top: 2.5rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    background: var(--panel);
+}
+
+.author-card .author-avatar {
+    flex: none;
+    margin: 0;
+    border: 1px solid var(--border);
+}
+
+.author-card p {
+    margin: 0 0 0.35rem;
+}
+
+.author-name {
+    font-weight: bold;
+}
+
+.author-bio {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.author-links {
+    font-size: 0.85rem;
+}
+
+@media (max-width: 480px) {
+    .author-card {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
