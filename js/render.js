@@ -11,7 +11,13 @@ import {
   filterBlog,
 } from "./app.js";
 import { menu, Views } from "./content/views.js";
-import { projects, contributions, mainTags, githubUser } from "./content/projects.js";
+import {
+  projects,
+  contributions,
+  minorContributions,
+  mainTags,
+  githubUser,
+} from "./content/projects.js";
 import { aboutView } from "./content/about.js";
 import { contactView } from "./content/contact.js";
 import { introView } from "./content/intro.js";
@@ -136,6 +142,7 @@ export function newProjects() {
   if (upstream.length) {
     const block = newBlocks(upstream, t("contributionsTitle"));
     block.classList.add("contributions");
+    if (!active) block.append(newAlsoLine(minorContributions));
     wrap.append(block);
   }
   return wrap;
@@ -684,6 +691,19 @@ function newBlocks(items, title) {
   });
 
   return pre;
+}
+
+// A trailing "also:" line of upstream projects, each linking to my merged PRs there.
+function newAlsoLine(items) {
+  const line = document.createElement("span");
+  line.append(`${blockSeparator}\n${t("contributionsAlso")}`);
+  items.forEach(({ name, prs }, i) => {
+    if (i) line.append(" · ");
+    const link = newExternalLink(mergedPrsUrl(prs), name);
+    link.title = prs;
+    line.append(link);
+  });
+  return line;
 }
 
 const GITHUB_REPO_URL = /^https:\/\/github\.com\/([^/]+)\/([^/?#]+)/;

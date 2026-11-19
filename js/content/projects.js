@@ -210,3 +210,13 @@ export const contributions = [
     tags: ["Rust", "Performance"],
   },
 ];
+
+// Upstream projects with a few merged PRs; `prs` is the owner/repo.
+export const minorContributions = [
+  { name: "Vita3K", prs: "Vita3K/Vita3K" },
+  { name: "gl4es", prs: "ptitSeb/gl4es" },
+  { name: "MiyooMini-Ports", prs: "Producdevity/MiyooMini-Ports" },
+  { name: "rogalik", prs: "maciekglowka/rogalik" },
+  { name: "pastiera", prs: "palsoftware/pastiera" },
+  { name: "pico-ios", prs: "jevonlipsey/pico-ios" },
+];

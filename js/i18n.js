@@ -41,6 +41,7 @@ const STRINGS = {
     starsTitle: (n) => `GitHub stars: ${n}`,
     contributionsTitle: "Open source contributions",
     mergedPrs: (n) => `${n} merged PRs`,
+    contributionsAlso: "also: ",
 
     // cli.js
     cliHelpIntro: "This is an optional command line — the whole site works from here.",
@@ -175,6 +176,7 @@ const STRINGS = {
     starsTitle: (n) => `Звёзды на GitHub: ${n}`,
     contributionsTitle: "Вклад в open source",
     mergedPrs: (n) => `принято PR: ${n}`,
+    contributionsAlso: "а также: ",
 
     cliHelpIntro: "Это необязательная командная строка — отсюда работает весь сайт.",
     helpExplore: "Разделы: ",
