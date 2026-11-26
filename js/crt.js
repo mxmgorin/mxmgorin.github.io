@@ -28,6 +28,12 @@ export function setCrt(on) {
   }
 }
 
+// Resolves when the screen's running animation ends; at once if none runs.
+export function screenAnimationsDone() {
+  const tui = document.querySelector(".tui");
+  return Promise.all(tui.getAnimations().map((a) => a.finished.catch(() => {})));
+}
+
 export function toggleCrt() {
   const next = !isCrtOn();
   setCrt(next);

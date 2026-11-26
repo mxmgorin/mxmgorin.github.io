@@ -27,7 +27,9 @@ import { portrait } from "./content/portrait.js";
 import { renderMarkdown } from "./markdown.js";
 import { GITHUB_STATS_PATH, mergedPrsUrl, prsRepo, sourceRepo } from "./github.js";
 import { syncCrtToggles, toggleCrt } from "./crt.js";
+import { degauss } from "./monitor.js";
 import { togglePower } from "./power.js";
+import { syncSoundToggles, toggleSound } from "./sound.js";
 import { t } from "./i18n.js";
 
 const contentEl = document.getElementById("content");
@@ -38,6 +40,8 @@ export function render() {
   renderLangSelector();
   renderCrtToggle();
   renderPowerToggle();
+  renderSoundToggle();
+  renderDegaussButton();
   renderMenu();
   renderView();
 }
@@ -608,6 +612,21 @@ function renderPowerToggle() {
   document.querySelectorAll("[data-power-toggle]").forEach((btn) => {
     btn.title = t("powerToggleTitle");
     btn.onclick = togglePower;
+  });
+}
+
+function renderSoundToggle() {
+  document.querySelectorAll("[data-sound-toggle]").forEach((btn) => {
+    btn.title = t("soundToggleTitle");
+    btn.onclick = toggleSound;
+  });
+  syncSoundToggles();
+}
+
+function renderDegaussButton() {
+  document.querySelectorAll("[data-degauss]").forEach((btn) => {
+    btn.title = t("degaussTitle");
+    btn.onclick = degauss;
   });
 }
 

@@ -18,8 +18,9 @@ import {
 import { setLang, openPost, Languages, state as appState } from "./app.js";
 import { blogView } from "./content/blog.js";
 import { setCrt, toggleCrt } from "./crt.js";
-import { CASES, getCase, isCaseShown, setCase } from "./monitor.js";
+import { CASES, degauss, getCase, isCaseShown, setCase } from "./monitor.js";
 import { rebootSystem, shutdownSystem } from "./power.js";
+import { setSound, toggleSound } from "./sound.js";
 import { t } from "./i18n.js";
 
 const commandEl = document.getElementById("command");
@@ -204,6 +205,30 @@ const commands = {
     renderElement(on ? t("crtOn") : t("crtOff"));
   },
 
+  async degauss() {
+    if (!(await degauss())) renderElement(t("degaussFlat"));
+  },
+
+  sound(args) {
+    const arg = (args[0] || "toggle").toLowerCase();
+    let on;
+    switch (arg) {
+      case "on":
+        setSound((on = true));
+        break;
+      case "off":
+        setSound((on = false));
+        break;
+      case "toggle":
+        on = toggleSound();
+        break;
+      default:
+        renderElement(t("soundUsage"));
+        return;
+    }
+    renderElement(on ? t("soundOn") : t("soundOff"));
+  },
+
   case(args) {
     const name = args[0]?.toLowerCase();
     if (!name) {
@@ -378,6 +403,7 @@ const ARG_COMPLETERS = {
   lang: () => Object.values(Languages),
   crt: () => ["on", "off", "toggle"],
   case: () => CASES,
+  sound: () => ["on", "off", "toggle"],
   ls: () => ["handhelds"],
 };
 

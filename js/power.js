@@ -9,8 +9,9 @@
 import { openHome, state } from "./app.js";
 import { handhelds } from "./content/handhelds.js";
 import { homeView } from "./content/views.js";
-import { isCrtOn } from "./crt.js";
+import { isCrtOn, screenAnimationsDone } from "./crt.js";
 import { render } from "./render.js";
+import { playSound } from "./sound.js";
 
 const root = document.documentElement;
 
@@ -47,7 +48,7 @@ export function setupPower() {
 
   if (root.classList.contains("powering-on")) {
     const current = generation;
-    animationsDone().then(() => {
+    screenAnimationsDone().then(() => {
       if (current === generation) root.classList.remove("powering-on");
     });
     if (bootsOnLoad()) boot(render);
@@ -107,10 +108,11 @@ async function powerOff({ halt = false } = {}) {
   post?.abort();
   document.activeElement?.blur();
   syncPowerToggles();
+  playSound("powerOff");
   root.classList.remove("powering-on");
   root.classList.add("powering-off");
 
-  await animationsDone();
+  await screenAnimationsDone();
   if (current !== generation) return;
   root.classList.replace("powering-off", "power-off");
 }
@@ -122,6 +124,7 @@ async function powerOn() {
   on = true;
   const current = ++generation;
   syncPowerToggles();
+  playSound("powerOn");
   root.classList.remove("powering-off", "power-off");
   root.classList.add("powering-on");
   if (halted) {
@@ -129,7 +132,7 @@ async function powerOn() {
     boot(openHome);
   }
 
-  await animationsDone();
+  await screenAnimationsDone();
   if (current !== generation) return;
   root.classList.remove("powering-on");
 }
@@ -138,12 +141,6 @@ function syncPowerToggles() {
   document.querySelectorAll("[data-power-toggle]").forEach((btn) => {
     btn.setAttribute("aria-pressed", String(on));
   });
-}
-
-// Resolves when the screen's power animation ends; at once if none runs.
-function animationsDone() {
-  const tui = document.querySelector(".tui");
-  return Promise.all(tui.getAnimations().map((a) => a.finished.catch(() => {})));
 }
 
 // Shows the POST screen over the TUI, then calls `onDone`.

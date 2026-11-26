@@ -161,3 +161,84 @@ body::after {
         rgba(0, 0, 0, 0.35) 100%
     );
 }
+
+/* Refresh band rolling down the tube. */
+.tui::before {
+    --crt-roll-share: 0.18;
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 1;
+    height: calc(var(--crt-roll-share) * 100%);
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(var(--crt-r), var(--crt-g), var(--crt-b), 0.035),
+        transparent
+    );
+    pointer-events: none;
+    animation: crt-roll 9s linear infinite;
+}
+
+@keyframes crt-roll {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(calc(100% / var(--crt-roll-share)));
+    }
+}
+
+html.no-crt .tui::before {
+    content: none;
+}
+
+/* Degauss: the picture wobbles and swirls with colour while the field decays.
+   Held off while the screen powers up or down, which animates the same box. */
+@media (prefers-reduced-motion: no-preference) {
+    html.degaussing:not(.no-crt):not(.powering-on):not(.powering-off):not(.power-off)
+        .tui {
+        animation: crt-degauss 1.2s ease-out;
+    }
+}
+
+@keyframes crt-degauss {
+    0% {
+        transform: none;
+        filter: none;
+    }
+    8% {
+        transform: skewX(4deg) scale(1.02);
+        filter: hue-rotate(90deg) saturate(3);
+    }
+    18% {
+        transform: skewX(-3deg) rotate(0.6deg);
+        filter: hue-rotate(-120deg) saturate(3) brightness(1.2);
+    }
+    30% {
+        transform: skewX(2deg) translateX(0.5%);
+        filter: hue-rotate(160deg) saturate(2.4);
+    }
+    45% {
+        transform: skewX(-1.2deg);
+        filter: hue-rotate(-60deg) saturate(1.8);
+    }
+    62% {
+        transform: skewX(0.6deg);
+        filter: hue-rotate(30deg) saturate(1.4);
+    }
+    80% {
+        transform: skewX(-0.2deg);
+        filter: hue-rotate(-10deg);
+    }
+    100% {
+        transform: none;
+        filter: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tui::before {
+        content: none;
+    }
+}

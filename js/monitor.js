@@ -1,7 +1,12 @@
-// Monitor case colour: one of CASES, kept as `data-case` on <html> and saved
+// Monitor controls: the case colour and the degauss coil.
+// The case colour is one of CASES, kept as `data-case` on <html> and saved
 // to localStorage. The saved choice is applied before first paint by a tiny
 // inline script in index.html; this module handles runtime switching from the
 // `case` CLI command. Each name has a matching colour block in css/monitor.css.
+// Degaussing sets `degaussing` on <html> for css/retro.css to animate.
+
+import { isCrtOn, screenAnimationsDone } from "./crt.js";
+import { playSound } from "./sound.js";
 
 const STORAGE_KEY = "case";
 
@@ -31,4 +36,18 @@ export function setCase(name) {
 export function isCaseShown() {
   const monitor = document.querySelector(".monitor");
   return monitor !== null && getComputedStyle(monitor).display !== "contents";
+}
+
+// Wobbles the picture while the tube demagnetises; returns false on a flat panel.
+export async function degauss() {
+  if (!isCrtOn()) return false;
+
+  const root = document.documentElement;
+  if (root.classList.contains("degaussing")) return true;
+
+  playSound("degauss");
+  root.classList.add("degaussing");
+  await screenAnimationsDone();
+  root.classList.remove("degaussing");
+  return true;
 }
