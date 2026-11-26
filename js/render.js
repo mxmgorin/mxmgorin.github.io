@@ -27,6 +27,7 @@ import { portrait } from "./content/portrait.js";
 import { renderMarkdown } from "./markdown.js";
 import { GITHUB_STATS_PATH, mergedPrsUrl, prsRepo, sourceRepo } from "./github.js";
 import { syncCrtToggles, toggleCrt } from "./crt.js";
+import { togglePower } from "./power.js";
 import { t } from "./i18n.js";
 
 const contentEl = document.getElementById("content");
@@ -36,6 +37,7 @@ export function render() {
   applyChrome();
   renderLangSelector();
   renderCrtToggle();
+  renderPowerToggle();
   renderMenu();
   renderView();
 }
@@ -50,6 +52,9 @@ function applyChrome() {
 
   const command = document.getElementById("command");
   if (command) command.placeholder = t("placeholder");
+
+  const powerHint = document.querySelector(".power-hint");
+  if (powerHint) powerHint.textContent = t("powerHint");
 }
 
 function renderMenu() {
@@ -597,6 +602,13 @@ function renderCrtToggle() {
     btn.onclick = toggleCrt;
   });
   syncCrtToggles();
+}
+
+function renderPowerToggle() {
+  document.querySelectorAll("[data-power-toggle]").forEach((btn) => {
+    btn.title = t("powerToggleTitle");
+    btn.onclick = togglePower;
+  });
 }
 
 function renderLangSelector() {

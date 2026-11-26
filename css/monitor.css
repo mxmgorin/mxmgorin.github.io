@@ -22,6 +22,7 @@
         --bezel-bottom: calc(var(--bezel) + 2.2rem);
         --screen-radius: clamp(12px, 2.4vmin, 26px);
         --case-radius: calc(var(--screen-radius) + var(--bezel) * 0.5);
+        --tube-off: #0a0c0b;
 
         --case-top: #363a2f;
         --case-mid: #272b22;
@@ -123,7 +124,7 @@
         border-radius: var(--screen-radius);
         overflow: hidden;
         isolation: isolate;
-        background: var(--panel);
+        background: var(--tube-off);
         /* Recess lip, then screen light caught by the bezel around it. */
         box-shadow:
             0 0 0 2px var(--case-edge),
@@ -210,7 +211,13 @@
             0 -1px 0 var(--case-emboss-lo);
     }
 
-    .monitor-crt {
+    .monitor-controls {
+        display: inline-flex;
+        align-items: center;
+        gap: 1.4em;
+    }
+
+    .monitor-button {
         display: inline-flex;
         align-items: center;
         gap: 0.9em;
@@ -224,13 +231,13 @@
         cursor: pointer;
     }
 
-    .monitor-crt:focus-visible {
+    .monitor-button:focus-visible {
         outline: 1px solid var(--accent);
         outline-offset: 2px;
         border-radius: 3px;
     }
 
-    .monitor-crt:hover {
+    .monitor-button:hover {
         color: var(--case-ink-hover);
     }
 
@@ -248,7 +255,7 @@
             box-shadow 0.05s ease;
     }
 
-    .monitor-crt:active .monitor-key {
+    .monitor-button:active .monitor-key {
         transform: translateY(1px);
         box-shadow:
             0 0 0 1px var(--case-edge),
@@ -267,11 +274,15 @@
             box-shadow 0.15s ease;
     }
 
-    .monitor-crt[aria-pressed="true"] .monitor-led {
+    .monitor-button[aria-pressed="true"] .monitor-led {
         background: var(--accent);
         box-shadow:
             0 0 3px rgba(var(--accent-rgb), 1),
             0 0 9px rgba(var(--accent-rgb), 0.7);
+    }
+
+    html.power-off .power-hint {
+        position: absolute;
     }
 }
 

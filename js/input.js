@@ -1,9 +1,16 @@
 import { moveUp, moveDown, select, state, gameApp } from "./app.js";
 import { render, scroll } from "./render.js";
 import { blurCli, focusCli, isCliFocused } from "./cli.js";
+import { handlePowerInput } from "./power.js";
 
 export function setupInput() {
   document.addEventListener("keydown", (e) => {
+    // Browser shortcuts pass through even while the screen is dark.
+    if (!e.ctrlKey && !e.metaKey && !e.altKey && handlePowerInput()) {
+      e.preventDefault();
+      return;
+    }
+
     const handled = handleKey(e);
 
     if (handled) {

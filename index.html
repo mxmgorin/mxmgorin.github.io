@@ -74,6 +74,7 @@
         <link rel="stylesheet" href="css/tui.css" />
         <link rel="stylesheet" href="css/retro.css" />
         <link rel="stylesheet" href="css/cli.css" />
+        <link rel="stylesheet" href="css/power.css" />
         <link rel="stylesheet" href="css/monitor.css" />
 
         <script>
@@ -91,6 +92,8 @@
                 const monitorCase = localStorage.getItem("case");
                 if (monitorCase) document.documentElement.dataset.case = monitorCase;
             } catch (e) {}
+            // Every page load powers the screen on; js/power.js ends it.
+            document.documentElement.classList.add("powering-on");
         </script>
     </head>
 
@@ -168,19 +171,32 @@
                         </div>
                     </footer>
                 </main>
+                <p class="power-hint"></p>
             </div>
             <div class="monitor-panel">
                 <span class="monitor-badge">mxmgorin</span>
-                <button
-                    type="button"
-                    class="monitor-crt"
-                    data-crt-toggle
-                    aria-pressed="true"
-                >
-                    <span class="monitor-label">CRT</span>
-                    <span class="monitor-key" aria-hidden="true"></span>
-                    <span class="monitor-led" aria-hidden="true"></span>
-                </button>
+                <span class="monitor-controls">
+                    <button
+                        type="button"
+                        class="monitor-button"
+                        data-crt-toggle
+                        aria-pressed="true"
+                    >
+                        <span class="monitor-label">CRT</span>
+                        <span class="monitor-key" aria-hidden="true"></span>
+                        <span class="monitor-led" aria-hidden="true"></span>
+                    </button>
+                    <button
+                        type="button"
+                        class="monitor-button"
+                        data-power-toggle
+                        aria-pressed="true"
+                    >
+                        <span class="monitor-label">Power</span>
+                        <span class="monitor-key" aria-hidden="true"></span>
+                        <span class="monitor-led" aria-hidden="true"></span>
+                    </button>
+                </span>
             </div>
         </div>
 

@@ -19,6 +19,7 @@ import { setLang, openPost, Languages, state as appState } from "./app.js";
 import { blogView } from "./content/blog.js";
 import { setCrt, toggleCrt } from "./crt.js";
 import { CASES, getCase, isCaseShown, setCase } from "./monitor.js";
+import { rebootSystem, shutdownSystem } from "./power.js";
 import { t } from "./i18n.js";
 
 const commandEl = document.getElementById("command");
@@ -314,6 +315,16 @@ const commands = {
   exit() {
     renderElement(t("exitMsg"));
     blurCli();
+  },
+
+  shutdown() {
+    renderElement(t("shutdownMsg", state.user));
+    shutdownSystem();
+  },
+
+  reboot() {
+    renderElement(t("rebootMsg", state.user));
+    rebootSystem();
   },
 };
 

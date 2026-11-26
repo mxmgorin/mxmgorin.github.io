@@ -80,6 +80,8 @@ const STRINGS = {
       "  case [colour]   Change the monitor case colour",
       "",
       "System:",
+      "  shutdown        Power off the system",
+      "  reboot          Restart the system",
       "  neofetch        Show a system info card",
       "  whoami          Print the current user",
       "  ls [handhelds]  List sections or the handheld collection",
@@ -110,6 +112,16 @@ const STRINGS = {
     caseCurrent: (name, list) => [`Case: ${name}`, `Available: ${list}`],
     caseSet: (name) => `Case: ${name}.`,
     caseHidden: "The case shows on larger screens.",
+    powerToggleTitle: "Power on/off",
+    powerHint: "Press any key or tap to power on",
+    shutdownMsg: (user) => [
+      `Broadcast message from ${user}@mxmgorin.dev:`,
+      "The system is going down for poweroff NOW!",
+    ],
+    rebootMsg: (user) => [
+      `Broadcast message from ${user}@mxmgorin.dev:`,
+      "The system is going down for reboot NOW!",
+    ],
     tip: (hint) => `Tip: ${hint}`,
     commandNotFound: [
       "Command not found.",
@@ -222,6 +234,8 @@ const STRINGS = {
       "  case [colour]   Сменить цвет корпуса монитора",
       "",
       "Система:",
+      "  shutdown        Выключить систему",
+      "  reboot          Перезагрузить систему",
       "  neofetch        Карточка о системе",
       "  whoami          Текущий пользователь",
       "  ls [handhelds]  Список разделов или коллекция консолей",
@@ -252,6 +266,16 @@ const STRINGS = {
     caseCurrent: (name, list) => [`Корпус: ${name}`, `Доступно: ${list}`],
     caseSet: (name) => `Корпус: ${name}.`,
     caseHidden: "Корпус виден на больших экранах.",
+    powerToggleTitle: "Вкл/выкл питание",
+    powerHint: "Нажмите любую клавишу или коснитесь экрана, чтобы включить",
+    shutdownMsg: (user) => [
+      `Широковещательное сообщение от ${user}@mxmgorin.dev:`,
+      "Система выключается СЕЙЧАС!",
+    ],
+    rebootMsg: (user) => [
+      `Широковещательное сообщение от ${user}@mxmgorin.dev:`,
+      "Система перезагружается СЕЙЧАС!",
+    ],
     tip: (hint) => `Совет: ${hint}`,
     commandNotFound: [
       "Команда не найдена.",

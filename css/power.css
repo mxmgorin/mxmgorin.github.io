@@ -1,0 +1,109 @@
+/* Screen power states, set as classes on <html>:
+   .powering-off  the picture collapses into a bright line, then a dot;
+   .power-off     the tube is dark and a hint tells how to wake it;
+   .powering-on   the line opens back into the picture.
+   The collapse and the line run only with CRT effects on and motion allowed;
+   otherwise the screen switches at once. .post-screen is the boot text shown
+   over the TUI after a shutdown. */
+
+:root {
+    --tube-line: #e6fff0;
+    --power-off-time: 0.5s;
+    --power-on-time: 0.7s;
+    /* Height of the collapsed picture, as a share of the screen. */
+    --tube-line-scale: 0.004;
+}
+
+html.power-off .tui {
+    visibility: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html:not(.no-crt).powering-off .tui {
+        animation: crt-power-off var(--power-off-time) ease-in both;
+    }
+
+    html:not(.no-crt).powering-on .tui {
+        animation: crt-power-on var(--power-on-time) ease-out both;
+    }
+}
+
+@keyframes crt-power-off {
+    0% {
+        scale: 1 1;
+    }
+    50% {
+        scale: 1 var(--tube-line-scale);
+        background-color: var(--tube-line);
+        filter: brightness(1.6);
+    }
+    100% {
+        scale: 0 var(--tube-line-scale);
+        background-color: var(--tube-line);
+        opacity: 0;
+    }
+}
+
+@keyframes crt-power-on {
+    0% {
+        scale: 0 var(--tube-line-scale);
+        background-color: var(--tube-line);
+        opacity: 0;
+    }
+    20% {
+        scale: 1 var(--tube-line-scale);
+        background-color: var(--tube-line);
+        opacity: 1;
+    }
+    55% {
+        scale: 1 1;
+        filter: brightness(1.8);
+    }
+    100% {
+        scale: 1 1;
+        filter: brightness(1);
+    }
+}
+
+.power-hint {
+    display: none;
+}
+
+html.power-off .power-hint {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    translate: -50% -50%;
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.8rem;
+    text-align: center;
+    opacity: 0;
+    animation: power-hint-in 0.6s ease 1s forwards;
+}
+
+@keyframes power-hint-in {
+    to {
+        opacity: 0.7;
+    }
+}
+
+.post-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    margin: 0;
+    padding: 1.5rem 2rem;
+    overflow: hidden;
+    background: var(--panel);
+    white-space: pre-wrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.power-off .power-hint {
+        animation: none;
+        opacity: 0.7;
+    }
+}
