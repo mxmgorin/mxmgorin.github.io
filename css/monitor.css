@@ -15,7 +15,7 @@
     display: none;
 }
 
-@media (min-width: 900px) and (min-height: 560px) {
+@media (min-width: 320px) and (min-height: 480px) {
     :root {
         --room-gap: clamp(6px, 1.4vmin, 18px);
         --bezel: clamp(20px, 3.8vmin, 46px);
@@ -283,6 +283,46 @@
 
     html.power-off .power-hint {
         position: absolute;
+    }
+
+    /* Phones: a thin bezel, and each key under its label to fit the width. */
+    @media (max-width: 700px) {
+        :root {
+            --room-gap: 0px;
+            --bezel: 8px;
+            --bezel-bottom: calc(var(--bezel) + 2.2rem);
+        }
+
+        .monitor-panel {
+            padding: 0 var(--bezel);
+            font-size: 0.55rem;
+            letter-spacing: 0.15em;
+        }
+
+        .monitor-controls {
+            gap: 0.8em;
+        }
+
+        .monitor-button {
+            display: inline-grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            justify-items: center;
+            gap: 0.45em 0.4em;
+            padding: 0.4em 0.2em;
+        }
+
+        .monitor-label {
+            grid-column: 1 / -1;
+        }
+
+        .monitor-key {
+            grid-column: 2;
+        }
+
+        .monitor-led {
+            justify-self: start;
+        }
     }
 }
 
