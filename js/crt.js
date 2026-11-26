@@ -10,8 +10,17 @@ export function isCrtOn() {
   return !document.documentElement.classList.contains("no-crt");
 }
 
+// Marks every CRT toggle pressed or not to match the current state.
+export function syncCrtToggles() {
+  const pressed = String(isCrtOn());
+  document.querySelectorAll("[data-crt-toggle]").forEach((btn) => {
+    btn.setAttribute("aria-pressed", pressed);
+  });
+}
+
 export function setCrt(on) {
   document.documentElement.classList.toggle("no-crt", !on);
+  syncCrtToggles();
   try {
     localStorage.setItem(STORAGE_KEY, on ? "on" : "off");
   } catch (e) {

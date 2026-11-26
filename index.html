@@ -74,6 +74,7 @@
         <link rel="stylesheet" href="css/tui.css" />
         <link rel="stylesheet" href="css/retro.css" />
         <link rel="stylesheet" href="css/cli.css" />
+        <link rel="stylesheet" href="css/monitor.css" />
 
         <script>
             // Apply the saved CRT preference before first paint so a visitor who
@@ -83,6 +84,12 @@
                 if (localStorage.getItem("crt") === "off") {
                     document.documentElement.classList.add("no-crt");
                 }
+            } catch (e) {}
+            // Saved monitor case colour, applied before first paint like the CRT
+            // preference; runtime switching lives in js/monitor.js.
+            try {
+                const monitorCase = localStorage.getItem("case");
+                if (monitorCase) document.documentElement.dataset.case = monitorCase;
             } catch (e) {}
         </script>
     </head>
@@ -105,59 +112,77 @@
       <p><a href="/blog/">All posts →</a></p>
       <!-- SEO:noscript:end -->
         </noscript>
-        <main class="tui">
-            <header class="tui-header">
-                <span class="title"><span class="lang"></span></span>
-                <span class="tui-header-actions">
-                    <button
-                        type="button"
-                        class="crt-toggle"
-                        aria-pressed="true"
-                    >
-                        <span class="crt-label">CRT</span>
-                    </button>
-                    <a href="/" class="status">mxmgorin.dev</a>
-                </span>
-            </header>
-
-            <div class="tui-body">
-                <nav class="tui-menu" aria-label="Main menu">
-                    <ul></ul>
-                </nav>
-
-                <section class="tui-content" id="content">
-                    <pre id="screen"></pre>
-                </section>
-            </div>
-
-            <footer class="tui-footer">
-                <div class="footer-help">
-                    <span class="kbd-hints">
-                        nav: ↑↓ | scroll: PgUp/PgDn | select: Enter | command: / | Mouse
-                    </span>
-                </div>
-                <div class="footer-prompt">
-                    <form id="input-line" autocomplete="off">
-                        <div class="command-line">
-                            <span id="prompt" class="prompt" aria-hidden="true"
-                                >guest:~$</span
+        <div class="monitor">
+            <div class="monitor-screen">
+                <main class="tui">
+                    <header class="tui-header">
+                        <span class="title"><span class="lang"></span></span>
+                        <span class="tui-header-actions">
+                            <button
+                                type="button"
+                                class="crt-toggle"
+                                data-crt-toggle
+                                aria-pressed="true"
                             >
-                            <span class="idle-cursor" aria-hidden="true"></span>
-                            <input
-                                id="command"
-                                type="text"
-                                aria-label="Command input"
-                                autocomplete="off"
-                                autocorrect="off"
-                                placeholder="type 'help'"
-                                autocapitalize="off"
-                                spellcheck="false"
-                            />
+                                <span class="crt-label">CRT</span>
+                            </button>
+                            <a href="/" class="status">mxmgorin.dev</a>
+                        </span>
+                    </header>
+
+                    <div class="tui-body">
+                        <nav class="tui-menu" aria-label="Main menu">
+                            <ul></ul>
+                        </nav>
+
+                        <section class="tui-content" id="content">
+                            <pre id="screen"></pre>
+                        </section>
+                    </div>
+
+                    <footer class="tui-footer">
+                        <div class="footer-help">
+                            <span class="kbd-hints">
+                                nav: ↑↓ | scroll: PgUp/PgDn | select: Enter | command: / | Mouse
+                            </span>
                         </div>
-                    </form>
-                </div>
-            </footer>
-        </main>
+                        <div class="footer-prompt">
+                            <form id="input-line" autocomplete="off">
+                                <div class="command-line">
+                                    <span id="prompt" class="prompt" aria-hidden="true"
+                                        >guest:~$</span
+                                    >
+                                    <span class="idle-cursor" aria-hidden="true"></span>
+                                    <input
+                                        id="command"
+                                        type="text"
+                                        aria-label="Command input"
+                                        autocomplete="off"
+                                        autocorrect="off"
+                                        placeholder="type 'help'"
+                                        autocapitalize="off"
+                                        spellcheck="false"
+                                    />
+                                </div>
+                            </form>
+                        </div>
+                    </footer>
+                </main>
+            </div>
+            <div class="monitor-panel">
+                <span class="monitor-badge">mxmgorin</span>
+                <button
+                    type="button"
+                    class="monitor-crt"
+                    data-crt-toggle
+                    aria-pressed="true"
+                >
+                    <span class="monitor-label">CRT</span>
+                    <span class="monitor-key" aria-hidden="true"></span>
+                    <span class="monitor-led" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
 
         <script type="module" src="js/main.js"></script>
     </body>

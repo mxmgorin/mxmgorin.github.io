@@ -18,6 +18,7 @@ import {
 import { setLang, openPost, Languages, state as appState } from "./app.js";
 import { blogView } from "./content/blog.js";
 import { setCrt, toggleCrt } from "./crt.js";
+import { CASES, getCase, isCaseShown, setCase } from "./monitor.js";
 import { t } from "./i18n.js";
 
 const commandEl = document.getElementById("command");
@@ -202,6 +203,23 @@ const commands = {
     renderElement(on ? t("crtOn") : t("crtOff"));
   },
 
+  case(args) {
+    const name = args[0]?.toLowerCase();
+    if (!name) {
+      renderElement(t("caseCurrent", getCase(), CASES.join(" ")));
+      return;
+    }
+
+    if (!setCase(name)) {
+      renderElement(t("caseUsage", CASES.join("|")));
+      return;
+    }
+
+    renderElement(
+      isCaseShown() ? t("caseSet", name) : [t("caseSet", name), t("caseHidden")],
+    );
+  },
+
   hint() {
     if (hintQueue.length === 0) {
       hintQueue = [...t("hints")].sort(() => Math.random() - 0.5);
@@ -348,6 +366,7 @@ const ARG_COMPLETERS = {
   start: () => ["snake", "tetris", "invaders", "breakout"],
   lang: () => Object.values(Languages),
   crt: () => ["on", "off", "toggle"],
+  case: () => CASES,
   ls: () => ["handhelds"],
 };
 

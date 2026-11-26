@@ -1,0 +1,282 @@
+/* CRT monitor case around the TUI.
+   .monitor is the plastic case, .monitor-screen the tube it holds, and
+   .monitor-panel the bottom strip with the badge and the CRT key.
+   The case appears only when the viewport has room for the bezel; otherwise
+   both wrappers dissolve, the panel hides, and the TUI lays out flat with the
+   CRT chip in its header. Inside the case, scanlines and flicker move from the
+   page onto the tube so the plastic stays still. */
+
+.monitor,
+.monitor-screen {
+    display: contents;
+}
+
+.monitor-panel {
+    display: none;
+}
+
+@media (min-width: 900px) and (min-height: 560px) {
+    :root {
+        --room-gap: clamp(6px, 1.4vmin, 18px);
+        --bezel: clamp(20px, 3.8vmin, 46px);
+        --bezel-bottom: calc(var(--bezel) + 2.2rem);
+        --screen-radius: clamp(12px, 2.4vmin, 26px);
+        --case-radius: calc(var(--screen-radius) + var(--bezel) * 0.5);
+
+        --case-top: #363a2f;
+        --case-mid: #272b22;
+        --case-bottom: #1e2119;
+        --case-edge: #0a0b0a;
+        --case-ink: #7b816d;
+        --case-ink-hover: #9aa188;
+        --case-emboss-hi: rgba(255, 255, 255, 0.06);
+        --case-emboss-lo: rgba(0, 0, 0, 0.6);
+        --key-top: #3c4034;
+        --key-bottom: #22251d;
+    }
+
+    /* Case colours other than the default; CASES in js/monitor.js must match. */
+    html[data-case="graphite"] {
+        --case-top: #2d302e;
+        --case-mid: #1f2220;
+        --case-bottom: #171918;
+        --case-ink: #6e7470;
+        --case-ink-hover: #8b918d;
+        --key-top: #333634;
+        --key-bottom: #1b1d1c;
+    }
+
+    html[data-case="black"] {
+        --case-top: #242528;
+        --case-mid: #18191b;
+        --case-bottom: #111214;
+        --case-ink: #63666c;
+        --case-ink-hover: #858990;
+        --key-top: #2a2b2f;
+        --key-bottom: #151618;
+    }
+
+    html[data-case="taupe"] {
+        --case-top: #3b3632;
+        --case-mid: #2c2825;
+        --case-bottom: #221f1c;
+        --case-ink: #877d73;
+        --case-ink-hover: #a69a8e;
+        --key-top: #423c37;
+        --key-bottom: #26221f;
+    }
+
+    html[data-case="platinum"] {
+        --case-top: #cac7be;
+        --case-mid: #b4b1a7;
+        --case-bottom: #a09d93;
+        --case-edge: #2a2a27;
+        --case-ink: #75726a;
+        --case-ink-hover: #57554f;
+        --case-emboss-hi: rgba(255, 255, 255, 0.45);
+        --case-emboss-lo: rgba(0, 0, 0, 0.12);
+        --key-top: #d6d3ca;
+        --key-bottom: #aaa79d;
+    }
+
+    body {
+        animation: none;
+    }
+
+    body::after {
+        content: none;
+    }
+
+    .tui-header .crt-toggle {
+        display: none;
+    }
+
+    .monitor {
+        display: flex;
+        flex-direction: column;
+        width: calc(100vw - 2 * var(--room-gap));
+        max-width: 1560px;
+        height: calc(100dvh - 2 * var(--room-gap));
+        padding: var(--bezel) var(--bezel) 0;
+        border-radius: var(--case-radius);
+        background:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"),
+            linear-gradient(
+                to bottom,
+                var(--case-top),
+                var(--case-mid) 55%,
+                var(--case-bottom)
+            );
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.09),
+            inset 0 -2px 0 rgba(0, 0, 0, 0.5),
+            0 2px 0 var(--case-edge),
+            0 24px 60px rgba(0, 0, 0, 0.7),
+            0 0 140px rgba(var(--accent-rgb), 0.07);
+    }
+
+    .monitor-screen {
+        display: block;
+        position: relative;
+        flex: 1;
+        min-height: 0;
+        border-radius: var(--screen-radius);
+        overflow: hidden;
+        isolation: isolate;
+        background: var(--panel);
+        /* Recess lip, then screen light caught by the bezel around it. */
+        box-shadow:
+            0 0 0 2px var(--case-edge),
+            0 0 0 3px rgba(255, 255, 255, 0.06),
+            0 0 26px rgba(var(--accent-rgb), 0.12);
+        animation: crt-flicker var(--crt-flicker-speed) infinite;
+    }
+
+    .monitor .tui {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        border: none;
+        border-radius: 0;
+        transform: none;
+    }
+
+    /* Tube overlays: scanlines and the dark rim first, glass glare on top. */
+    .monitor-screen::before,
+    .monitor-screen::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    .monitor-screen::before {
+        background: repeating-linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, var(--crt-scanline-opacity)) 0 1px,
+            transparent 1px 2px
+        );
+        box-shadow:
+            inset 0 0 3rem rgba(0, 0, 0, 0.6),
+            inset 0 0 0.6rem rgba(0, 0, 0, 0.85);
+    }
+
+    .monitor-screen::after {
+        background:
+            radial-gradient(
+                120% 90% at 15% 5%,
+                rgba(255, 255, 255, 0.07),
+                transparent 45%
+            ),
+            linear-gradient(160deg, rgba(255, 255, 255, 0.03), transparent 35%);
+    }
+
+    /* CRT off: a flat screen in the case, no tube shading. */
+    html.no-crt .monitor {
+        --crt-border-alpha: 0;
+    }
+
+    html.no-crt .monitor-screen {
+        animation: none;
+    }
+
+    html.no-crt .monitor-screen::before,
+    html.no-crt .monitor-screen::after,
+    html.no-crt .monitor .tui::after {
+        content: none;
+    }
+
+    html.no-crt .monitor .tui {
+        box-shadow: none;
+    }
+
+    .monitor-panel {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: var(--bezel-bottom);
+        padding: 0 calc(var(--screen-radius) * 0.5);
+        color: var(--case-ink);
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        /* Embossed into the plastic. */
+        text-shadow:
+            0 1px 0 var(--case-emboss-hi),
+            0 -1px 0 var(--case-emboss-lo);
+    }
+
+    .monitor-crt {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.9em;
+        padding: 0.4em;
+        border: none;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        cursor: pointer;
+    }
+
+    .monitor-crt:focus-visible {
+        outline: 1px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 3px;
+    }
+
+    .monitor-crt:hover {
+        color: var(--case-ink-hover);
+    }
+
+    .monitor-key {
+        width: 2.6em;
+        height: 1.3em;
+        border-radius: 3px;
+        background: linear-gradient(to bottom, var(--key-top), var(--key-bottom));
+        box-shadow:
+            0 0 0 1px var(--case-edge),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 2px 0 rgba(0, 0, 0, 0.7);
+        transition:
+            transform 0.05s ease,
+            box-shadow 0.05s ease;
+    }
+
+    .monitor-crt:active .monitor-key {
+        transform: translateY(1px);
+        box-shadow:
+            0 0 0 1px var(--case-edge),
+            inset 0 1px 2px rgba(0, 0, 0, 0.6),
+            0 1px 0 rgba(0, 0, 0, 0.7);
+    }
+
+    .monitor-led {
+        width: 0.65em;
+        height: 0.65em;
+        border-radius: 50%;
+        background: #14201a;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
+        transition:
+            background 0.15s ease,
+            box-shadow 0.15s ease;
+    }
+
+    .monitor-crt[aria-pressed="true"] .monitor-led {
+        background: var(--accent);
+        box-shadow:
+            0 0 3px rgba(var(--accent-rgb), 1),
+            0 0 9px rgba(var(--accent-rgb), 0.7);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .monitor-screen {
+        animation: none;
+    }
+}

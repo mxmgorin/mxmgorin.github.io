@@ -26,7 +26,7 @@ import { nowView } from "./content/now.js";
 import { portrait } from "./content/portrait.js";
 import { renderMarkdown } from "./markdown.js";
 import { GITHUB_STATS_PATH, mergedPrsUrl, prsRepo, sourceRepo } from "./github.js";
-import { isCrtOn, toggleCrt } from "./crt.js";
+import { syncCrtToggles, toggleCrt } from "./crt.js";
 import { t } from "./i18n.js";
 
 const contentEl = document.getElementById("content");
@@ -589,22 +589,14 @@ export function newFeed() {
   return pre;
 }
 
-// The header CRT toggle mirrors the `crt` CLI command: dim/un-pressed when off,
+// The CRT toggles mirror the `crt` CLI command: dim/un-pressed when off,
 // accent-lit/pressed when on. State + persistence live in crt.js.
 function renderCrtToggle() {
-  const btn = document.querySelector(".tui-header .crt-toggle");
-  if (!btn) return;
-
-  const sync = () => {
-    btn.setAttribute("aria-pressed", String(isCrtOn()));
+  document.querySelectorAll("[data-crt-toggle]").forEach((btn) => {
     btn.title = t("crtToggleTitle");
-  };
-
-  sync();
-  btn.onclick = () => {
-    toggleCrt();
-    sync();
-  };
+    btn.onclick = toggleCrt;
+  });
+  syncCrtToggles();
 }
 
 function renderLangSelector() {
