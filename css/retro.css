@@ -5,15 +5,18 @@
     --crt-b: 156;
 
     /* Text glow strength */
-    --crt-glow-inner: 0.25;
-    --crt-glow-outer: 0.15;
+    --crt-glow-inner: 0.6;
+    --crt-glow-outer: 0.4;
+
+    /* Text colour: brighter than --fg to make up for the scanlines. */
+    --crt-fg: #e3f7ea;
 
     /* Active item glow */
-    --crt-active-inner: 0.6;
-    --crt-active-outer: 0.35;
+    --crt-active-inner: 0.8;
+    --crt-active-outer: 0.5;
 
     /* Scanline strength */
-    --crt-scanline-opacity: 0.12;
+    --crt-scanline-opacity: 0.25;
 
     /* Flicker */
     --crt-flicker-speed: 6s;
@@ -26,6 +29,7 @@
 }
 
 html.no-crt {
+    --crt-fg: var(--fg);
     --crt-glow-inner: 0;
     --crt-glow-outer: 0;
     --crt-active-inner: 0;
@@ -41,6 +45,7 @@ html.no-crt body {
    glow/scanline effects, same as the .no-crt opt-out. */
 @media (prefers-reduced-motion: reduce) {
     :root {
+        --crt-fg: var(--fg);
         --crt-glow-inner: 0;
         --crt-glow-outer: 0;
         --crt-active-inner: 0;
@@ -54,21 +59,29 @@ html.no-crt body {
 }
 
 body {
-    color: var(--fg);
+    color: var(--crt-fg);
+    /* Glow from tight to wide; the widest layer is the phosphor bloom. */
     text-shadow:
-        0 0 2px
+        0 0 1px
             rgba(
                 var(--crt-r),
                 var(--crt-g),
                 var(--crt-b),
                 var(--crt-glow-inner)
             ),
-        0 0 6px
+        0 0 4px
             rgba(
                 var(--crt-r),
                 var(--crt-g),
                 var(--crt-b),
                 var(--crt-glow-outer)
+            ),
+        0 0 12px
+            rgba(
+                var(--crt-r),
+                var(--crt-g),
+                var(--crt-b),
+                calc(var(--crt-glow-outer) * 0.6)
             );
     animation: crt-flicker var(--crt-flicker-speed) infinite;
 }
@@ -96,6 +109,10 @@ body::after {
     50% {
         opacity: var(--crt-flicker-min-opacity);
     }
+}
+
+.tui-menu li {
+    color: var(--crt-fg);
 }
 
 .tui-menu li.active {
@@ -158,7 +175,7 @@ body::after {
     background: radial-gradient(
         ellipse at center,
         transparent 55%,
-        rgba(0, 0, 0, 0.35) 100%
+        rgba(0, 0, 0, 0.45) 100%
     );
 }
 
@@ -173,7 +190,7 @@ body::after {
     background: linear-gradient(
         to bottom,
         transparent,
-        rgba(var(--crt-r), var(--crt-g), var(--crt-b), 0.035),
+        rgba(var(--crt-r), var(--crt-g), var(--crt-b), 0.05),
         transparent
     );
     pointer-events: none;
