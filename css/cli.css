@@ -72,6 +72,24 @@
     caret-color: var(--accent);
 }
 
+/* Key hints at the far end of the idle line, gone once it is focused or typed in. */
+.kbd-hints {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-left: 1ch;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 0.6rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    opacity: 0.6;
+}
+
+.command-line:focus-within .kbd-hints,
+.command-line:has(#command:not(:placeholder-shown)) .kbd-hints {
+    display: none;
+}
+
 #command::placeholder {
     color: var(--muted);
     opacity: 0.7;

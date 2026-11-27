@@ -27,9 +27,9 @@ import { portrait } from "./content/portrait.js";
 import { renderMarkdown } from "./markdown.js";
 import { GITHUB_STATS_PATH, mergedPrsUrl, prsRepo, sourceRepo } from "./github.js";
 import { syncCrtToggles, toggleCrt } from "./crt.js";
-import { degauss } from "./monitor.js";
+import { nextChannel } from "./monitor.js";
+import { syncMenuButtons, toggleMenu } from "./osd.js";
 import { togglePower } from "./power.js";
-import { syncSoundToggles, toggleSound } from "./sound.js";
 import { t } from "./i18n.js";
 
 const contentEl = document.getElementById("content");
@@ -38,10 +38,10 @@ const blockSeparator = " ".repeat(1);
 export function render() {
   applyChrome();
   renderLangSelector();
+  renderMenuButton();
+  renderChannelKey();
   renderCrtToggle();
   renderPowerToggle();
-  renderSoundToggle();
-  renderDegaussButton();
   renderMenu();
   renderView();
 }
@@ -615,18 +615,19 @@ function renderPowerToggle() {
   });
 }
 
-function renderSoundToggle() {
-  document.querySelectorAll("[data-sound-toggle]").forEach((btn) => {
-    btn.title = t("soundToggleTitle");
-    btn.onclick = toggleSound;
+function renderMenuButton() {
+  document.querySelectorAll("[data-menu]").forEach((btn) => {
+    btn.title = t("menuTitle");
+    btn.onclick = toggleMenu;
   });
-  syncSoundToggles();
+  syncMenuButtons();
 }
 
-function renderDegaussButton() {
-  document.querySelectorAll("[data-degauss]").forEach((btn) => {
-    btn.title = t("degaussTitle");
-    btn.onclick = degauss;
+function renderChannelKey() {
+  document.querySelectorAll("[data-channel]").forEach((btn) => {
+    btn.title = t("channelTitle");
+    btn.onclick = nextChannel;
+    btn.querySelector(".monitor-channel").textContent = state.lang.toUpperCase();
   });
 }
 

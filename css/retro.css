@@ -9,7 +9,7 @@
     --crt-glow-outer: 0.4;
 
     /* Text colour: brighter than --fg to make up for the scanlines. */
-    --crt-fg: #e3f7ea;
+    --crt-fg: var(--fg-bright);
 
     /* Active item glow */
     --crt-active-inner: 0.8;
@@ -247,6 +247,37 @@ html.no-crt .tui::before {
     80% {
         transform: skewX(-0.2deg);
         filter: hue-rotate(-10deg);
+    }
+    100% {
+        transform: none;
+        filter: none;
+    }
+}
+
+/* Channel switch: the picture loses sync and rolls back into place. */
+@media (prefers-reduced-motion: no-preference) {
+    html.channel-switching:not(.no-crt):not(.powering-on):not(.powering-off):not(.power-off)
+        .tui {
+        animation: crt-channel 0.4s ease-out;
+    }
+}
+
+@keyframes crt-channel {
+    0% {
+        transform: none;
+        filter: none;
+    }
+    15% {
+        transform: translateY(-8%) skewX(2deg);
+        filter: brightness(1.8) contrast(1.4) blur(1px);
+    }
+    35% {
+        transform: translateY(5%);
+        filter: brightness(0.5) blur(2px);
+    }
+    60% {
+        transform: translateY(-2%);
+        filter: brightness(1.3) blur(0.5px);
     }
     100% {
         transform: none;

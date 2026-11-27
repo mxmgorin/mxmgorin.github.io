@@ -262,14 +262,9 @@
         content: "";
     }
 
-    .footer-help {
+    .kbd-hints {
         display: none;
     }
-}
-
-.footer-help {
-    opacity: 0.6;
-    font-size: 0.6rem;
 }
 
 .footer-prompt {

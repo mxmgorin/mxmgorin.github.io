@@ -1,5 +1,5 @@
 // Monitor sound effects, synthesised with Web Audio: no audio files.
-// Off by default; the `sound` CLI command and the case key switch them, and
+// Off by default; the `sound` CLI command and the on-screen menu switch them, and
 // the choice is saved to localStorage. Browsers start audio only after a user
 // gesture, so effects fired before the first key press or click are dropped.
 
@@ -15,16 +15,8 @@ export function isSoundOn() {
   return enabled;
 }
 
-// Marks every sound toggle pressed or not to match the current state.
-export function syncSoundToggles() {
-  document.querySelectorAll("[data-sound-toggle]").forEach((btn) => {
-    btn.setAttribute("aria-pressed", String(enabled));
-  });
-}
-
 export function setSound(on) {
   enabled = on;
-  syncSoundToggles();
   try {
     localStorage.setItem(STORAGE_KEY, on ? "on" : "off");
   } catch (e) {
@@ -62,6 +54,12 @@ const SOUNDS = {
   powerOff(ac, at) {
     SOUNDS.click(ac, at);
     tone(ac, { at, duration: 0.35, from: 900, to: 50, gain: 0.15 });
+  },
+
+  channel(ac, at) {
+    SOUNDS.click(ac, at);
+    // Static between stations.
+    noise(ac, { at: at + 0.02, duration: 0.3, freq: 4000, q: 0.4, gain: 0.12 });
   },
 
   degauss(ac, at) {

@@ -21,6 +21,7 @@ import { setCrt, toggleCrt } from "./crt.js";
 import { CASES, degauss, getCase, isCaseShown, setCase } from "./monitor.js";
 import { rebootSystem, shutdownSystem } from "./power.js";
 import { setSound, toggleSound } from "./sound.js";
+import { THEMES, getTheme, setTheme } from "./theme.js";
 import { t } from "./i18n.js";
 
 const commandEl = document.getElementById("command");
@@ -246,6 +247,16 @@ const commands = {
     );
   },
 
+  theme(args) {
+    const name = args[0]?.toLowerCase();
+    if (!name) {
+      renderElement(t("themeCurrent", getTheme(), THEMES.join(" ")));
+      return;
+    }
+
+    renderElement(setTheme(name) ? t("themeSet", name) : t("themeUsage", THEMES.join("|")));
+  },
+
   hint() {
     if (hintQueue.length === 0) {
       hintQueue = [...t("hints")].sort(() => Math.random() - 0.5);
@@ -403,6 +414,7 @@ const ARG_COMPLETERS = {
   lang: () => Object.values(Languages),
   crt: () => ["on", "off", "toggle"],
   case: () => CASES,
+  theme: () => THEMES,
   sound: () => ["on", "off", "toggle"],
   ls: () => ["handhelds"],
 };

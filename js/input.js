@@ -1,6 +1,7 @@
 import { moveUp, moveDown, select, state, gameApp } from "./app.js";
 import { render, scroll } from "./render.js";
 import { blurCli, focusCli, isCliFocused } from "./cli.js";
+import { handleMenuKey } from "./osd.js";
 import { handlePowerInput } from "./power.js";
 
 export function setupInput() {
@@ -61,6 +62,8 @@ export function setupInput() {
 
 // returns true when key event is consumed
 function handleKey(e) {
+  if (handleMenuKey(e)) return true;
+
   const cliFocused = isCliFocused();
 
   if ((e.key === "/" || e.key === ":") && !cliFocused) {

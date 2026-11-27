@@ -92,6 +92,12 @@
                 const monitorCase = localStorage.getItem("case");
                 if (monitorCase) document.documentElement.dataset.case = monitorCase;
             } catch (e) {}
+            // Saved screen theme, applied before first paint like the case colour;
+            // runtime switching lives in js/theme.js.
+            try {
+                const theme = localStorage.getItem("theme");
+                if (theme) document.documentElement.dataset.theme = theme;
+            } catch (e) {}
             // Every page load powers the screen on; js/power.js ends it.
             document.documentElement.classList.add("powering-on");
         </script>
@@ -129,7 +135,7 @@
                             >
                                 <span class="crt-label">CRT</span>
                             </button>
-                            <a href="/" class="status">mxmgorin.dev</a>
+                            <a href="/" class="status" data-home>mxmgorin.dev</a>
                         </span>
                     </header>
 
@@ -144,11 +150,6 @@
                     </div>
 
                     <footer class="tui-footer">
-                        <div class="footer-help">
-                            <span class="kbd-hints">
-                                nav: ↑↓ | scroll: PgUp/PgDn | select: Enter | command: / | Mouse
-                            </span>
-                        </div>
                         <div class="footer-prompt">
                             <form id="input-line" autocomplete="off">
                                 <div class="command-line">
@@ -166,49 +167,49 @@
                                         autocapitalize="off"
                                         spellcheck="false"
                                     />
+                                    <span class="kbd-hints">
+                                        nav: ↑↓ | scroll: PgUp/PgDn | select: Enter | command: / | Mouse
+                                    </span>
                                 </div>
                             </form>
                         </div>
                     </footer>
                 </main>
                 <p class="power-hint"></p>
+                <p class="channel-osd" aria-hidden="true"></p>
+                <div class="osd-menu" role="menu" tabindex="-1" hidden></div>
             </div>
             <div class="monitor-panel">
-                <span class="monitor-badge">mxmgorin</span>
+                <button
+                    type="button"
+                    class="monitor-power"
+                    data-power-toggle
+                    aria-pressed="true"
+                >
+                    <span class="monitor-power-key" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 3v8" />
+                            <path d="M6.3 6.8a8 8 0 1 0 11.4 0" />
+                        </svg>
+                    </span>
+                    <span class="monitor-led" aria-hidden="true"></span>
+                </button>
+                <a href="/" class="monitor-badge" data-home>mxmgorin</a>
                 <span class="monitor-controls">
                     <button
                         type="button"
                         class="monitor-button"
-                        data-crt-toggle
-                        aria-pressed="true"
+                        data-menu
+                        aria-haspopup="menu"
+                        aria-expanded="false"
                     >
-                        <span class="monitor-label">CRT</span>
-                        <span class="monitor-key" aria-hidden="true"></span>
-                        <span class="monitor-led" aria-hidden="true"></span>
-                    </button>
-                    <button
-                        type="button"
-                        class="monitor-button"
-                        data-sound-toggle
-                        aria-pressed="false"
-                    >
-                        <span class="monitor-label">Sound</span>
-                        <span class="monitor-key" aria-hidden="true"></span>
-                        <span class="monitor-led" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" class="monitor-button" data-degauss>
-                        <span class="monitor-label">Degauss</span>
+                        <span class="monitor-label">Menu</span>
                         <span class="monitor-key" aria-hidden="true"></span>
                     </button>
-                    <button
-                        type="button"
-                        class="monitor-button"
-                        data-power-toggle
-                        aria-pressed="true"
-                    >
-                        <span class="monitor-label">Power</span>
+                    <button type="button" class="monitor-button" data-channel>
+                        <span class="monitor-label">Channel</span>
                         <span class="monitor-key" aria-hidden="true"></span>
-                        <span class="monitor-led" aria-hidden="true"></span>
+                        <span class="monitor-channel" aria-hidden="true"></span>
                     </button>
                 </span>
             </div>

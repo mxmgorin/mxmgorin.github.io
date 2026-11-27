@@ -229,11 +229,10 @@ export function setupApp() {
   });
 
   // The "mxmgorin.dev" header acts as a home link (clean console + neofetch).
-  const status = document.querySelector(".tui-header .status");
-  if (status) {
-    status.addEventListener("click", (e) => {
+  document.querySelectorAll("[data-home]").forEach((link) => {
+    link.addEventListener("click", (e) => {
       e.preventDefault();
       openHome();
     });
-  }
+  });
 }

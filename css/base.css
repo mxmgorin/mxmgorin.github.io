@@ -9,6 +9,42 @@
     --muted: #8fb3a0; /* secondary text */
     --accent: #6fd19c; /* selection / highlights */
     --accent-rgb: 111, 209, 156; /* --accent as r,g,b for rgba() */
+    --fg-bright: #e3f7ea; /* main text under CRT effects */
+    --code-bg: #0b120e;
+}
+
+/* Screen themes other than the default; THEMES in js/theme.js must match.
+   Each also sets the CRT glow and power-on line of css/retro.css and css/power.css. */
+html[data-theme="amber"] {
+    --bg: #0f0c08;
+    --panel: #17120b;
+    --border: #2e2416;
+    --fg: #f3dfbd;
+    --muted: #c4a477;
+    --accent: #ffb648;
+    --accent-rgb: 255, 182, 72;
+    --fg-bright: #fff0d6;
+    --code-bg: #120e08;
+    --crt-r: 255;
+    --crt-g: 182;
+    --crt-b: 72;
+    --tube-line: #fff4e0;
+}
+
+html[data-theme="white"] {
+    --bg: #0c0d0e;
+    --panel: #121416;
+    --border: #262a2e;
+    --fg: #c9cfd6;
+    --muted: #8a939c;
+    --accent: #eef4ff;
+    --accent-rgb: 238, 244, 255;
+    --fg-bright: #e4e9ee;
+    --code-bg: #0e1012;
+    --crt-r: 238;
+    --crt-g: 244;
+    --crt-b: 255;
+    --tube-line: #f4f8ff;
 }
 
 * {
@@ -307,7 +343,7 @@ a:focus-visible,
 .article pre.code {
     margin: 0.8rem 0;
     padding: 0.75rem 1rem;
-    background: #0b120e;
+    background: var(--code-bg);
     border: 1px solid var(--border);
     border-radius: 4px;
     overflow-x: auto;

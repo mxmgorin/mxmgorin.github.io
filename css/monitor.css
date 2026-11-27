@@ -1,17 +1,22 @@
 /* CRT monitor case around the TUI.
    .monitor is the plastic case, .monitor-screen the tube it holds, and
-   .monitor-panel the bottom strip with the badge and the CRT key.
+   .monitor-panel the bottom strip with the badge and the keys.
    The case appears only when the viewport has room for the bezel; otherwise
    both wrappers dissolve, the panel hides, and the TUI lays out flat with the
    CRT chip in its header. Inside the case, scanlines and flicker move from the
-   page onto the tube so the plastic stays still. */
+   page onto the tube so the plastic stays still.
+   The case takes over the header: its badge links home, its channel key
+   switches the language and its menu holds the screen settings, so the TUI
+   drops the header row. */
 
 .monitor,
 .monitor-screen {
     display: contents;
 }
 
-.monitor-panel {
+.monitor-panel,
+.channel-osd,
+.osd-menu {
     display: none;
 }
 
@@ -88,7 +93,7 @@
         content: none;
     }
 
-    .tui-header .crt-toggle {
+    .monitor .tui-header {
         display: none;
     }
 
@@ -193,10 +198,11 @@
         box-shadow: none;
     }
 
+    /* Power at the left end, the badge centred, the other keys at the right. */
     .monitor-panel {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        justify-content: space-between;
         height: var(--bezel-bottom);
         padding: 0 calc(var(--screen-radius) * 0.5);
         color: var(--case-ink);
@@ -211,10 +217,27 @@
             0 -1px 0 var(--case-emboss-lo);
     }
 
+    .monitor-badge {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .monitor-badge:hover {
+        color: var(--case-ink-hover);
+        text-decoration: none;
+    }
+
+    .monitor-badge:focus-visible {
+        outline: 1px solid var(--accent);
+        outline-offset: 4px;
+        border-radius: 3px;
+    }
+
     .monitor-controls {
         display: inline-flex;
         align-items: center;
         gap: 1.4em;
+        justify-self: end;
     }
 
     .monitor-button {
@@ -281,6 +304,223 @@
             0 0 9px rgba(var(--accent-rgb), 0.7);
     }
 
+    /* Power: a round key whose LED glows red in standby. */
+    .monitor-power {
+        --standby-rgb: 214, 64, 52;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.9em;
+        justify-self: start;
+        padding: 0.3em;
+        border: none;
+        background: none;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .monitor-power:hover {
+        color: var(--case-ink-hover);
+    }
+
+    .monitor-power:focus-visible {
+        outline: 1px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 3px;
+    }
+
+    .monitor-power .monitor-led {
+        background: rgba(var(--standby-rgb), 0.85);
+        box-shadow:
+            0 0 3px rgba(var(--standby-rgb), 0.8),
+            0 0 7px rgba(var(--standby-rgb), 0.4);
+    }
+
+    .monitor-power[aria-pressed="true"] .monitor-led {
+        background: var(--accent);
+        box-shadow:
+            0 0 3px rgba(var(--accent-rgb), 1),
+            0 0 9px rgba(var(--accent-rgb), 0.7);
+    }
+
+    .monitor-power-key {
+        display: grid;
+        place-items: center;
+        width: 2.6em;
+        height: 2.6em;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle at 50% 30%,
+            var(--key-top),
+            var(--key-bottom)
+        );
+        /* Edge, top light and drop, then the well the key sits in. */
+        box-shadow:
+            0 0 0 1px var(--case-edge),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 2px 0 rgba(0, 0, 0, 0.7),
+            0 0 0 4px rgba(0, 0, 0, 0.25);
+        transition:
+            transform 0.05s ease,
+            box-shadow 0.05s ease;
+    }
+
+    .monitor-power-key svg {
+        width: 55%;
+        height: 55%;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2.6;
+        stroke-linecap: round;
+        filter: drop-shadow(0 1px 0 var(--case-emboss-lo));
+    }
+
+    .monitor-power:active .monitor-power-key {
+        transform: translateY(1px);
+        box-shadow:
+            0 0 0 1px var(--case-edge),
+            inset 0 1px 2px rgba(0, 0, 0, 0.6),
+            0 1px 0 rgba(0, 0, 0, 0.7),
+            0 0 0 4px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Channel readout: a small lit window on the case, dark in standby. */
+    .monitor-channel {
+        min-width: 2.6em;
+        padding: 0.2em 0.3em;
+        border-radius: 2px;
+        background: var(--tube-off);
+        box-shadow:
+            0 0 0 1px var(--case-edge),
+            inset 0 1px 2px rgba(0, 0, 0, 0.8);
+        color: var(--accent);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        letter-spacing: 0.1em;
+        text-align: center;
+        text-shadow: 0 0 4px rgba(var(--accent-rgb), 0.8);
+        transition: color 0.15s ease;
+    }
+
+    html.power-off .monitor-channel {
+        color: transparent;
+        text-shadow: none;
+    }
+
+    /* On-screen display of the channel just tuned, under the scanlines. */
+    .channel-osd.shown {
+        display: block;
+        position: absolute;
+        top: calc(var(--screen-radius) * 0.5 + 1rem);
+        right: calc(var(--screen-radius) * 0.5 + 1.5rem);
+        margin: 0;
+        color: var(--accent);
+        font-size: 1.5rem;
+        font-weight: bold;
+        letter-spacing: 0.1em;
+        text-shadow:
+            0 0 2px rgba(var(--accent-rgb), 0.9),
+            0 0 10px rgba(var(--accent-rgb), 0.6);
+        pointer-events: none;
+        animation: channel-osd 2s steps(1, end) forwards;
+    }
+
+    html.power-off .channel-osd {
+        display: none;
+    }
+
+    @keyframes channel-osd {
+        to {
+            visibility: hidden;
+        }
+    }
+
+    /* Settings menu drawn on the tube, under the scanlines. */
+    .osd-menu:not([hidden]) {
+        display: block;
+        position: absolute;
+        top: calc(var(--screen-radius) * 0.5 + 1rem);
+        right: calc(var(--screen-radius) * 0.5 + 1.5rem);
+        /* Fits the widest row in every language, so switching channel keeps the box still. */
+        min-width: 19rem;
+        padding: 0.6rem 0;
+        border: 1px solid rgba(var(--accent-rgb), 0.6);
+        background-color: var(--panel);
+        background-image: linear-gradient(
+            rgba(var(--accent-rgb), 0.06),
+            rgba(var(--accent-rgb), 0.06)
+        );
+        box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.25);
+        color: var(--accent);
+        text-transform: uppercase;
+        outline: none;
+    }
+
+    html.power-off .osd-menu {
+        display: none;
+    }
+
+    .osd-title {
+        margin: 0 1rem 0.5rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid rgba(var(--accent-rgb), 0.35);
+        font-weight: bold;
+        letter-spacing: 0.15em;
+    }
+
+    .osd-menu ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .osd-menu li {
+        display: flex;
+        justify-content: space-between;
+        gap: 2ch;
+        padding: 0.25rem 1rem 0.25rem 2rem;
+        color: var(--fg);
+        cursor: pointer;
+    }
+
+    .osd-menu li:hover {
+        background: rgba(var(--accent-rgb), 0.08);
+    }
+
+    .osd-menu li.active {
+        position: relative;
+        background: rgba(var(--accent-rgb), 0.18);
+        color: var(--accent);
+    }
+
+    .osd-menu li.active::before {
+        content: "▶";
+        position: absolute;
+        left: 0.6rem;
+    }
+
+    /* Arrows hold their room on every row, so moving the selection keeps the box still. */
+    .osd-menu .osd-value:not(:empty)::before {
+        content: "‹ ";
+        visibility: hidden;
+    }
+
+    .osd-menu .osd-value:not(:empty)::after {
+        content: " ›";
+        visibility: hidden;
+    }
+
+    .osd-menu li.active .osd-value::before,
+    .osd-menu li.active .osd-value::after {
+        visibility: visible;
+    }
+
+    .osd-hint {
+        margin: 0.5rem 1rem 0;
+        color: var(--muted);
+        font-size: 0.6rem;
+        text-transform: none;
+        opacity: 0.8;
+    }
+
     html.power-off .power-hint {
         position: absolute;
     }
@@ -293,10 +533,16 @@
             --bezel-bottom: calc(var(--bezel) + 2.2rem);
         }
 
+        /* The badge centres in the room left between the keys. */
         .monitor-panel {
+            grid-template-columns: auto 1fr auto;
             padding: 0 var(--bezel);
             font-size: 0.55rem;
             letter-spacing: 0.15em;
+        }
+
+        .monitor-badge {
+            justify-self: center;
         }
 
         .monitor-controls {
@@ -320,8 +566,25 @@
             grid-column: 2;
         }
 
-        .monitor-led {
+        .monitor-led,
+        .monitor-channel {
             justify-self: start;
+        }
+
+        .channel-osd.shown {
+            font-size: 1.1rem;
+        }
+
+        /* Keyboard hints, hidden on phones like the footer's. */
+        .osd-hint {
+            display: none;
+        }
+
+        .osd-menu:not([hidden]) {
+            right: var(--bezel);
+            left: var(--bezel);
+            min-width: 0;
+            font-size: 0.9rem;
         }
     }
 }
