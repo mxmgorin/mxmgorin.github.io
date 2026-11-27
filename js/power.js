@@ -1,10 +1,11 @@
 // Screen power: the monitor switch and the system shutdown/boot cycle.
-// The switch blanks the screen and brings it back as it was. A shutdown also
-// halts the system, so the next power-on runs the POST screen and boots into
-// the home view. State is shown through classes on <html> (`powering-off`,
-// `power-off`, `powering-on`) that css/power.css animates; the power-on of a
-// page load is started before first paint by index.html and ended here.
-// A page load that lands on the home view with CRT effects on boots too.
+// The switch blanks the screen and brings it back through the POST screen onto
+// the page it showed. A shutdown also halts the system, so the next power-on
+// boots into the home view. State is shown through classes on <html>
+// (`powering-off`, `power-off`, `powering-on`) that css/power.css animates; the
+// power-on of a page load is started before first paint by index.html and ended
+// here. A page load that lands on the home view with CRT effects on boots too;
+// visitors who opted out of effects see the POST screen only after a shutdown.
 
 import { openHome, state } from "./app.js";
 import { handhelds } from "./content/handhelds.js";
@@ -12,6 +13,7 @@ import { homeView } from "./content/views.js";
 import { isCrtOn, screenAnimationsDone } from "./crt.js";
 import { render } from "./render.js";
 import { playSound } from "./sound.js";
+import { getTheme } from "./theme.js";
 
 const root = document.documentElement;
 
@@ -58,8 +60,13 @@ export function setupPower() {
 // Checks whether the page load shows the boot screen; deep links and visitors
 // who opted out of effects skip it.
 function bootsOnLoad() {
+  return state.view === homeView && effectsWanted();
+}
+
+// Checks whether the visitor keeps CRT effects and motion on.
+function effectsWanted() {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  return state.view === homeView && isCrtOn() && !reducedMotion;
+  return isCrtOn() && !reducedMotion;
 }
 
 // Wakes the screen or skips the boot screen; returns true if the input was spent on that.
@@ -130,6 +137,8 @@ async function powerOn() {
   if (halted) {
     halted = false;
     boot(openHome);
+  } else if (effectsWanted()) {
+    boot();
   }
 
   await screenAnimationsDone();
@@ -144,7 +153,7 @@ function syncPowerToggles() {
 }
 
 // Shows the POST screen over the TUI, then calls `onDone`.
-async function boot(onDone) {
+async function boot(onDone = () => {}) {
   const screen = document.createElement("pre");
   screen.className = "post-screen";
   document.querySelector(".tui").append(screen);
@@ -183,7 +192,7 @@ async function runPost(screen, signal) {
   print(`Memory test: ${MEMORY_KB}K OK`);
   await pause();
 
-  print(`Display: ${isCrtOn() ? "CRT, green phosphor" : "flat panel"}`);
+  print(`Display: ${isCrtOn() ? `CRT, ${getTheme()} phosphor` : "flat panel"}`);
   await pause();
   print(`Detecting handhelds... ${handheldCount()} found`);
   await pause();
