@@ -6,6 +6,7 @@ import { createTetrisApp } from "./games/tetris.js";
 import { createBreakoutApp } from "./games/breakout.js";
 import { createMatrixApp } from "./games/matrix.js";
 import { t } from "./i18n.js";
+import { playSound } from "./sound.js";
 
 export let gameApp = null;
 export const Languages = {
@@ -141,11 +142,16 @@ if (location.hostname === "localhost") {
 }
 
 export function moveUp() {
-  state.menuIndex = Math.max(0, state.menuIndex - 1);
+  moveTo(Math.max(0, state.menuIndex - 1));
 }
 
 export function moveDown() {
-  state.menuIndex = Math.min(menu.length - 1, state.menuIndex + 1);
+  moveTo(Math.min(menu.length - 1, state.menuIndex + 1));
+}
+
+function moveTo(index) {
+  if (index !== state.menuIndex) playSound("click");
+  state.menuIndex = index;
 }
 
 export function select() {
@@ -153,6 +159,7 @@ export function select() {
   // first menu item so pressing Enter still navigates somewhere sensible.
   const i = state.menuIndex < 0 ? 0 : state.menuIndex;
   state.menuIndex = i;
+  playSound("select");
   state.post = null;
   state.projectTag = null;
   state.blogTag = null;

@@ -20,7 +20,7 @@ import { blogView } from "./content/blog.js";
 import { setCrt, toggleCrt } from "./crt.js";
 import { CASES, degauss, getCase, isCaseShown, setCase } from "./monitor.js";
 import { rebootSystem, shutdownSystem } from "./power.js";
-import { setSound, toggleSound } from "./sound.js";
+import { playSound, setSound, toggleSound } from "./sound.js";
 import { THEMES, getTheme, setTheme } from "./theme.js";
 import { t } from "./i18n.js";
 
@@ -40,6 +40,8 @@ const USERS = {
 let hintQueue = [];
 
 const MAX_HISTORY = 100;
+// Keys that make no keyclick: modifiers, and Enter and Escape, which sound or act elsewhere.
+const QUIET_KEYS = ["Shift", "Control", "Alt", "Meta", "CapsLock", "Enter", "Escape"];
 const history = [];
 let historyIndex = -1;
 const commands = {
@@ -396,6 +398,7 @@ export function runCommand(value) {
   const handler = commands[command];
 
   if (!handler) {
+    playSound("bell");
     renderElement(t("commandNotFound"));
     const suggestion = closestCommand(command);
     if (suggestion) {
@@ -499,6 +502,7 @@ export function setupCli() {
 
   document.getElementById("input-line").addEventListener("submit", (e) => {
     e.preventDefault();
+    playSound("select");
 
     if (state.mode === "password") {
       handlePassword();
@@ -508,6 +512,8 @@ export function setupCli() {
   });
 
   commandEl.addEventListener("keydown", (e) => {
+    if (!QUIET_KEYS.includes(e.key)) playSound("key");
+
     if (e.key === "ArrowUp") {
       e.preventDefault();
       showPrevCommand();
@@ -546,6 +552,7 @@ function handlePassword() {
   if (password === USERS[user]?.password) {
     loginUser(user);
   } else {
+    playSound("bell");
     renderElement(t("invalidPassword"));
   }
 }
